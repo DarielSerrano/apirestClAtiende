@@ -26,19 +26,18 @@ text = (file_get_contents(sys.argv[1]))
 print(nlp_pos("Hola, soy un ejemplo de texto en español. Estoy muy feliz y quiero compartirlo contigo. Google Cloud Natural Language API es increíble.")) """
 
 
-from google.cloud import language_v1
+from google.cloud import language_v1,Document,PartOfSpeech
 import os
 
 # Establecer la variable de entorno con la ubicación del archivo de credenciales
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../../key/pragmatic-byway-393406-ab498ee30544.json"
 
-from google.cloud.language_v1 import enums
 
 def extract_verbs_and_nouns(text):
     client = language_v1.LanguageServiceClient()
 
     # Configurar el tipo de análisis
-    type_ = enums.Document.Type.PLAIN_TEXT
+    type_ = Document.Type.PLAIN_TEXT
     language = "es"
     document = {"content": text, "type": type_, "language": language}
 
@@ -49,9 +48,9 @@ def extract_verbs_and_nouns(text):
     verbs = []
     nouns = []
     for token in response.tokens:
-        if token.part_of_speech.tag == enums.PartOfSpeech.Tag.VERB:
+        if token.part_of_speech.tag == PartOfSpeech.Tag.VERB:
             verbs.append(token.text.content)
-        elif token.part_of_speech.tag == enums.PartOfSpeech.Tag.NOUN:
+        elif token.part_of_speech.tag == PartOfSpeech.Tag.NOUN:
             nouns.append(token.text.content)
 
     return verbs, nouns
