@@ -30,7 +30,7 @@ from google.cloud import language_v1
 import os
 
 # Establecer la variable de entorno con la ubicación del archivo de credenciales
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../key/pragmatic-byway-393406-ab498ee30544.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../../key/pragmatic-byway-393406-ab498ee30544.json"
 
 def classify(text, verbose=True):
     """Classify the input text into categories."""
