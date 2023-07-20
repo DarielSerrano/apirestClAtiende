@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForTokenClassification
+""" from transformers import AutoTokenizer, AutoModelForTokenClassification
 
 from transformers import pipeline
 
@@ -22,21 +22,40 @@ nlp_pos = pipeline(
 
 
 text = (file_get_contents(sys.argv[1]))
-print(nlp_pos(text))
+#print(nlp_pos(text))
+print(nlp_pos("Hola, soy un ejemplo de texto en español. Estoy muy feliz y quiero compartirlo contigo. Google Cloud Natural Language API es increíble.")) """
 
 
-from textblob import TextBlob
+from google.cloud import language_v1
+import os
 
-def extract_verbs_and_nouns(text):
-    blob = TextBlob(text)
-    tagged_words = blob.tags
-    
-    verbs = [word for word, pos in tagged_words if pos.startswith('VB')]
-    nouns = [word for word, pos in tagged_words if pos.startswith('NN')]
-    
-    return verbs, nouns
+# Establecer la variable de entorno con la ubicación del archivo de credenciales
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../key/pragmatic-byway-393406-ab498ee30544.json"
 
-text = "Hola, soy un ejemplo de texto en español."
-verbs, nouns = extract_verbs_and_nouns(text)
-print("Verbos:", verbs)
-print("Sustantivos:", nouns)
+def classify(text, verbose=True):
+    """Classify the input text into categories."""
+
+    language_client = language_v1.LanguageServiceClient()
+
+    document = language_v1.Document(
+        content=text, type_=language_v1.Document.Type.PLAIN_TEXT
+    )
+    response = language_client.classify_text(request={"document": document})
+    categories = response.categories
+
+    result = {}
+
+    for category in categories:
+        # Turn the categories into a dictionary of the form:
+        # {category.name: category.confidence}, so that they can
+        # be treated as a sparse vector.
+        result[category.name] = category.confidence
+
+    if verbose:
+        print(text)
+        for category in categories:
+            print("=" * 20)
+            print("{:<16}: {}".format("category", category.name))
+            print("{:<16}: {}".format("confidence", category.confidence))
+
+    return result
