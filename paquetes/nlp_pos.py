@@ -59,3 +59,5 @@ def classify(text, verbose=True):
             print("{:<16}: {}".format("confidence", category.confidence))
 
     return result
+
+classify("Hola, soy un ejemplo de texto en español. Estoy muy feliz y quiero compartirlo contigo. Google Cloud Natural Language API es increíble.")
