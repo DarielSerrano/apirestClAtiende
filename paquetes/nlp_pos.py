@@ -23,3 +23,20 @@ nlp_pos = pipeline(
 
 text = (file_get_contents(sys.argv[1]))
 print(nlp_pos(text))
+
+
+from textblob import TextBlob
+
+def extract_verbs_and_nouns(text):
+    blob = TextBlob(text)
+    tagged_words = blob.tags
+    
+    verbs = [word for word, pos in tagged_words if pos.startswith('VB')]
+    nouns = [word for word, pos in tagged_words if pos.startswith('NN')]
+    
+    return verbs, nouns
+
+text = "Hola, soy un ejemplo de texto en español."
+verbs, nouns = extract_verbs_and_nouns(text)
+print("Verbos:", verbs)
+print("Sustantivos:", nouns)
