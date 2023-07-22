@@ -21,6 +21,6 @@ nlp_pos = pipeline(
 ))
 
 
-text = (file_get_contents(sys.argv[1]))
+#text = (file_get_contents(sys.argv[1]))
 #print(nlp_pos(text))
 print(nlp_pos("Hola, soy un ejemplo de texto en español. Estoy muy feliz y quiero compartirlo contigo. Google Cloud Natural Language API es increíble."))
