@@ -10,11 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     // Validar si el RUT y la contraseña no están vacíos
     if (empty($rut)) 
     {
-        $respuesta = "Debes completar con tu Rut.";
+        $respuesta = "Debe completar con su Rut.";
     } 
     elseif (empty($password)) 
     {
-        $respuesta = "Debes completar con tu contraseña.";
+        $respuesta = "Debe completar con su contraseña.";
     }
     else 
     {
@@ -146,7 +146,6 @@ function formatoRUTValido($rut)
     
 
     // Cálculo del dígito verificador
-    $suma = 0;
     $i = 2;
     $suma = 0;
     foreach(array_reverse(str_split($rutNumeros)) as $v)
@@ -157,8 +156,8 @@ function formatoRUTValido($rut)
         $suma += $v * $i;
         ++$i;
     }
-
     $digitoVerificadorCalculado = 11 - ($suma % 11);
+
     // Comparar dígito verificador calculado con el ingresado (considerando K como 10)
     if ($digitoVerificadorCalculado == 11 && ($dv == '0')) {
         return true;
