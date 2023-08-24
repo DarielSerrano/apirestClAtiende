@@ -9,10 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 }; 
 
 // pruebas en index usando post
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    
+
 }; 
 
 ?>
