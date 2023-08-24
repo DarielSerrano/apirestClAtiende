@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     $pdf = $ruta_destino . $namefinal;                                          
                     try {
                         exec ("pdftotext.exe $pdf $txt");
+                        correccionTildes($txt);                        
                     } catch (\Throwable $th) {
                         $mensaje = $th->getMessage();
                         $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
@@ -130,8 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 function formatoRUTValido($rut) 
 {
-    $rut = preg_replace('/[^kK0-9]/', '', $rut); // Eliminar caracteres no válidos
-
+    // Eliminar caracteres no válidos
+    $rut = preg_replace('/[^kK0-9]/', '', $rut); 
     if (empty($rut)) {
         return false;
     }
@@ -142,8 +143,6 @@ function formatoRUTValido($rut)
     if ($dv != 'K' && !is_numeric($dv)) {
         return false;
     }
-
-    
 
     // Cálculo del dígito verificador
     $i = 2;
@@ -199,6 +198,25 @@ function validarContrasena($rut,$password)
     {
         return false
     }
+}
+
+function correccionTildes($filename) 
+{
+    // Leer el contenido del archivo
+    $file_contents = file_get_contents($filename);
+
+    // Mapeo de caracteres con tilde a sus versiones sin tilde
+    $replace_map = [
+        'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+        'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
+        'ñ' => 'n', 'Ñ' => 'N',
+    ];
+
+    // Reemplazar los caracteres con tilde por sus versiones sin tilde
+    $updated_contents = strtr($file_contents, $replace_map);
+
+    // Escribir los cambios de vuelta al archivo
+    file_put_contents($filename, $updated_contents);
 }
 
 ?>
