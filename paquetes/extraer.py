@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
 
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
-import sys
+import sys, json
 
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
@@ -49,8 +49,9 @@ def extract_verbs_and_nouns(segment):
     return verb_noun_objects
 
 # Procesar y mostrar los verbos y sustantivos en cada segmento
+output = []
 for segment in segments:
     verb_noun_segment = extract_verbs_and_nouns(segment)
-    for item in verb_noun_segment:
-        print(f"Palabra: {item['word']}, Entidad: {item['entity']}")
-    print()
+    output.extend(verb_noun_segment)
+
+print(json.dumps({"resultados": output}))
