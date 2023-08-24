@@ -29,7 +29,8 @@ model = AutoModelForTokenClassification.from_pretrained(model_name)
 nlp_ner = pipeline("ner", model=model, tokenizer=tokenizer)
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
-text = (file_get_contents(sys.argv[1]))
+# text = (file_get_contents(sys.argv[1]))
+text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
 
 # Dividir el texto en segmentos de no más de 512 tokens
 segment_size = 512
@@ -37,7 +38,7 @@ segments = [text[i:i + segment_size] for i in range(0, len(text), segment_size)]
 
 # Función para filtrar verbos y sustantivos y retornar objetos
 def extract_verbs_and_nouns(segment):
-    tokens = tokenizer(segment, return_tensors="pt", truncation=True, padding=True)
+    tokens = tokenizer(segment, return_tensors="pt", truncation=True, padding=True, max_length=segment_size)
     outputs = model(**tokens).logits
     predictions = outputs.argmax(2).tolist()
 
