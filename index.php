@@ -8,4 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     echo json_encode ($respuesta); 
 }; 
 
+// pruebas en index usando post
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+    
+}; 
+
 ?>

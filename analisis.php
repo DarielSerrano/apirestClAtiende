@@ -5,16 +5,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     // Obtener los datos del formulario
     $rut = $_POST['UsuarioRut'];
-    $password = $_POST['UsuarioContrasena'];
+    $UsuarioContrasena = $_POST['UsuarioContrasena'];
+
+    // Eliminar caracteres no válidos
+    $rut = preg_replace('/[^kK0-9]/', '', $rut); 
 
     // Validar si el RUT y la contraseña no están vacíos
     if (empty($rut)) 
     {
         $respuesta = "Debe completar con su Rut.";
+        header("HTTP/1.1 200 OK");
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
     } 
-    elseif (empty($password)) 
+    elseif (empty($UsuarioContrasena)) 
     {
         $respuesta = "Debe completar con su contraseña.";
+        header("HTTP/1.1 200 OK");
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
     }
     else 
     {
@@ -23,10 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         if (!formatoRUTValido($rut)) 
         {
             $respuesta = "Rut en formato incorrecto, revise el difito verificador.";
+            header("HTTP/1.1 200 OK");
+            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         } 
-        elseif (!validarContrasena($rut, $password))
+        elseif (!validarContrasena($rut, $UsuarioContrasena))
         {
             $respuesta = "Contraseña incorrecta.";
+            header("HTTP/1.1 200 OK");
+            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         }         
     }    
     if (!empty($_FILES['archivo']))
@@ -50,15 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         exec ("pdftotext.exe $pdf $txt");
                         correccionTildes($txt);                        
                     } catch (\Throwable $th) {
-                        $mensaje = $th->getMessage();
+                        $respuesta = "No se logró hacer la transformación de pdf a texto";
+                        $error = $th->getMessage();
                         $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
                         $nombreArchivo = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
                         $nombreArchivo = fopen($rutaLog, "a");
-                        // Escribe el mensaje junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora] $mensaje" . PHP_EOL);
+                        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
                         // Cierra el archivo de log
                         fclose($nombreArchivo);
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                        exit;
                     }
                     $extraer = "paquetes/extraer.py";
                     try 
@@ -79,19 +93,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     }
                     catch (\Throwable $th) 
                     {
-                        $mensaje = $th->getMessage();
+                        $respuesta = "No se logró hacer el análisis NLP";
+                        $error = $th->getMessage();
                         $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
                         $nombreArchivo = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
                         $nombreArchivo = fopen($rutaLog, "a");
-                        // Escribe el mensaje junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora] $mensaje" . PHP_EOL);
+                        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
                         // Cierra el archivo de log
                         fclose($nombreArchivo);
-                        $respuesta['mensaje']='Analisis con python fallo';                    
-                        header("HTTP/1.1 200 OK");
-                        echo json_encode($respuesta); 
-                        exit();
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                        exit;
                     }                                                           
                 }
                 else
@@ -110,21 +123,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             else
             {
                 $respuesta='El servidor no pudo efectuar la subida de archivo debido a un error interno.';
-                echo json_encode($respuesta);
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                 exit();
             }                               
         }
         else
         {
             $respuesta='El archivo adjunto no es un documento pdf.';
-            echo json_encode($respuesta);
+            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit();
         }
     }
     else
     {
         $respuesta='No se encuentra adjunto un documento PDF.';
-        echo json_encode($respuesta);
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit();
     }
 }
@@ -134,14 +147,14 @@ function formatoRUTValido($rut)
     // Eliminar caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
     if (empty($rut)) {
-        return false;
+    return false;
     }
 
     $rutNumeros = substr($rut, 0, strlen($rut)-1);
     $dv = strtoupper(substr($rut, -1));
     // Validar si el dígito verificador es K o número
     if ($dv != 'K' && !is_numeric($dv)) {
-        return false;
+    return false;
     }
 
     // Cálculo del dígito verificador
@@ -149,11 +162,11 @@ function formatoRUTValido($rut)
     $suma = 0;
     foreach(array_reverse(str_split($rutNumeros)) as $v)
     {
-        if($i==8){
-            $i = 2;
-        }            
-        $suma += $v * $i;
-        ++$i;
+    if($i==8){
+        $i = 2;
+    }            
+    $suma += $v * $i;
+    ++$i;
     }
     $digitoVerificadorCalculado = 11 - ($suma % 11);
 
@@ -164,18 +177,41 @@ function formatoRUTValido($rut)
         return true;
     } elseif ($digitoVerificadorCalculado == intval($dv)) {
         return true;
-    }
-
-    return false;
+    } else {
+        return false;
+    } 
 }
 
 function validarContrasena($rut,$password)
 {
-    $password = password_hash($password, PASSWORD_DEFAULT);
+    $UsusarioRut = $_POST['rut'];
+    $UsuarioContrasena = $_POST['password'];
+
+    // Declarar la variable $Contrasena
+    $Contrasena = null;
+    
+    // funcion para transformar la contraseña a hash
+    // $passwordhash = password_hash($UsuarioContrasena, PASSWORD_DEFAULT);
     include 'conexiondb.php';
-    // Consulta SQL con cláusula WHERE
-    $sql = "SELECT UsuarioContrasena FROM Usuarios WHERE UsuarioRut = $rut";
-    $result = $conn->query($sql);
+
+    try {
+        // Consulta SQL con cláusula WHERE
+        $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsusarioRut";
+        $result = $conn->query($sql);
+    } catch (\Throwable $th) {
+        $respuesta = "No se logro hacer la consulta a la base de datos";
+        $error = $th->getMessage();
+        $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+        $nombreArchivo = "logs_de_error.txt";                    
+        // Abre o crea el archivo de log en modo de escritura al final del archivo
+        $nombreArchivo = fopen($rutaLog, "a");
+        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
+        // Cierra el archivo de log
+        fclose($nombreArchivo);
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }        
 
     if ($result->num_rows > 0) 
     {
@@ -184,19 +220,17 @@ function validarContrasena($rut,$password)
         {
             // Accede a los valores en $row
             $Contrasena = $row["UsuarioContrasena"];
-            // ...
         }
     } 
+
     // Cerrar la conexión
     $conn->close(); 
+
     //Verificar la contraseña hash con la almacenada 
-    if (password_verify($password, $Contrasena)) 
-    {
+    if (password_verify($UsuarioContrasena, $Contrasena)) {
         return true;
-    }
-    else
-    {
-        return false
+    } else {
+        return false;
     }
 }
 
