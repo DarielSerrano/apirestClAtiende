@@ -11,7 +11,7 @@ def file_get_contents(pathfile):
         return "no file found"
 
 # Cargar el modelo y el tokenizador
-model_name = "bert-large-uncased"
+model_name = "bert-base-uncased"
 model = BertForSequenceClassification.from_pretrained(model_name, num_labels=20)  # 20 labels for your categories
 tokenizer = BertTokenizer.from_pretrained(model_name)
 
