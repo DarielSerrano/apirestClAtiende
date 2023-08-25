@@ -17,10 +17,10 @@ def file_get_contents(pathfile):
         return f"no file found: {pathfile}"
     
 # Clases o categorías posibles
-classes = ["Jubilación","Certificados","Trabajo y Cesantia","Pareja y Familia","Salud","Chilenos en extranjero",
-           "Deporte","Previsión y seguridad laboral","Discapacidad","Vivienda","Emprendimiento e innovacion",
-           "Transporte","Consumidor","Medioambiente","Bonos","Extranjeros en Chile","Becas y créditos",
-           "Pueblos originarios","Educación","Cultura"]
+classes = ["Jubilacion","Certificados","Trabajo y Cesantia","Pareja y Familia","Salud","Chilenos en exterior",
+           "Deporte","Prevision y seguridad laboral","Discapacidad","Vivienda","Emprendimiento e innovacion",
+           "Transporte","Consumidor","Medioambiente","Bonos","Extranjeros en Chile","Becas y creditos","Pueblos originarios",
+           "Educacion","Cultura y recreacion"]
 
 # Texto que deseas clasificar
 texto_largo = (file_get_contents(sys.argv[1]))
