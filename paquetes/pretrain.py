@@ -1,22 +1,26 @@
 from transformers import BertForSequenceClassification, BertTokenizer, Trainer, TrainingArguments
+import json
 
 # Cargar el modelo preentrenado y el tokenizador
 model_name = "bert-base-uncased"
 model = BertForSequenceClassification.from_pretrained(model_name, num_labels=20)
 tokenizer = BertTokenizer.from_pretrained(model_name)
 
-# Cargar tus datos etiquetados
-data = pd.read_csv("datos_train.csv")  # Asegúrate de tener una columna "text" y otra "label"
+# Cargar tus datos etiquetados desde un archivo JSON
+with open("datos_train.json", "r") as json_file:
+    data = json.load(json_file)
 
 # Tokenizar los textos
 def tokenize_function(examples):
     return tokenizer(examples["text"], padding="max_length", truncation=True)
 
-tokenized_datasets = data.map(tokenize_function, batched=True)
+# Convertir los datos a un formato adecuado para el tokenizador
+tokenized_datasets = [{"text": item["text"], "label": item["label"]} for item in data]
+tokenized_datasets = tokenize_function(tokenized_datasets)
 
 # Definir los argumentos de entrenamiento
 training_args = TrainingArguments(
-    output_dir="/resultados_train", 
+    output_dir="./resultados_train",
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     per_device_train_batch_size=8,
