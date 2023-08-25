@@ -29,12 +29,17 @@ training_args = TrainingArguments(
     save_total_limit=2,
 )
 
+# Convertir los ejemplos tokenizados a formato Dataset
+from datasets import Dataset
+
+train_dataset = Dataset.from_dict(tokenized_datasets)
+train_dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
+
 # Definir el Trainer y entrenar el modelo
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=tokenized_datasets["train"],
-    eval_dataset=tokenized_datasets["validation"],
+    train_dataset=train_dataset,
 )
 
 trainer.train()
