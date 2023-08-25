@@ -29,8 +29,8 @@ model = AutoModelForTokenClassification.from_pretrained(model_name)
 nlp_ner = pipeline("ner", model=model, tokenizer=tokenizer)
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
-# text = (file_get_contents(sys.argv[1]))
-text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
+text = (file_get_contents(sys.argv[1]))
+# text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
 
 # Dividir el texto en segmentos de no más de 512 tokens
 segment_size = 512
