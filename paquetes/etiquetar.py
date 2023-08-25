@@ -1,40 +1,38 @@
-from transformers import BertTokenizer, BertForSequenceClassification
-import torch
-import sys
+import torch, sys
+from transformers import BertForSequenceClassification, BertTokenizer
 
-# Función para leer archivos por ruta
+# Cargar el modelo entrenado
+model_path = "./results"  # Ruta donde se guardó el modelo
+model = BertForSequenceClassification.from_pretrained(model_path)
+
+# Cargar el tokenizador
+tokenizer = BertTokenizer.from_pretrained("bert-base-uncased") 
+
+# Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
     try:
         with open(pathfile) as f:
             return f.read()
     except IOError:
-        return "no file found"
-
-# Cargar el modelo y el tokenizador
-model_name = "bert-base-uncased"
-model = BertForSequenceClassification.from_pretrained(model_name, num_labels=20)  # 20 labels for your categories
-tokenizer = BertTokenizer.from_pretrained(model_name)
-
+        return f"no file found: {pathfile}"
+    
 # Clases o categorías posibles
-classes = ["Jubilación", "Certificados", "Trabajo y cesantía", "Pareja y Familia", "Salud", "Chilenos en el exterior", "Deporte", "Previsión y seguridad laboral", "Discapacidad", "Vivienda", "Emprendimiento e innovación", "Transporte", "Consumidor", "Medioambiente", "Bonos", "Extranjeros dentro de Chile", "Becas y créditos", "Pueblos originarios", "Educación", "Cultura y recreación"]  # Cambiar por tus categorías reales
+classes = ["Jubilación","Certificados","Trabajo y Cesantia","Pareja y Familia","Salud","Chilenos en extranjero",
+           "Deporte","Previsión y seguridad laboral","Discapacidad","Vivienda","Emprendimiento e innovacion",
+           "Transporte","Consumidor","Medioambiente","Bonos","Extranjeros en Chile","Becas y créditos",
+           "Pueblos originarios","Educación","Cultura"]
 
-# Leer el contenido del archivo pasado como argumento en la línea de comandos
-texto_largo = file_get_contents(sys.argv[1])
-if texto_largo == "no file found":
-    print("Archivo no encontrado.")
-    sys.exit(1)
+# Texto que deseas clasificar
+texto_largo = (file_get_contents(sys.argv[1]))
 
-# Tokenizar el texto y obtener IDs de tokens
-inputs = tokenizer(texto_largo, return_tensors="pt", truncation=True, padding=True)
+# Tokenizar el texto y obtener las probabilidades de categoría
+inputs = tokenizer(texto, return_tensors="pt", truncation=True, padding=True)
 with torch.no_grad():
     outputs = model(**inputs)
 
-# Obtener las probabilidades de las clases y etiqueta predicha
+# Obtener las probabilidades de las categorías
 probs = torch.softmax(outputs.logits, dim=-1)
-predicted_label = classes[probs.argmax()]
 
-print(f"Texto: {texto_largo}")
-print(f"Categoría Predicha: {predicted_label}")
-print("Probabilidades por categoría:")
-for i, category in enumerate(classes):
-    print(f"{category}: {probs[0][i].item():.4f}")
+# Imprimir las probabilidades por categoría
+for i, prob in enumerate(probs[0]):
+    print(f"{classes[i]}: {prob.item():.4f}")
