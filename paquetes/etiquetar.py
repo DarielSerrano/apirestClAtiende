@@ -16,7 +16,7 @@ model = BertForSequenceClassification.from_pretrained(model_name, num_labels=20)
 tokenizer = BertTokenizer.from_pretrained(model_name)
 
 # Clases o categorías posibles
-classes = ["Jubilación", "Certificados", "Trabajo y cesantía", "Pareja y Familia", "Salud", "Chilenos en el exterior", "Deporte", "Previsión y seguridad laboral", "Discapacidad", "Vivienda", "Emprendimiento e innovación", "Transporte", "Consumidor", "Medioambiente", "Bonos", "Extranjeros en Chile", "Becas y créditos", "Pueblos originarios", "Educación", "Cultura y recreación"]  # Cambiar por tus categorías reales
+classes = ["Jubilación", "Certificados", "Trabajo y cesantía", "Pareja y Familia", "Salud", "Chilenos en el exterior", "Deporte", "Previsión y seguridad laboral", "Discapacidad", "Vivienda", "Emprendimiento e innovación", "Transporte", "Consumidor", "Medioambiente", "Bonos", "Extranjeros dentro de Chile", "Becas y créditos", "Pueblos originarios", "Educación", "Cultura y recreación"]  # Cambiar por tus categorías reales
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 texto_largo = file_get_contents(sys.argv[1])
