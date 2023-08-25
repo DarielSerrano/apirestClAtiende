@@ -37,5 +37,4 @@ print(f"Texto: {texto_largo}")
 print(f"Categoría Predicha: {predicted_label}")
 print("Probabilidades por categoría:")
 for i, category in enumerate(classes):
-    if i < len(probs[0]):
-        print(f"{category}: {probs[0][i].item():.4f}")
+    print(f"{category}: {probs[0][i].item():.4f}")
