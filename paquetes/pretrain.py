@@ -1,12 +1,4 @@
-import os
 from transformers import BertForSequenceClassification, BertTokenizer, Trainer, TrainingArguments
-import pandas as pd
-
-# Obtener la ruta del directorio del script
-script_dir = os.path.dirname(__file__)
-
-# Ruta completa para el directorio de salida
-output_dir = os.path.join(script_dir, "results")
 
 # Cargar el modelo preentrenado y el tokenizador
 model_name = "bert-base-uncased"
@@ -24,7 +16,7 @@ tokenized_datasets = data.map(tokenize_function, batched=True)
 
 # Definir los argumentos de entrenamiento
 training_args = TrainingArguments(
-    output_dir=output_dir,  # Usar la ruta calculada
+    output_dir="/resultados_train", 
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     per_device_train_batch_size=8,
