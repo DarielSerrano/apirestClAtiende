@@ -51,7 +51,7 @@
         Se adquiere desde la edad que resulte de restar a 65 (para hombres y mujeres), el numero de años de rebaja de edad legal a que haya tenido derecho de acuerdo con lo citado (por debajo de 65 o 60 años, segun el caso).
         Se paga hasta el ultimo dia del mes en que la persona cumple 65 años, fecha en la cual, automaticamente, el IPS debe verificar todos los requisitos para que estas personas reciban la totalidad de la PGU a partir de la fecha citada.
         Al complemento de PGU se le aplican las normas de reajustabilidad, extincion y suspension aplicables a la PGU del regimen general. Solo la edad como requisito se flexibiliza, de acuerdo con lo ya señalado.
-        El monto corresponde a la diferencia entre el monto de la PGU y la suma de pensiones que la persona se encuentre recibiendo en el sistema del DL Nº 3.500 (es lo que se llama 'complemento'). Si dicha suma es mayor a la PGU,cuando la persona cumpla con los requisitos, no recibiria complemento alguno.",
+        El monto corresponde a la diferencia entre el monto de la PGU y la suma de pensiones que la persona se encuentre recibiendo en el sistema del DL Nº 3.500 (es lo que se llama complemento). Si dicha suma es mayor a la PGU,cuando la persona cumpla con los requisitos, no recibiria complemento alguno.",
         "label": "Jubilacion"
     },
     {
@@ -59,7 +59,7 @@
         Permite acreditar el nombre, RUN, fecha de nacimiento, sexo y nombre de los padres de una persona nacida en Chile, y tambien el RUN de sus padres.
         
         El certificado esta disponible durante todo el año en el sitio web y en oficinas del Registro Civil. tambien puede solicitarlo en sucursales ChileAtiende.
-         Si necesita presentar este documento en el extranjero, puede apostillarlo en linea, marcando la opcion 'Si, apostillar' y seleccionando el pais donde presentaria el certificado.
+         Si necesita presentar este documento en el extranjero, puede apostillarlo en linea, marcando la opcion Si, apostillar y seleccionando el pais donde presentaria el certificado.
         A quien va dirigido?
         Todas las personas que requieran presentar el documento ante alguna entidad, para lo cual deben conocer su RUN.",
         "label": "Certificados"
@@ -176,7 +176,7 @@
         Actividad fisica.
         Vida al aire libre.
         Vida en familia
-        Visita el sitio web 'Elige vivir sano'.
+        Visita el sitio web Elige vivir sano.
         
         Pilares del sistema
         Elige Vivir Sano cuenta con cuatro ejes claves dentro de su implementacion:
@@ -304,9 +304,7 @@
         Los datos de esta hoja de vida son los consignados en el Registro Nacional de Conductores.
         
         El documento se puede obtener durante todo el año.
-        Si necesita presentar este documento en el extranjero, puede pedirlo apostillado, marcando la opcion 'Si, apostillar' y seleccionando el pais donde presentaria el certificado.
-        
-        
+        Si necesita presentar este documento en el extranjero, puede pedirlo apostillado, marcando la opcion Si, apostillar y seleccionando el pais donde presentaria el certificado.               
         Todas las personas.",
         "label": "Transporte"
     },
