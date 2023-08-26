@@ -1,9 +1,6 @@
 import sys, json
 from transformers import pipeline
 
-# Cargar el modelo de traducción específico para inglés a español
-translator = pipeline("translation", model="Helsinki-NLP/opus-mt-en-es")
-
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
     try:
@@ -37,12 +34,12 @@ def generate_summary(text):
 
 # Función para refinar el resumen inicial
 def refine_summary(summary):
-    summarizer = pipeline("summarization", model="Joemgu/mlong-t5-base-sumstew-es")
+    summarizer = pipeline("summarization", model="Joemgu/mlong-t5-base-sumstew")
     refined_summary = summarizer(summary, max_length=300, min_length=50, do_sample=False)
     return refined_summary[0]['summary_text']
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
-text = file_get_contents(sys.argv[1])
+text = (file_get_contents(sys.argv[1]))
 
 # Generar el resumen inicial del texto
 initial_summary = generate_summary(text)
@@ -50,12 +47,7 @@ initial_summary = generate_summary(text)
 # Refinar el resumen inicial
 refined_summary = refine_summary(initial_summary)
 
-# Traducir el resumen refinado al español
-translated_summary = translator(refined_summary, max_length=500)[0]['translation_text']
-
-# Convertir el resumen traducido a formato JSON
-result = {"summary": translated_summary}
-result_json = json.dumps(result, ensure_ascii=False, indent=4)
+result_json = json.dumps(refined_summary, ensure_ascii=False, indent=4)
 
 # Imprimir el resultado JSON
 print(result_json)
