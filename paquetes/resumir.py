@@ -37,7 +37,7 @@ def generate_summary(text):
 
 # Función para refinar el resumen inicial
 def refine_summary(summary):
-    summarizer = pipeline("summarization", model="Joemgu/mlong-t5-base-sumstew")
+    summarizer = pipeline("summarization", model="Joemgu/mlong-t5-base-sumstew-es")
     refined_summary = summarizer(summary, max_length=300, min_length=50, do_sample=False)
     return refined_summary[0]['summary_text']
 
