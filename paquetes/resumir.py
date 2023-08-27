@@ -1,8 +1,6 @@
 import sys, json
 from transformers import pipeline
 
-summarizer = pipeline("summarization", "joemgu/mlong-t5-large-sumstew")
-
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
     try:
@@ -14,13 +12,13 @@ def file_get_contents(pathfile):
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
 
-summary = summarizer(text)[0]["summary_text"]
+summarizer = pipeline("summarization", model="justinian336/salvadoran-news-summarizer-base-auto")
 
-# Limpieza del resumen
-cleaned_summary = summary.replace("Title:", "").replace("Summary:", "").strip()
+final_summary = summarizer(text, truncation=True)
 
 # Convertir el resumen a formato JSON
-result_json = json.dumps(cleaned_summary, ensure_ascii=False, indent=4)
+result = {"Resumen": final_summary}
+result_json = json.dumps(result, ensure_ascii=False, indent=4)
 
 # Imprimir el resultado JSON
 print(result_json)
