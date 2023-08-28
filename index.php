@@ -11,13 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 // pruebas en index usando post
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    echo json_encode("Intentando ejecutar script python espere", JSON_PRETTY_PRINT);
+    echo json_encode("Intentando ejecutar script python espere");
     try {
         // Ejecuta el script de Python y captura la salida
         $python_output = exec('python3.10 paquetes/extraer.py archivos/prueba.txt');
-        echo json_encode("\nScript ejecutado\n", JSON_PRETTY_PRINT);
+        echo json_encode("\nScript ejecutado\n");
     } catch (\Throwable $th) {
-        echo json_encode("\nScript no ejecutado, error\n", JSON_PRETTY_PRINT);
+        echo json_encode("\nScript no ejecutado, error\n");
         $error = $th->getMessage();
         echo json_encode($error, JSON_PRETTY_PRINT);
     }
