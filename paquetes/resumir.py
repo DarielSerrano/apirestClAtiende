@@ -20,7 +20,7 @@ WHITESPACE_HANDLER = lambda k: re.sub('\s+', ' ', re.sub('\n+', ' ', k.strip()))
 model_name = "csebuetnlp/mT5_multilingual_XLSum"
 
 # Cargar el tokenizador y el modelo
-tokenizer = AutoTokenizer.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name, legacy=False)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
 # Tokenizar el texto de entrada
