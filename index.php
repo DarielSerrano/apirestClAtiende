@@ -8,10 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     echo json_encode ($respuesta); 
 }; 
 
-// pruebas en index usando post
-if ($_SERVER['REQUEST_METHOD'] == 'POST') 
-{
-    $response = array(); // Crear un array para almacenar las respuestas
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
+    set_time_limit(1200);
+
+    $response = array();
 
     $response[] = "Intentando ejecutar script python, espere";
     try {
@@ -25,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $response[] = $python_output1;
         $response[] = $python_output2;
         $response[] = $python_output3;
+        
         // Imprimir la respuesta completa como JSON
         echo json_encode($response);
         exit();
@@ -35,4 +37,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $response[] = $error;
     }
 }
+
 ?>
