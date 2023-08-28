@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 }; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    file_put_contents("tmp.txt","prueba tmp")
     // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
     set_time_limit(1200);
 
