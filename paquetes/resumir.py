@@ -9,7 +9,7 @@ def file_get_contents(pathfile):
             return f.read()
     except IOError:
         return f"no file found: {pathfile}"
-
+   
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
 
@@ -20,7 +20,7 @@ WHITESPACE_HANDLER = lambda k: re.sub('\s+', ' ', re.sub('\n+', ' ', k.strip()))
 model_name = "csebuetnlp/mT5_multilingual_XLSum"
 
 # Cargar el tokenizador y el modelo
-tokenizer = AutoTokenizer.from_pretrained(model_name, legacy=False)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
 # Tokenizar el texto de entrada
@@ -32,7 +32,6 @@ input_ids = tokenizer(
     max_length=512
 )["input_ids"]
 
-# Generar un resumen con el modelo
 output_ids = model.generate(
     input_ids=input_ids,
     max_length=400,
