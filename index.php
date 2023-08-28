@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $response_data = json_decode($python_output, true);
 
         // Imprime la respuesta JSON en pantalla
-        echo json_encode($response_data, JSON_PRETTY_PRINT);
+        echo json_encode($response_data);
         echo json_encode("Script ejecutado");
         exit();
     } catch (\Throwable $th) {
         echo json_encode("Script no ejecutado, error");
         $error = $th->getMessage();
-        echo json_encode($error, JSON_PRETTY_PRINT);
+        echo json_encode($error);
     }
 }; 
 
