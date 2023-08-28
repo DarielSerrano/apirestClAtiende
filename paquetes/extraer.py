@@ -1,5 +1,5 @@
 # Importar las clases y funciones necesarias de la biblioteca Transformers
-from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
+from transformers import AutoTokenizer, AutoModelForTokenClassification
 
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys, json
@@ -24,11 +24,9 @@ model_name = "mrm8488/bert-spanish-cased-finetuned-pos-16-tags"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForTokenClassification.from_pretrained(model_name)
 
-# Crear el pipeline de lematización
-lemmatizer = pipeline("fill-mask", model="bert-base-multilingual-cased")
-
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
+# text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
 
 # Tokenizar el texto completo
 tokens = tokenizer.tokenize(text)
@@ -49,6 +47,35 @@ for i, token in enumerate(tokens):
 
     if i == total_tokens - 1:
         segments.append(current_segment)
+
+# Función para lematizar verbos utilizando el modelo BERT
+def lemmatize_verbs_with_bert(text):
+    tokens = tokenizer.tokenize(text)
+    token_ids = tokenizer.convert_tokens_to_ids(tokens)
+
+    # Encontrar los índices de los verbos en el texto
+    verb_indices = [i for i, token_id in enumerate(token_ids) if tags.get(token_id) == "VERB"]
+
+    for verb_index in verb_indices:
+        token_ids[verb_index] = tokenizer.convert_tokens_to_ids(["[MASK]"])[0]
+
+    input_ids = tokenizer.build_inputs_with_special_tokens(token_ids)
+    input_ids = torch.tensor(input_ids).unsqueeze(0)
+
+    with torch.no_grad():
+        outputs = model(input_ids).logits
+
+    lemmatized_tokens = []
+    for i, token_id in enumerate(token_ids):
+        if tags.get(token_id) == "VERB":
+            predicted_token_id = torch.argmax(outputs[0, i + 1]).item()
+            predicted_token = tokenizer.convert_ids_to_tokens(predicted_token_id)
+            lemmatized_tokens.append(predicted_token)
+        else:
+            lemmatized_tokens.append(tokenizer.convert_ids_to_tokens(token_id))
+    
+    lemmatized_text = tokenizer.convert_tokens_to_string(lemmatized_tokens)
+    return lemmatized_text
 
 # Función para filtrar verbos y sustantivos y retornar objetos
 def extract_verbs_and_nouns(segment):
@@ -81,21 +108,15 @@ def extract_verbs_and_nouns(segment):
 # Procesar y mostrar los verbos y sustantivos en cada segmento
 output = []
 for segment in segments:
-    verb_noun_segment = extract_verbs_and_nouns(segment)
+    segment_text = tokenizer.convert_tokens_to_string(segment)
+    lemmatized_text = lemmatize_verbs_with_bert(segment_text)
+    verb_noun_segment = extract_verbs_and_nouns(lemmatized_text)
     output.extend(verb_noun_segment)
+
 
 # Filtrar objetos no deseados
 filtered_output = [item for item in output if item['word'] != "[UNK]" and item['word'] != "[SEP]" and item['word'] != "[PAD]" and item['word'] != "[CLS]" and item['word'] != "[MASK]"]
 
-# Lematizar los verbos y añadirlos a los sustantivos
-lemmatized_output = []
-for item in filtered_output:
-    if item["entity"] == "VERB":
-        lemmatized_verb = lemmatizer("[MASK] " + item['word'] + " [MASK]")[0]['sequence']
-        lemmatized_output.append({"word": lemmatized_verb, "entity": "VERB"})
-    else:
-        lemmatized_output.append(item)
-
 # Convertir el resultado filtrado en una cadena JSON
-json_output = json.dumps({"resultados": lemmatized_output}, ensure_ascii=False)
+json_output = json.dumps({"resultados": filtered_output}, ensure_ascii=False)
 print(json_output)
