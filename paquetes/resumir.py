@@ -1,3 +1,4 @@
+sys.path.append('/home/usuario1/.local/lib/python3.10/site-packages')
 import sys, json
 import re
 from transformers import pipeline

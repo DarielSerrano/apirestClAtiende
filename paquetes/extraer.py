@@ -1,3 +1,4 @@
+sys.path.append('/home/usuario1/.local/lib/python3.10/site-packages')
 # Importar las clases y funciones necesarias de la biblioteca Transformers
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
