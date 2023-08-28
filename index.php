@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $response[] = "Intentando ejecutar script python, espere";
     try {
         // Ejecuta el script de Python y captura la salida
-        $python_output1 = shell_exec('python3.10 paquetes/extraer.py archivos/prueba.txt'); 
-        $python_output2 = shell_exec('python3.10 paquetes/etiquetar.py archivos/prueba.txt'); 
-        $python_output3 = shell_exec('python3.10 paquetes/resumir.py archivos/prueba.txt'); 
+        $python_output1 = shell_exec('python3.10 /var/www/html/apirestClAtiende/paquetes/extraer.py /var/www/html/apirestClAtiende/archivos/prueba.txt'); 
+        $python_output2 = shell_exec('python3.10 /var/www/html/apirestClAtiende/paquetes/etiquetar.py /var/www/html/apirestClAtiende/archivos/prueba.txt'); 
+        $python_output3 = shell_exec('python3.10 /var/www/html/apirestClAtiende/paquetes/resumir.py /var/www/html/apirestClAtiende/archivos/prueba.txt'); 
 
         // Agregar la salida del script de Python al array de respuesta
         $response[] = "Script ejecutado:";
