@@ -79,11 +79,8 @@ def extract_verbs_and_nouns(segment):
 # Procesar y mostrar los verbos y sustantivos en cada segmento
 output = []
 for segment in segments:
-    segment_text = tokenizer.convert_tokens_to_string(segment)
-    lemmatized_text = lemmatize_verbs_with_bert(segment_text)
-    verb_noun_segment = extract_verbs_and_nouns(lemmatized_text)
+    verb_noun_segment = extract_verbs_and_nouns(segment)
     output.extend(verb_noun_segment)
-
 
 # Filtrar objetos no deseados
 filtered_output = [item for item in output if item['word'] != "[UNK]" and item['word'] != "[SEP]" and item['word'] != "[PAD]" and item['word'] != "[CLS]" and item['word'] != "[MASK]"]
