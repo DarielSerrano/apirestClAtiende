@@ -48,34 +48,24 @@ for i, token in enumerate(tokens):
     if i == total_tokens - 1:
         segments.append(current_segment)
 
+
 # Función para lematizar verbos utilizando el modelo BERT
-def lemmatize_verbs_with_bert(text):
-    tokens = tokenizer.tokenize(text)
-    token_ids = tokenizer.convert_tokens_to_ids(tokens)
-
-    # Encontrar los índices de los verbos en el texto
-    verb_indices = [i for i, token_id in enumerate(token_ids) if tags.get(token_id) == "VERB"]
-
-    for verb_index in verb_indices:
-        token_ids[verb_index] = tokenizer.convert_tokens_to_ids(["[MASK]"])[0]
-
-    input_ids = tokenizer.build_inputs_with_special_tokens(token_ids)
+def lemmatize_verbs_with_bert(input_ids):
     input_ids = torch.tensor(input_ids).unsqueeze(0)
 
     with torch.no_grad():
         outputs = model(input_ids).logits
 
     lemmatized_tokens = []
-    for i, token_id in enumerate(token_ids):
-        if tags.get(token_id) == "VERB":
+    for i, token_id in enumerate(input_ids[0]):
+        if tags.get(token_id.item()) == "VERB":
             predicted_token_id = torch.argmax(outputs[0, i + 1]).item()
             predicted_token = tokenizer.convert_ids_to_tokens(predicted_token_id)
             lemmatized_tokens.append(predicted_token)
         else:
-            lemmatized_tokens.append(tokenizer.convert_ids_to_tokens(token_id))
+            lemmatized_tokens.append(tokenizer.convert_ids_to_tokens(token_id.item()))
     
-    lemmatized_text = tokenizer.convert_tokens_to_string(lemmatized_tokens)
-    return lemmatized_text
+    return lemmatized_tokens
 
 # Función para filtrar verbos y sustantivos y retornar objetos
 def extract_verbs_and_nouns(segment):
