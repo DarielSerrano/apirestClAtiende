@@ -18,7 +18,7 @@ WHITESPACE_HANDLER = lambda k: re.sub('\s+', ' ', re.sub('\n+', ' ', k.strip()))
 
 text = WHITESPACE_HANDLER(text)
 
-summarizer = pipeline("summarization", model="csebuetnlp/mT5_multilingual_XLSum")
+summarizer = pipeline("summarization", model="csebuetnlp/mT5_multilingual_XLSum", legacy=True)
 
 # Generate the summary using the summarizer
 summary = summarizer(text, max_length=200, num_beams=4, no_repeat_ngram_size=2)
