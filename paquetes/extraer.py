@@ -1,5 +1,5 @@
 # Importar las clases y funciones necesarias de la biblioteca Transformers
-from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline 
+from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
 
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys, json
@@ -24,12 +24,11 @@ model_name = "mrm8488/bert-spanish-cased-finetuned-pos-16-tags"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForTokenClassification.from_pretrained(model_name)
 
-# Cargar el pipeline de lematización
+# Crear el pipeline de lematización
 lemmatizer = pipeline("fill-mask", model="bert-base-multilingual-cased")
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
-# text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
 
 # Tokenizar el texto completo
 tokens = tokenizer.tokenize(text)
@@ -88,17 +87,15 @@ for segment in segments:
 # Filtrar objetos no deseados
 filtered_output = [item for item in output if item['word'] != "[UNK]" and item['word'] != "[SEP]" and item['word'] != "[PAD]" and item['word'] != "[CLS]" and item['word'] != "[MASK]"]
 
-# Obtener una lista de verbos y sustantivos presentes en el resultado filtrado
-verbs_nouns_to_lemmatize = [item for item in filtered_output if item['entity'] in ["VERB", "NOUN", "PROPN"]]
+# Lematizar los verbos presentes en filtered_output
+lemmatized_output = []
+for item in filtered_output:
+    if item['entity'] == 'VERB':
+        lemmas = lemmatizer(item['word'])
+        if lemmas and 'lemma' in lemmas[0]:
+            item['word'] = lemmas[0]['lemma']
+    lemmatized_output.append(item)
 
-# Lematizar los verbos y sustantivos
-lemmatized_tokens = []
-for token in verbs_nouns_to_lemmatize:
-    lemmas = lemmatizer(token['word'])
-    if lemmas and 'lemma' in lemmas[0]:
-        token['word'] = lemmas[0]['lemma']
-    lemmatized_tokens.append(token)
-
-# Convertir el resultado filtrado con lemas en una cadena JSON
-json_output_lemmas = json.dumps({"resultados_con_lemas": lemmatized_tokens}, ensure_ascii=False)
-print(json_output_lemmas)
+# Convertir el resultado lematizado en una cadena JSON
+json_output = json.dumps({"resultados": lemmatized_output}, ensure_ascii=False)
+print(json_output)
