@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     $response[] = "Intentando ejecutar script python, espere";
     try {
         // Ejecuta el script de Python y captura la salida
-        $python_output = shell_exec('python3.10 paquetes/extraer.py archivos/prueba.txt'); 
-        $python_output2 = shell_exec('python3.10 paquetes/test.py'); 
+        $python_output = exec('python3.10 paquetes/extraer.py archivos/prueba.txt'); 
+        $python_output2 = exec('python3.10 paquetes/test.py'); 
 
         // Agregar la salida del script de Python al array de respuesta
         $response[] = "Script ejecutado:";
