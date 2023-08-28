@@ -17,10 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     try {
         // Ejecuta el script de Python y captura la salida
         $python_output = shell_exec('python3.10 ./paquetes/extraer.py ./archivos/prueba.txt'); 
+        $python_output2 = shell_exec('python3.10 ./paquetes/test.py'); 
 
         // Agregar la salida del script de Python al array de respuesta
         $response[] = "Script ejecutado:";
         $response[] = $python_output;
+        $response[] = $python_output2;
+        
 
     } catch (\Throwable $th) {
         $response[] = "Script no ejecutado, error:";
