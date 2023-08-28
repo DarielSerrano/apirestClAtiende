@@ -11,21 +11,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 // pruebas en index usando post
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    echo json_encode("Intentando ejecutar script python espere");
+    $response = array(); // Crear un array para almacenar las respuestas
+
+    $response[] = "Intentando ejecutar script python, espere";
     try {
         // Ejecuta el script de Python y captura la salida
-        $python_output = shell_exec('python3.10 ./paquetes/extraer.py ./archivos/prueba.txt');  // Reemplaza "tu_script.py" con el nombre de tu script Python
+        $python_output = shell_exec('python3.10 ./paquetes/extraer.py ./archivos/prueba.txt'); 
 
-        // Imprime la salida del script de Python (sin procesar)
-        echo $python_output;
+        // Agregar la salida del script de Python al array de respuesta
+        $response[] = "Script ejecutado:";
+        $response[] = $python_output;
 
-        echo json_encode("Script ejecutado");
-        exit();
     } catch (\Throwable $th) {
-        echo json_encode("Script no ejecutado, error");
+        $response[] = "Script no ejecutado, error:";
         $error = $th->getMessage();
-        echo json_encode($error);
+        $response[] = $error;
     }
-}; 
+
+    // Imprimir la respuesta completa como JSON
+    echo json_encode($response);
+    exit();
+}
 
 ?>
