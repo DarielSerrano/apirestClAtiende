@@ -1,9 +1,10 @@
-sys.path.append('/home/usuario1/.local/lib/python3.10/site-packages')
 # Importar las clases y funciones necesarias de la biblioteca Transformers
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys, json, stanza, re
+
+sys.path.append('/home/usuario1/.local/lib/python3.10/site-packages')
 
 stanza.download('es', package='ancora', processors='tokenize,mwt,pos,lemma', verbose=True) 
 stNLP = stanza.Pipeline(processors='tokenize,mwt,pos,lemma', lang='es', use_gpu=True) 
