@@ -2,7 +2,7 @@ import sys, json
 import re
 from transformers import pipeline
 
-sys.path.append('/home/usuario1/.local/lib/python3.10/site-packages')
+sys.path.append('~/.local/lib/python3.10/site-packages/transformers')
 
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
