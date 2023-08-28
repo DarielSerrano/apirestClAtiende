@@ -2,7 +2,7 @@
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
-import sys, json
+import sys, json, torch 
 
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
