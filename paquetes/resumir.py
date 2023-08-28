@@ -18,7 +18,9 @@ WHITESPACE_HANDLER = lambda k: re.sub('\s+', ' ', re.sub('\n+', ' ', k.strip()))
 
 text = WHITESPACE_HANDLER(text)
 
-summary = pipeline("summarization", model="csebuetnlp/mT5_multilingual_XLSum")
+summarizer = pipeline("summarization", model="csebuetnlp/mT5_multilingual_XLSum")
+
+summary = summarizer(text)
 
 # Realizar un reemplazo específico en el resumen generado
 summary = summary.replace("A continuación, ", "El siguiente documento trata de: ")
