@@ -87,15 +87,15 @@ for segment in segments:
 # Filtrar objetos no deseados
 filtered_output = [item for item in output if item['word'] != "[UNK]" and item['word'] != "[SEP]" and item['word'] != "[PAD]" and item['word'] != "[CLS]" and item['word'] != "[MASK]"]
 
-# Lematizar los verbos presentes en filtered_output
+# Lematizar los verbos y añadirlos a los sustantivos
 lemmatized_output = []
 for item in filtered_output:
-    if item['entity'] == 'VERB':
-        lemmas = lemmatizer(item['word'])
-        if lemmas and 'lemma' in lemmas[0]:
-            item['word'] = lemmas[0]['lemma']
-    lemmatized_output.append(item)
+    if item["entity"] == "VERB":
+        lemmatized_verb = lemmatizer(item['word'])[0]['sequence']
+        lemmatized_output.append({"word": lemmatized_verb, "entity": "VERB"})
+    else:
+        lemmatized_output.append(item)
 
-# Convertir el resultado lematizado en una cadena JSON
+# Convertir el resultado filtrado en una cadena JSON
 json_output = json.dumps({"resultados": lemmatized_output}, ensure_ascii=False)
 print(json_output)
