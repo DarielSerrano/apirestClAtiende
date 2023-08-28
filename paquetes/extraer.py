@@ -1,7 +1,8 @@
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
-import sys, json, stanza, re
-
+import sys
 sys.path.append('/var/www/html/apirestClAtiende/librerias')
+
+import json, stanza, re
 
 # Importar las clases y funciones necesarias de la biblioteca Transformers
 from transformers import AutoTokenizer, AutoModelForTokenClassification
