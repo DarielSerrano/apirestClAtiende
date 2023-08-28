@@ -26,8 +26,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForTokenClassification.from_pretrained(model_name)
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
-#text = (file_get_contents(sys.argv[1]))
-text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
+text = (file_get_contents(sys.argv[1]))
 
 # Dividir el texto en segmentos de no más de 512 tokens
 segment_size = 512
