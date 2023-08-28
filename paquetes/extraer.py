@@ -91,7 +91,7 @@ filtered_output = [item for item in output if item['word'] != "[UNK]" and item['
 lemmatized_output = []
 for item in filtered_output:
     if item["entity"] == "VERB":
-        lemmatized_verb = lemmatizer(item['word'])[0]['sequence']
+        lemmatized_verb = lemmatizer("[MASK] " + item['word'] + " [MASK]")[0]['sequence']
         lemmatized_output.append({"word": lemmatized_verb, "entity": "VERB"})
     else:
         lemmatized_output.append(item)
