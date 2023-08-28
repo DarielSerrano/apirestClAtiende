@@ -1,6 +1,8 @@
 import sys, json
 import re
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import transformers.tokenization_t5
+import transformers.convert_slow_tokenizer
 
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
