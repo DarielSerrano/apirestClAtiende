@@ -25,17 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $response[] = $python_output1;
         $response[] = $python_output2;
         $response[] = $python_output3;
-        
+        // Imprimir la respuesta completa como JSON
+        echo json_encode($response);
+        exit();
 
     } catch (\Throwable $th) {
         $response[] = "Script no ejecutado, error:";
         $error = $th->getMessage();
         $response[] = $error;
     }
-
-    // Imprimir la respuesta completa como JSON
-    echo json_encode($response);
-    exit();
 }
-
 ?>
