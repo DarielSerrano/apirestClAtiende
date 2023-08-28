@@ -16,16 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         // Ejecuta el script de Python y captura la salida
         $python_output = exec('python3.10 paquetes/extraer.py archivos/prueba.txt');
         echo json_encode("\nScript ejecutado\n");
+        // Decodifica la salida JSON en un array asociativo
+        $response_data = json_decode($python_output, true);
+
+        // Imprime la respuesta JSON en pantalla
+        echo json_encode($response_data, JSON_PRETTY_PRINT);
+        exit();
     } catch (\Throwable $th) {
         echo json_encode("\nScript no ejecutado, error\n");
         $error = $th->getMessage();
         echo json_encode($error, JSON_PRETTY_PRINT);
     }
-    // Decodifica la salida JSON en un array asociativo
-    $response_data = json_decode($python_output, true);
-
-    // Imprime la respuesta JSON en pantalla
-    echo json_encode($response_data, JSON_PRETTY_PRINT);
 }; 
 
 ?>
