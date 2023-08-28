@@ -14,13 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     echo json_encode("Intentando ejecutar script python espere");
     try {
         // Ejecuta el script de Python y captura la salida
-        $python_output = shell_exec('ls');
+        $python_output = shell_exec('python tu_script.py');  // Reemplaza "tu_script.py" con el nombre de tu script Python
 
-        // Decodifica la salida JSON en un array asociativo
-        $response_data = json_decode($python_output, true);
+        // Imprime la salida del script de Python (sin procesar)
+        echo $python_output;
 
-        // Imprime la respuesta JSON en pantalla
-        echo json_encode($response_data);
         echo json_encode("Script ejecutado");
         exit();
     } catch (\Throwable $th) {
