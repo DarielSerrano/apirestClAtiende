@@ -4,7 +4,7 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys, json, stanza, re
 
-sys.path.append('~/.local/lib/python3.10/site-packages/transformers')
+sys.path.append('/var/www/html/apirestClAtiende/librerias/')
 
 stanza.download('es', package='ancora', processors='tokenize,mwt,pos,lemma', verbose=True) 
 stNLP = stanza.Pipeline(processors='tokenize,mwt,pos,lemma', lang='es', use_gpu=True) 
