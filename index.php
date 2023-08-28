@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     echo json_encode("Intentando ejecutar script python espere");
     try {
         // Ejecuta el script de Python y captura la salida
-        $python_output = shell_exec('python3.10 paquetes/extraer.py archivos/prueba.txt')
+        $python_output = shell_exec('python3.10 paquetes/extraer.py archivos/prueba.txt');
 
         // Decodifica la salida JSON en un array asociativo
         $response_data = json_decode($python_output, true);
