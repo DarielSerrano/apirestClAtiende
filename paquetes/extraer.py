@@ -1,6 +1,5 @@
 # Importar las clases y funciones necesarias de la biblioteca Transformers
 from transformers import AutoTokenizer, AutoModelForTokenClassification
-from transformers import pipeline
 
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys, json
@@ -25,20 +24,34 @@ model_name = "mrm8488/bert-spanish-cased-finetuned-pos-16-tags"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForTokenClassification.from_pretrained(model_name)
 
-# Crear un procesador NER (Named Entity Recognition) utilizando el modelo "mrm8488/bert-spanish-cased-finetuned-pos-16-tags"
-nlp_ner = pipeline("ner", model=model, tokenizer=tokenizer)
-
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
 # text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
 
-# Dividir el texto en segmentos de no más de 512 tokens
-segment_size = 512
-segments = [text[i:i + segment_size] for i in range(0, len(text), segment_size)]
+# Tokenizar el texto completo
+tokens = tokenizer.tokenize(text)
+total_tokens = len(tokens)
+
+# Parámetros para la segmentación
+max_segment_size = 480
+current_segment = []
+segments = []
+
+# Construir segmentos asegurándose de que las palabras no se dividan
+for i, token in enumerate(tokens):
+    if len(current_segment) + len(token) <= max_segment_size:
+        current_segment.append(token)
+    else:
+        segments.append(current_segment)
+        current_segment = [token]
+
+    if i == total_tokens - 1:
+        segments.append(current_segment)
 
 # Función para filtrar verbos y sustantivos y retornar objetos
 def extract_verbs_and_nouns(segment):
-    tokens = tokenizer(segment, return_tensors="pt", truncation=True, padding=True, max_length=segment_size)
+    segment_text = tokenizer.convert_tokens_to_string(segment)
+    tokens = tokenizer(segment_text, return_tensors="pt", truncation=True, padding=True, max_length=max_segment_size)
     outputs = model(**tokens).logits
     predictions = outputs.argmax(2).tolist()
 
@@ -69,7 +82,7 @@ for segment in segments:
     verb_noun_segment = extract_verbs_and_nouns(segment)
     output.extend(verb_noun_segment)
 
-  # Filtrar objetos no deseados
+# Filtrar objetos no deseados
 filtered_output = [item for item in output if item['word'] != "[UNK]" and item['word'] != "[SEP]" and item['word'] != "[PAD]" and item['word'] != "[CLS]" and item['word'] != "[MASK]"]
 
 # Convertir el resultado filtrado en una cadena JSON
