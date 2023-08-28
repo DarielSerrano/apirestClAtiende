@@ -4,6 +4,9 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys, json, stanza, re
 
+stanza.download('es', package='ancora', processors='tokenize,mwt,pos,lemma', verbose=True) 
+stNLP = stanza.Pipeline(processors='tokenize,mwt,pos,lemma', lang='es', use_gpu=True) 
+
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
     try:
@@ -27,10 +30,6 @@ model = AutoModelForTokenClassification.from_pretrained(model_name)
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
 # text = "Esto es una prueba de texto para librerías de NLP ChileAtiende tíldés Ñuñoa."
-
-stanza.download('es', package='ancora', processors='tokenize,mwt,pos,lemma', verbose=True) 
-stNLP = stanza.Pipeline(processors='tokenize,mwt,pos,lemma', lang='es', use_gpu=True) 
-
 
 # Definición de una función para manipular el texto (eliminar espacios y saltos de línea)
 WHITESPACE_HANDLER = lambda k: re.sub('\s+', ' ', re.sub('\n+', ' ', k.strip()))
