@@ -20,13 +20,17 @@ text = WHITESPACE_HANDLER(text)
 
 summarizer = pipeline("summarization", model="csebuetnlp/mT5_multilingual_XLSum")
 
-summary = summarizer(text)
+# Generate the summary using the summarizer
+summary = summarizer(text, max_length=200, num_beams=4, no_repeat_ngram_size=2)
 
-# Realizar un reemplazo específico en el resumen generado
-summary = summary.replace("A continuación, ", "El siguiente documento trata de: ")
+# Extract the summary text from the output
+summary_text = summary[0]['summary_text']
 
-# Convertir el resumen a formato JSON
-result_json = json.dumps(summary, ensure_ascii=False, indent=4)
+# Perform a specific replacement in the generated summary
+summary_text = summary_text.replace("A continuación, ", "El siguiente documento trata de: ")
 
-# Imprimir el resultado JSON
+# Convert the summary to JSON format
+result_json = json.dumps({"summary": summary_text}, ensure_ascii=False, indent=4)
+
+# Print the JSON result
 print(result_json)
