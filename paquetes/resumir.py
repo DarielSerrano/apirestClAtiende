@@ -33,7 +33,7 @@ summary_text = summary[0]['summary_text']
 summary_text = summary_text.replace("A continuación, ", "El siguiente documento trata de: ")
 
 # Convert the summary to JSON format
-result_json = json.dumps({"summary": summary_text}, ensure_ascii=False, indent=4)
+result_json = json.dumps({"resumen": summary_text}, ensure_ascii=False)
 
 # Print the JSON result
 print(result_json)

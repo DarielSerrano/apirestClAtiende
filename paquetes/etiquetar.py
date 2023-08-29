@@ -64,11 +64,11 @@ def label_text(text, keywords):
             best_label = label
             
     if best_label:
-        return {"label": best_label}
+        return {"etiqueta": best_label}
     else:
-        return {"label": "No categorizado"}
+        return {"etiqueta": "No categorizado"}
 
 result = label_text(text, keywords)
-result_json = json.dumps(result, ensure_ascii=False, indent=4)
+result_json = json.dumps(result, ensure_ascii=False)
 
 print(result_json)
