@@ -66,12 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     catch (\Throwable $th) {
                         $respuesta = "No se logró hacer la transformación de pdf a texto.";
                         $error = $th->getMessage();
-                        $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+                        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                         $nombreArchivo = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
                         $nombreArchivo = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
+                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
                         // Cierra el archivo de log
                         fclose($nombreArchivo);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -95,12 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     catch (\Throwable $th) {
                         $respuesta = "No se logró hacer la extracción NLP.";
                         $error = $th->getMessage();
-                        $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+                        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                         $nombreArchivo = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
                         $nombreArchivo = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
+                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
                         // Cierra el archivo de log
                         fclose($nombreArchivo);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -133,12 +133,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     catch (\Throwable $th) {
                         $respuesta = "No se logró hacer la extracción NLP.";
                         $error = $th->getMessage();
-                        $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+                        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                         $nombreArchivo = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
                         $nombreArchivo = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
+                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
                         // Cierra el archivo de log
                         fclose($nombreArchivo);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -204,12 +204,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     catch (\Throwable $th) {
                         $respuesta = "Hubo un problema al ingresar las palabras clave de la extraccion en la base de datos.";
                         $error = $th->getMessage();
-                        $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+                        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                         $nombreArchivo = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
                         $nombreArchivo = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
+                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
                         // Cierra el archivo de log
                         fclose($nombreArchivo);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 else {
                     $mensaje = "El archivo internamente no se logró mover al directorio.";
-                    $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $nombreArchivo = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $nombreArchivo = fopen($rutaLog, "a");
@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             else {
                 $respuesta = 'El servidor no pudo efectuar la subida de archivo.';
-                $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+                $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                 $nombreArchivo = "logs_de_error.txt";                    
                 // Abre o crea el archivo de log en modo de escritura al final del archivo
                 $nombreArchivo = fopen($rutaLog, "a");
@@ -250,7 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         else{
             $respuesta = 'El archivo adjunto no es un documento PDF.';
-            $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+            $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $nombreArchivo = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $nombreArchivo = fopen($rutaLog, "a");
@@ -266,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     else{
         $respuesta = 'No se encuentra adjunto un documento PDF.';
-        $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
         $nombreArchivo = "logs_de_error.txt";                    
         // Abre o crea el archivo de log en modo de escritura al final del archivo
         $nombreArchivo = fopen($rutaLog, "a");
@@ -341,12 +341,12 @@ function validarContrasena($rut,$pass) {
     catch (\Throwable $th) {
         $respuesta = "No se logró hacer la consulta a la base de datos para validar contraseña.";
         $error = $th->getMessage();
-        $fechaHora = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado                                        
+        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
         $nombreArchivo = "logs_de_error.txt";                    
         // Abre o crea el archivo de log en modo de escritura al final del archivo
         $nombreArchivo = fopen($rutaLog, "a");
         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-        fwrite($nombreArchivo, "[$fechaHora] $error" . PHP_EOL);
+        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
         // Cierra el archivo de log
         fclose($nombreArchivo);
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
