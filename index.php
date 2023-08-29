@@ -36,19 +36,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $response[] = "Script no ejecutado, error:";
         $error = $th->getMessage();
         $response[] = $error;
+        echo json_encode($response,JSON_UNESCAPED_UNICODE);
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
     set_time_limit(1200);
+    $response = array();    
     $pdf = "Pension_Garantizada_Universal_PGU.pdf";
     $txt = "Pension_Garantizada_Universal_PGU.txt";
-    if (shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt")) {
-        echo json_encode("Funciono como apache",JSON_UNESCAPED_UNICODE);
-    } else {
-        echo json_encode("No funciono como apache",JSON_UNESCAPED_UNICODE);
-    }    
+    try {
+        shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt")
+        $response[] = "Funciono como apache";
+        echo json_encode($response,JSON_UNESCAPED_UNICODE);
+    } catch (\Throwable $th) {
+        $response[] = "No funciono como apache";
+        $error = $th->getMessage();
+        $response[] = $error;
+        echo json_encode($response,JSON_UNESCAPED_UNICODE);
+    }
 }
 
 ?>
