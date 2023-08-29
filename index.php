@@ -190,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $output); // La salida del comando
+                        $respuesta[] = implode("\n", $output); // La salida del comando
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
@@ -259,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $output); // La salida del comando
+                        $respuesta[] = implode("\n", $output); // La salida del comando
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
@@ -370,7 +370,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $output); // La salida del comando
+                        $respuesta[] = implode("\n", $output); // La salida del comando
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
