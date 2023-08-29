@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         // Abre o crea el archivo de log en modo de escritura al final del archivo
         $rutaLog = fopen($rutaLog, "a");
         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-        fwrite($rutaLog, "[$fechaHora]_$respuesta\_$error" . PHP_EOL);
+        fwrite($rutaLog, "[$fechaHora]_$respuesta_$error" . PHP_EOL);
         // Cierra el archivo de log
         fclose($rutaLog);
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
