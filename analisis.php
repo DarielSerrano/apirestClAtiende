@@ -24,26 +24,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    }
-    else {
-        // Realizar otras validaciones específicas, como formato de RUT válido
-        // Verificación de contraseña 
-        if (!formatoRUTValido($rut)) {
-            $respuesta = "Rut en formato incorrecto, revise el dígito verificador.";
-            header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-            header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-            exit;
-        } 
-        elseif (!validarContrasena($rut, $UsuarioContrasena)) {
-            $respuesta = "Contraseña incorrecta.";
-            header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-            header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-            exit;
-        }         
-    }    
-    if (!empty($_FILES['archivo'])) {
+    }// Realizar otras validaciones específicas, como formato de RUT válido
+    elseif (!formatoRUTValido($rut)) {
+        $respuesta = "Rut en formato incorrecto, revise el dígito verificador.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    } // Verificación de contraseña 
+    elseif (!validarContrasena($rut, $UsuarioContrasena)) {
+        $respuesta = "Contraseña incorrecta.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }           
+    elseif (!empty($_FILES['archivo'])) {
         if ($_FILES['archivo']['type'] == 'application/pdf') {    
             $ruta_destino = "archivos/";
             $namefinal = trim ($_FILES['archivo']['name']);  
