@@ -143,12 +143,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 //intentar ejecutar la aplicación pdftotext 
                 try {
-                    // Ejecutar el comando y obtener la salida
-                    $output = shell_exec("cd /var/www/html/apirestClAtiende && pdftotext a");
+                    $output = array();
+                    $return_var = 0;
+                    
+                    // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
+                    exec("cd /var/www/html/apirestClAtiende && pdftotext a", $output, $return_var);
 
-                    // Si la salida es null, entonces hubo un problema
-                    if ($output != true) {
-                        throw new Exception($output);
+                    // Verificar el estado de retorno para determinar si hubo un error
+                    if ($return_var === 0) {
+                        // El comando se ejecutó correctamente
+                        $response = implode("\n", $output); // La salida del comando
+                        echo "Comando ejecutado exitosamente:\n$response";
+                    } else {
+                        // Hubo un error al ejecutar el comando
+                        $error_message = implode("\n", $output); // Los mensajes de error generados
+                        throw new Exception($error_message);
                     }
                 } 
                 catch (Exception $th) {
@@ -164,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     fclose($rutaLog);
                     header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                    echo json_encode($error, JSON_UNESCAPED_UNICODE);
+                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
                 }
 
