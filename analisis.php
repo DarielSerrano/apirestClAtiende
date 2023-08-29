@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         exit;
                     }                    
                     try { // guardado en BD
-                        // Inicializar los contadores
+                        /* // Inicializar los contadores
                         $frecuenciaVerbos = [];
                         $frecuenciaSustantivos = [];
 
@@ -211,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
 
                         // Cerrar la conexión
-                        $conn->close();
+                        $conn->close(); */
 
                     } 
                     catch (\Throwable $th) {
@@ -300,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     else{
-        $respuesta = "El archivo no se adjunto.":
+        $respuesta = "El archivo no se adjunto.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);

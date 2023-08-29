@@ -1,6 +1,6 @@
 <?php
 
-
+/* 
 session_start();
 
 // Aquí debes realizar la validación del usuario y obtener el rut y rol desde la base de datos.
@@ -13,5 +13,5 @@ if(validarUsuario($username, $password)) {
     // Sesión creada exitosamente, redirigir a una página o mostrar contenido.
 } else {
     // Credenciales incorrectas, mostrar mensaje de error o redirigir a la página de inicio de sesión.
-}
+} */
 ?>
