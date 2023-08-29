@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     try {
         shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt");
         $response[] = "Funciono como apache";
+        $response[] = shell_exec ("cd /var/www/html/apirestClAtiende/archivos && ls -als");
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $th) {
         $response[] = "No funciono como apache";
