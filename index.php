@@ -97,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $respuesta[] = $rut;
     $respuesta[] = $pass;
+    $respuesta[] = $_FILES['archivo'];
     header("HTTP/1.1 200 OK");
     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
