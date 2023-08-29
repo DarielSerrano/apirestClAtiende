@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 //intentar ejecutar la aplicación pdftotext 
                 try {
-                    shell_exec ("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt");
+                    shell_exec ("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf");
                 } 
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al hacer la transformación de pdf a texto.";
