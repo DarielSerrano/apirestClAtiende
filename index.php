@@ -59,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     } */
     
     try {
-        return false;
+        // Código que puede generar una excepción
+        throw new Exception("¡Excepción intencional!");
     } catch (\Throwable $th) {
         $respuesta = "No se logró hacer la prueba.";
         $error = $th->getMessage();
