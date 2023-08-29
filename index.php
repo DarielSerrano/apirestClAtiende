@@ -141,6 +141,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $ruta_txt = $ruta_destino . $ruta_txt;            
                 $ruta_pdf = $ruta_archivo;
                 
+                //intentar ejecutar la aplicación pdftotext 
+                try {
+                    shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $ruta_pdf $ruta_txt");
+                } 
+                catch (\Throwable $th) {
+                    $respuesta = "Hubo un problema al hacer la transformación de pdf a texto.";
+                    $error = $th->getMessage();
+                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $rutaLog = "logs_de_error.txt";                    
+                    // Abre o crea el archivo de log en modo de escritura al final del archivo
+                    $rutaLog = fopen($rutaLog, "a");
+                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                    // Cierra el archivo de log
+                    fclose($rutaLog);
+                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
+
                 
             }
             else {
