@@ -101,28 +101,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-        exit;
     } 
     elseif (empty($UsuarioContrasena)) {
         $respuesta = "Debe completar con su contraseña.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-        exit;
     }// Realizar otras validaciones específicas, como formato de RUT válido
     elseif (!formatoRUTValido($rut)) {
         $respuesta = "Rut en formato incorrecto, revise el dígito verificador.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-        exit;
     } // Verificación de contraseña 
     elseif (!validarContrasena($rut, $UsuarioContrasena)) {
         $respuesta = "Contraseña incorrecta.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-        exit;
     }           
     elseif (!empty($_FILES['archivo'])) {
         $respuesta[] = $rut;
@@ -137,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-        exit;
     }
 }
 
