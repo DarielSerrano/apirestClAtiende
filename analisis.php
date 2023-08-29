@@ -4,8 +4,8 @@ date_default_timezone_set('America/Santiago');
 //codigo del metodo post para recibir pdfs
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener los datos del formulario
-    $rut = $_POST['UsuarioRut'];
-    $UsuarioContrasena = $_POST['UsuarioContrasena'];
+    $rut = $_POST['rut'];
+    $UsuarioContrasena = $_POST['password'];
 
     // Eliminar caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
