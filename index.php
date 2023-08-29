@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 } 
                 catch (Exception $th) {
-                    $respuesta = "Mensaje error";
+                    $respuesta = "Hubo un problema al generar el etiquetado.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
@@ -218,14 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }
                 
-                // 
                 
-                try { // Inicio creacion automatica de etiqueta
-                    header("HTTP/1.1 200 OK");
-                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                    echo json_encode($salida, JSON_UNESCAPED_UNICODE);                                                                   
-                }
-                  
                 try { // guardado en BD
                     //code...
                 } 
