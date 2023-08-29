@@ -144,21 +144,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 //intentar ejecutar la aplicación pdftotext 
                 try {
                     // Ejecutar el comando y obtener la salida
-                    $output = shell_exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt");
+                    $output = shell_exec("cd /var/www/html/apirestClAtiende && pdftotext a");
 
                     // Si la salida es null, entonces hubo un problema
-                    if ($output === null) {
-                        throw new Exception("Hubo un problema al hacer la transformación de pdf a texto.");
+                    if ($output != true) {
+                        throw new Exception($output);
                     }
                 } 
                 catch (Exception $th) {
+                    $respuesta = "Hubo un problema al hacer la transformación de pdf a texto.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
                     // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                    fwrite($rutaLog, "[$fechaHora]_$error" . PHP_EOL);
+                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
                     header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
