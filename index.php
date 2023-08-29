@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
     set_time_limit(1200);
     $response = array();    
-    $pdf = "Pension_Garantizada_Universal_PGU.pdf";
+    /* $pdf = "Pension_Garantizada_Universal_PGU.pdf";
     $txt = "Pension_Garantizada_Universal_PGU.txt";
     try {
         shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt");
@@ -56,7 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         $error = $th->getMessage();
         $response[] = $error;
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
-    }
+    } */
+    $response[] = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado  ;
+    echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
 
 ?>

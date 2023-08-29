@@ -15,12 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     } 
     elseif (empty($UsuarioContrasena)) {
         $respuesta = "Debe completar con su contraseña.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     }
     else {
         // Realizar otras validaciones específicas, como formato de RUT válido
@@ -30,12 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
             header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+            exit;
         } 
         elseif (!validarContrasena($rut, $UsuarioContrasena)) {
             $respuesta = "Contraseña incorrecta.";
             header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
             header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+            exit;
         }         
     }    
     if (!empty($_FILES['archivo'])) {
@@ -44,19 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $namefinal = trim ($_FILES['archivo']['name']);  
             $namefinal = preg_replace('([^[A-Z][a-z]*\s*.+])', '', $namefinal);
             $namefinal = preg_replace('/\s+/', '_', $namefinal);
-            $namefinal = strtolower($namefinal);
-            $uploadfile = $ruta_destino . $namefinal; 
+            $nombreDocumento = $namefinal;
+            $ruta_archivo = $ruta_destino . $namefinal; 
             if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
-                if(move_uploaded_file($_FILES['archivo']['tmp_name'], $uploadfile)) {      
+                if(move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta_archivo)) {      
                     //guardar en la variable txt el nombre del archivo, pero cambiando la extensión 
-                    $txt= preg_replace("/pdf/", 'txt', $namefinal);                    
+                    $ruta_txt= preg_replace("/pdf/", 'txt', $namefinal);                    
                     //creación de rutas y nombres 
-                    $txt = $ruta_destino . $txt;            
-                    $pdf = $ruta_destino . $namefinal;  
+                    $ruta_txt = $ruta_destino . $ruta_txt;            
+                    $ruta_pdf = $ruta_archivo;
                     
                     //intentar ejecutar la aplicación pdftotext 
                     try {
-                        shell_exec ("cd /var/www/html/apirestClAtiende && pdftotext $pdf $txt");
+                        shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $ruta_pdf $ruta_txt");
                     } 
                     catch (\Throwable $th) {
                         $respuesta = "No se logró hacer la transformación de pdf a texto.";
@@ -80,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $resultados = null;
                     try {
                         //ejecucion extraccion NLP
-                        exec("python3.10 $etiquetar $txt", $salida);
+                        exec("python3.10 $etiquetar $ruta_txt", $salida);
                         $jsonOutput = implode("", $salida);
                         $data = json_decode($jsonOutput, true);
                         
@@ -118,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $resultados = null;
                     try {
                         //ejecucion extraccion NLP
-                        shell_exec("$extraer $txt", $salida);
+                        shell_exec("$extraer $ruta_txt", $salida);
                         $jsonOutput = implode("", $salida);
                         $data = json_decode($jsonOutput, true);
                         
