@@ -94,10 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Eliminar caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
-
+    bdTest();
     $respuesta[] = $rut;
     $respuesta[] = $pass;
-    $respuesta[] = $_FILES['archivo'];
+    $respuesta[] = $_FILES['archivo'];    
     header("HTTP/1.1 200 OK");
     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
@@ -238,7 +238,7 @@ function validarContrasena($rut,$pass) {
         include 'conexiondb.php';
         try {
             // Consulta SQL con cláusula WHERE
-            $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $rut";
+            $sql = "SELECT * FROM Usuario";
             $result = $conn->query($sql);
         } 
         catch (\Throwable $th) {
@@ -262,10 +262,9 @@ function validarContrasena($rut,$pass) {
             // Encontrado, procesa los resultados
             while ($row = $result->fetch_assoc()) {
                 // Accede a los valores en $row
-                $Contrasena = $row["UsuarioContrasena"];
+                echo json_encode($row, JSON_UNESCAPED_UNICODE);        
             }
         } 
-    
         // Cerrar la conexión
         $conn->close();         
     }
