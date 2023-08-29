@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     //intentar ejecutar la aplicación pdftotext 
                     try {
-                        exec ("pdftotext.exe $pdf $txt");
+                        shell_exec ("cd /var/www/html/apirestClAtiende && pdftotext $pdf $txt");
                     } 
                     catch (\Throwable $th) {
                         $respuesta = "No se logró hacer la transformación de pdf a texto.";
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $resultados = null;
                     try {
                         //ejecucion extraccion NLP
-                        exec("$extraer $txt", $salida);
+                        shell_exec("$extraer $txt", $salida);
                         $jsonOutput = implode("", $salida);
                         $data = json_decode($jsonOutput, true);
                         
