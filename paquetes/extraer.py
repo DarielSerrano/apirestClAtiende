@@ -1,6 +1,6 @@
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys
-sys.path.append('../')
+sys.path.append('/var/www/html/apirestClAtiende/librerias')
 
 import json, stanza, re
 
