@@ -140,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 //creación de rutas y nombres 
                 $ruta_txt = $ruta_destino . $ruta_txt;            
                 $ruta_pdf = $ruta_archivo;
+                echo json_encode("$ruta_txt $ruta_pdf", JSON_UNESCAPED_UNICODE);
                 
                 //intentar ejecutar la aplicación pdftotext 
                 try {
