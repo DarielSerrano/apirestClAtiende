@@ -21,11 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Ejecuta el script de Python y captura la salida
         $python_output1 = shell_exec('cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py archivos/prueba.txt'); 
         $python_output2 = shell_exec('cd /var/www/html/apirestClAtiende && python3.10 /var/www/html/apirestClAtiende/paquetes/etiquetar.py /var/www/html/apirestClAtiende/archivos/prueba.txt'); 
-
+        $python_output1 = shell_exec('cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/resumir.py archivos/prueba.txt'); 
+        
         // Agregar la salida del script de Python al array de respuesta
         $response[] = "Script ejecutado:";
         $response[] = $python_output1;
         $response[] = $python_output2;
+        $response[] = $python_output3;
         
         // Imprimir la respuesta completa como JSON
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
