@@ -44,12 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     set_time_limit(1200);
     $pdf = "Pension_Garantizada_Universal_PGU.pdf";
     $txt = "Pension_Garantizada_Universal_PGU.txt";
-    if (shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt");) {
+    if (shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt")) {
         echo json_encode("Funciono como apache",JSON_UNESCAPED_UNICODE);
     } else {
         echo json_encode("No funciono como apache",JSON_UNESCAPED_UNICODE);
-    }
-    
+    }    
 }
 
 ?>
