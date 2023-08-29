@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
 
                     // Inicio creacion automatica de etiqueta
-                    $etiquetar = "paquetes/etiquetar.py";
+                    /* $etiquetar = "paquetes/etiquetar.py";
                     $resultados = null;
                     try {
                         //ejecucion extraccion NLP
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                         exit;
-                    }
+                    } */
                     
 
                     // Inicio creacion del documento en DB
@@ -114,11 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
                     // Inicio extraccion palabras clave y guardado en DB
-                    $extraer = "paquetes/extraer.py";
+                    $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
                     $resultados = null;
                     try {
                         //ejecucion extraccion NLP
-                        exec("python3.10 $extraer $txt", $salida);
+                        exec("$extraer $txt", $salida);
                         $jsonOutput = implode("", $salida);
                         $data = json_decode($jsonOutput, true);
                         
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         exit;
                     }
                     try {
-                        // Inicializar los contadores
+                        /* // Inicializar los contadores
                         $frecuenciaVerbos = [];
                         $frecuenciaSustantivos = [];
 
@@ -193,7 +193,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
 
                         // Cerrar la conexión
-                        $conn->close();
+                        $conn->close(); */
+
                     } 
                     catch (\Throwable $th) {
                         $respuesta = "Hubo un problema al ingresar las palabras clave de la extraccion en la base de datos.";
