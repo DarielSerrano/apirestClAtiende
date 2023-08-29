@@ -4,6 +4,7 @@
 if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
     header("HTTP/1.1 200 OK");
+    echo (ini_get("upload_max_filesize"));
     $respuesta = "Api de analisis, busqueda y preguntas frecuentes";
     echo json_encode ($respuesta); 
 }; 
