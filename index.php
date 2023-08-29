@@ -39,4 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
+    set_time_limit(1200);
+    $pdf = "Pension_Garantizada_Universal_PGU.pdf";
+    $txt = "Pension_Garantizada_Universal_PGU.txt";
+    if (shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt");) {
+        echo json_encode("Funciono como apache",JSON_UNESCAPED_UNICODE);
+    } else {
+        echo json_encode("No funciono como apache",JSON_UNESCAPED_UNICODE);
+    }
+    
+}
+
 ?>
