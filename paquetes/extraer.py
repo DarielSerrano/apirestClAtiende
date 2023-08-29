@@ -7,7 +7,7 @@ import json, stanza, re
 # Importar las clases y funciones necesarias de la biblioteca Transformers
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
-stanza.download('es', package='ancora', processors='tokenize,mwt,pos,lemma', verbose=True) 
+stanza.download('es', package='ancora', processors='tokenize,mwt,pos,lemma', verbose=True,model_dir="../stanza_resources") 
 stNLP = stanza.Pipeline(processors='tokenize,mwt,pos,lemma', lang='es', use_gpu=True, model_dir="../stanza_resources") 
 
 # Funcion para leer archivos por ruta
