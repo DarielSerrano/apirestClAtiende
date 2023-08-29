@@ -102,7 +102,7 @@ for segment in segments:
     output.extend(verb_noun_segment)
 
 # Filtrar objetos no deseados
-filtered_output = [item for item in output if item['word'] != "[UNK]" and item['word'] != "[SEP]" and item['word'] != "[PAD]" and item['word'] != "[CLS]" and item['word'] != "[MASK]"]
+filtered_output = [item for item in output if item['palabra'] != "[UNK]" and item['palabra'] != "[SEP]" and item['palabra'] != "[PAD]" and item['palabra'] != "[CLS]" and item['palabra'] != "[MASK]"]
 
 # Convertir el resultado filtrado en una cadena JSON
 json_output = json.dumps({"resultados": filtered_output}, ensure_ascii=False)
