@@ -5,39 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     header("HTTP/1.1 200 OK");
     $respuesta = "Api de analisis, busqueda y preguntas frecuentes";
-    echo json_encode ($respuesta); 
-    include 'conexiondb.php';
-    try {
-        // Consulta SQL con cláusula WHERE
-        $sql = "SELECT * FROM Usuario";
-        $result = $conn->query($sql);
-    } 
-    catch (\Throwable $th) {
-        $respuesta = "No se logró hacer la consulta a la base de datos para validar contraseña.";
-        $error = $th->getMessage();
-        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-        $rutaLog = "logs_de_error.txt";                    
-        // Abre o crea el archivo de log en modo de escritura al final del archivo
-        $rutaLog = fopen($rutaLog, "a");
-        // Escribe la excepcion junto con la fecha y hora en el archivo de log
-        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
-        // Cierra el archivo de log
-        fclose($rutaLog);
-        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-        exit;
-    }        
-    
-    if ($result->num_rows > 0) {
-        // Encontrado, procesa los resultados
-        while ($row = $result->fetch_assoc()) {
-            // Accede a los valores en $row
-            echo json_encode($row, JSON_UNESCAPED_UNICODE);        
-        }
-    } 
-    // Cerrar la conexión
-    $conn->close();     
+    echo json_encode ($respuesta);      
 }; 
 
 /* if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -126,12 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Eliminar caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
-    $respuesta[] = $rut;
-    $respuesta[] = $pass;
-    $respuesta[] = $_FILES['archivo'];    
-    header("HTTP/1.1 200 OK");
-    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
 
     // Validar si el RUT y la contraseña no están vacíos
     if (empty($rut)) {
@@ -164,15 +126,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                                 
     }
+    elseif ($_FILES['archivo']['type'] == 'application/pdf') {    
+        $ruta_destino = "archivos/";
+        $namefinal = trim ($_FILES['archivo']['name']);  
+        $namefinal = preg_replace('([^[A-Z][a-z]*\s*.+])', '', $namefinal);
+        $namefinal = preg_replace('/\s+/', '_', $namefinal);
+        $nombreDocumento = $namefinal;
+        $ruta_archivo = $ruta_destino . $namefinal; 
+        if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
+            if(move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta_archivo)) {      
+                //guardar en la variable txt el nombre del archivo, pero cambiando la extensión 
+                $ruta_txt= preg_replace("/pdf/", 'txt', $namefinal);                    
+                //creación de rutas y nombres 
+                $ruta_txt = $ruta_destino . $ruta_txt;            
+                $ruta_pdf = $ruta_archivo;
+                
+                
+            }
+            else {
+                $respuesta = "El archivo internamente no se logró mover al directorio.";
+                header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                exit;
+            }     
+        }
+        else {
+            $respuesta = 'El servidor no pudo efectuar la subida de archivo.';
+            header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+            header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+            exit;
+        }                               
+    }
     else{
-        $respuesta[] = $rut;
-        $respuesta[] = $pass;
-        $respuesta[] = "Archivo OK";
-        header("HTTP/1.1 200 OK");
+        $respuesta = 'El archivo adjunto no es un documento PDF.';
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     }
 }
+
 
 function formatoRUTValido($rut) {
     // Eliminar caracteres no válidos
