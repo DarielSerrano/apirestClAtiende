@@ -8,37 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     echo json_encode ($respuesta);      
 }; 
 
-/* if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
-    set_time_limit(1200);
-
-    $response = array();
-
-    $response[] = "Intentando ejecutar script python, espere";
-    try {
-        // Ejecuta el script de Python y captura la salida
-        $python_output1 = shell_exec('cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py archivos/prueba.txt'); 
-        $python_output2 = shell_exec('cd /var/www/html/apirestClAtiende && python3.10 paquetes/etiquetar.py archivos/prueba.txt'); 
-        $python_output3 = shell_exec('cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py archivos/prueba.txt'); 
-        
-        // Agregar la salida del script de Python al array de respuesta
-        $response[] = "Script ejecutado:";
-        $response[] = $python_output1;
-        $response[] = $python_output2;
-        $response[] = $python_output3;
-        
-        // Imprimir la respuesta completa como JSON
-        echo json_encode($response,JSON_UNESCAPED_UNICODE);
-        exit();
-
-    } catch (\Throwable $th) {
-        $response[] = "Script no ejecutado, error:";
-        $error = $th->getMessage();
-        $response[] = $error;
-        echo json_encode($response,JSON_UNESCAPED_UNICODE);
-    }
-} */
-
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
     set_time_limit(1200);
@@ -190,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // El comando se ejecutó correctamente
-                        $respuesta[] = implode("\n", $output); // La salida del comando
+                        $respuesta = implode("\n", $output); // La salida del comando
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
@@ -259,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // El comando se ejecutó correctamente
-                        $respuesta[] = implode("\n", $output); // La salida del comando
+                        $respuesta = implode("\n", $output); // La salida del comando
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
@@ -370,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // El comando se ejecutó correctamente
-                        $respuesta[] = implode("\n", $output); // La salida del comando
+                        $respuesta = implode("\n", $output); // La salida del comando
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
