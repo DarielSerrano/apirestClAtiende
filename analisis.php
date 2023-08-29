@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Inicio creacion automatica de etiqueta y guardado en BD
                     $etiquetar = "cd /var/www/html/apirestClAtiende && python3.10 paquetes/etiquetar.py";
                     try { // Inicio creacion automatica de etiqueta
-                        $salida = shell_exec("python3.10 $etiquetar $ruta_txt");
+                        $salida = shell_exec("$etiquetar $ruta_txt");
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($salida, JSON_UNESCAPED_UNICODE);                                                                   
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
                     try {
                         //ejecucion extraccion NLP
-                        shell_exec("$extraer $ruta_txt", $salida);
+                        $salida = shell_exec("$extraer $ruta_txt");
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($salida, JSON_UNESCAPED_UNICODE);                                                                       
@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Inicio creacion del resumen de documento NLP y guardado en BD
                     $resumir = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py";
                     try { // Inicio creacion automatica de etiqueta
-                        $salida = shell_exec("python3.10 $resumir $ruta_txt");
+                        $salida = shell_exec("$resumir $ruta_txt");
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($salida, JSON_UNESCAPED_UNICODE);
