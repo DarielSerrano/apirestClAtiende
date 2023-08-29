@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 }; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
-    include 'validarsesionadmin.php';
+    include 'sesiones/validarsesionadmin.php';
     // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
     set_time_limit(1200);
     $response = array();    
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     } catch (\Throwable $th) {
         $respuesta = "No se logró hacer la prueba.";
         $error = $th->getMessage();
-        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+        $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                     
         $rutaLog = "logs_de_error.txt";                    
         // Abre o crea el archivo de log en modo de escritura al final del archivo
         $rutaLog = fopen($rutaLog, "a");
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     }
 
     date_default_timezone_set('America/Santiago');
-    $response[] = preg_replace('/\s+/', '_', date("Y-m-d H:i:s"));
+    $response[] = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual
     
     echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
@@ -58,13 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     date_default_timezone_set('America/Santiago');
     set_time_limit(1200);
     $response = array();    
+    $json_objects = array();
     // Obtener los datos del formulario
     $rut = $_POST['rut'];
     $pass = $_POST['password'];
-
     // Eliminar caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
-
     // Validar si el RUT y la contraseña no están vacíos
     if (empty($rut)) {
         $respuesta = "Debe completar con su Rut.";
@@ -98,33 +97,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     elseif ($_FILES['archivo']['type'] == 'application/pdf') {    
         $ruta_destino = "archivos/";
-        $namefinal = trim ($_FILES['archivo']['name']);  
-        $namefinal = preg_replace('([^[A-Z][a-z]*\s*.+])', '', $namefinal);
-        $namefinal = preg_replace('/\s+/', '_', $namefinal);
+        $namefinal = trim ($_FILES['archivo']['name']); 
+        $namefinal = preg_replace('/\s/', '_', $namefinal);
+        $namefinal = correccion_tildes($namefinal);
+        $namefinal = preg_replace('/[^A-Za-z\s.:-_]/', '', $namefinal);        
         $nombreDocumento = $namefinal;
+        $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual 
+        $namefinal = $fechaHora."_".$namefinal;
         $ruta_archivo = $ruta_destino . $namefinal; 
+        echo ($nombreDocumento);
         if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
             if(move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta_archivo)) {      
                 //guardar en la variable txt el nombre del archivo, pero cambiando la extensión 
                 $ruta_txt= preg_replace("/pdf/", 'txt', $namefinal);                    
-                //creación de rutas y nombres 
+                //creación de rutas, nombres y variables
                 $ruta_txt = $ruta_destino . $ruta_txt;            
-                $ruta_pdf = $ruta_archivo;
-                
+                $ruta_pdf = $ruta_archivo;                
                 //intentar ejecutar la aplicación pdftotext 
                 try {
                     $output = array();
                     $return_var = 0;
                     $errcapture = "2>&1";
-
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
                     exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt $errcapture", $output, $return_var);
-
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
-                        /* // El comando se ejecutó correctamente
-                        $response = implode("\n", $output); // La salida del comando
-                        echo "Comando ejecutado exitosamente:\n$response"; */
+                        /* // El comando se ejecutó correctamente*/
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -134,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al hacer la transformación de pdf a texto.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
@@ -146,8 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }
-                
+                }      
+                $dbetiqueta = null;       
                 // Inicio creacion automatica de etiqueta y guardado en BD
                 try {
                     $output = array();
@@ -155,18 +153,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $etiquetar = "cd /var/www/html/apirestClAtiende && python3.10 paquetes/etiquetar.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    exec("$etiquetar $ruta_txt $errcapture", $output, $return_var);
-                    
+                    exec("$etiquetar $ruta_txt $errcapture", $output, $return_var);                    
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // Filtrar y extraer los objetos JSON de la salida
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
-                                $json_objects = json_decode($line, true);
+                                $dbetiqueta = json_decode($line, true);
                             }
-                        }
-
-                        // Puedes usar $json_objects según tus necesidades
+                        }                        
+                        $respuesta = "Etiquetado exitoso.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
                         echo json_encode($json_objects, JSON_UNESCAPED_UNICODE);                          
@@ -179,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al generar el etiquetado.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
@@ -191,14 +187,81 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }                            
-                try { // guardado en BD
-                    //code...
+                }                  
+                $dbidetiqueta = null;                          
+                try { // Inicio busqueda de id por nombre etiqueta extraida de documento
+                    include 'conexiondb.php';                                    
+                    // Consulta SQL con cláusula WHERE
+                    $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
+                    // Ejecutar la consulta
+                    $result = $conn->query($sql);                    
+                    if ($result) {
+                        if ($result->num_rows > 0) {
+                            // Encontrado, procesa los resultados
+                            while ($row = $result->fetch_assoc()) {
+                                // Accede a los valores en $row
+                                $dbidetiqueta = $row["idDocumentosCategoria"];
+                            }
+                        } else {
+                            // No se encontraron resultados
+                        }
+                    } else {
+                        // Manejar error en la consulta
+                        $error_message = $conn->error; // Mensaje de error generado
+                        $conn->close(); 
+                        throw new Exception($error_message);
+                    } 
+                    // Cerrar la conexión
+                    $conn->close();                                                                                                  
                 } 
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al guardar la etiqueta.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $rutaLog = "logs_de_error.txt";                    
+                    // Abre o crea el archivo de log en modo de escritura al final del archivo
+                    $rutaLog = fopen($rutaLog, "a");
+                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                    // Cierra el archivo de log
+                    fclose($rutaLog);
+                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
+                try { // Inicio busqueda de id por nombre etiqueta extraida de documento
+                    include 'conexiondb.php';
+                    $dbidetiqueta;                    
+                    // Consulta SQL con cláusula WHERE
+                    $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";
+                    
+                    // Ejecutar la consulta
+                    $result = $conn->query($sql);
+                    
+                    if ($result) {
+                        if ($result->num_rows > 0) {
+                            // Encontrado, procesa los resultados
+                            while ($row = $result->fetch_assoc()) {
+                                // Accede a los valores en $row
+                                $a = $row["idDocumentosCategoria"];
+                            }
+                        } else {
+                            // No se encontraron resultados
+                        }
+                    } else {
+                        // Manejar error en la consulta
+                        $error_message = $conn->error; // Mensaje de error generado
+                        $conn->close(); 
+                        throw new Exception($error_message);
+                    } 
+                    // Cerrar la conexión
+                    $conn->close();                                                                                                  
+                } 
+                catch (\Throwable $th) {
+                    $respuesta = "Hubo un problema al guardar la etiqueta.";
+                    $error = $th->getMessage();
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                      
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
@@ -213,16 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 
 
-                // Inicio creacion del documento y guardado en BD
-                try {
-                    $nombreDocumento;
-                } 
-                catch (\Throwable $th) {
-                    //throw $th;
-                }
-
-
-                // Inicio extraccion palabras clave NLP y guardado en BD
+                /* // Inicio extraccion palabras clave NLP y guardado en BD
                 try {
                     $output = array();
                     $return_var = 0;
@@ -253,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al hacer la extracción NLP.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
@@ -267,7 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }                                   
                 try { // guardado en BD
-                    /* // Inicializar los contadores
+                    // Inicializar los contadores
                     $frecuenciaVerbos = [];
                     $frecuenciaSustantivos = [];
 
@@ -318,13 +372,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
 
                     // Cerrar la conexión
-                    $conn->close(); */
+                    $conn->close();
 
                 } 
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al guardar la extraccion.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
@@ -369,7 +423,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al generar el resumen.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                     
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
@@ -388,7 +442,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al guardar la etiqueta.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                      
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
@@ -400,7 +454,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }                                           
+                }  */                                          
             }
             else {
                 $respuesta = "El archivo internamente no se logró mover al directorio.";
@@ -469,56 +523,17 @@ function formatoRUTValido($rut) {
     } 
 }
 
-function validarContrasena($rut,$pass) {
+function correccion_tildes($text) {
+    // Mapeo de caracteres con tilde a sus versiones sin tilde
+    $replace_map = array(
+        'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+        'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
+    );
     
-    // Declarar la variable $Contrasena
-    $Contrasena = null;
+    // Reemplazar los caracteres con tilde por sus versiones sin tilde
+    $updated_text = strtr($text, $replace_map);
     
-    // funcion para transformar la contraseña a hash
-    // $passwordhash = password_hash($pass, PASSWORD_DEFAULT);
-    include 'conexiondb.php';
-
-    try {
-        // Consulta SQL con cláusula WHERE
-        $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $rut";
-        $result = $conn->query($sql);
-    } 
-    catch (\Throwable $th) {
-        $respuesta = "No se logró hacer la consulta a la base de datos para validar contraseña.";
-        $error = $th->getMessage();
-        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-        $rutaLog = "logs_de_error.txt";                    
-        // Abre o crea el archivo de log en modo de escritura al final del archivo
-        $rutaLog = fopen($rutaLog, "a");
-        // Escribe la excepcion junto con la fecha y hora en el archivo de log
-        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
-        // Cierra el archivo de log
-        fclose($rutaLog);
-        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-        exit;
-    }        
-
-    if ($result->num_rows > 0) {
-        // Encontrado, procesa los resultados
-        while ($row = $result->fetch_assoc()) {
-            // Accede a los valores en $row
-            $Contrasena = $row["UsuarioContrasena"];
-        }
-    } 
-
-    // Cerrar la conexión
-    $conn->close(); 
-
-    //Verificar la contraseña hash con la almacenada 
-    if (password_verify($pass, $Contrasena)) {
-        return true;
-    } 
-    else {
-        return false;
-    }
-
+    return $updated_text;
 }
 
 ?>
