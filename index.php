@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
 
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt $errcapture", $output, $return_var);
+                    shell_exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt $errcapture", $output, $return_var);
 
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $etiquetar = "cd /var/www/html/apirestClAtiende && python3.10 paquetes/etiquetar.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    exec("$etiquetar $ruta_txt $errcapture", $output, $return_var);
+                    shell_exec("$etiquetar $ruta_txt $errcapture", $output, $return_var);
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    exec("$extraer $ruta_txt $errcapture", $output, $return_var);
+                    shell_exec("$extraer $ruta_txt $errcapture", $output, $return_var);
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
@@ -334,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $resumir = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    exec("$resumir $ruta_txt $errcapture", $output, $return_var);
+                    shell_exec("$resumir $ruta_txt $errcapture", $output, $return_var);
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
