@@ -49,8 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
                 if(move_uploaded_file($_FILES['archivo']['tmp_name'], $uploadfile)) {      
                     //guardar en la variable txt el nombre del archivo, pero cambiando la extensión 
-                    $txt= preg_replace("/pdf/", 'txt', $namefinal);
-
+                    $txt= preg_replace("/pdf/", 'txt', $namefinal);                    
                     //creación de rutas y nombres 
                     $txt = $ruta_destino . $txt;            
                     $pdf = $ruta_destino . $namefinal;  
