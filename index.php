@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $pdf = "Pension_Garantizada_Universal_PGU.pdf";
     $txt = "Pension_Garantizada_Universal_PGU.txt";
     try {
-        shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt")
+        shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $pdf $txt");
         $response[] = "Funciono como apache";
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $th) {
