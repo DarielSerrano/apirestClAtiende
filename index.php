@@ -143,7 +143,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 //intentar ejecutar la aplicación pdftotext 
                 try {
-                    if (!shell_exec ("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt")) {
+                    // Ejecutar el comando y obtener la salida
+                    $output = shell_exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt");
+
+                    // Si la salida es null, entonces hubo un problema
+                    if ($output === null) {
                         throw new Exception("Hubo un problema al hacer la transformación de pdf a texto.");
                     }
                 } 
