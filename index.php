@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $response[] = $python_output2;
         
         // Imprimir la respuesta completa como JSON
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE);
         exit();
 
     } catch (\Throwable $th) {
