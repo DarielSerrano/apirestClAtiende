@@ -57,6 +57,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         $response[] = $error;
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
     } */
+    
+    try {
+        return false;
+    } catch (\Throwable $th) {
+        $respuesta = "No se logró hacer la prueba.";
+        $error = $th->getMessage();
+        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+        $nombreArchivo = "logs_de_error.txt";                    
+        // Abre o crea el archivo de log en modo de escritura al final del archivo
+        $nombreArchivo = fopen($rutaLog, "a");
+        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
+        // Cierra el archivo de log
+        fclose($nombreArchivo);
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     date_default_timezone_set('America/Santiago');
     $response[] = preg_replace('/\s+/', '_', date("Y-m-d H:i:s"));
     
