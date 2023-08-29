@@ -86,12 +86,12 @@ def extract_verbs_and_nouns(segment):
                 current_word += subtoken[2:]  # Eliminar "##" del subtoken y agregarlo a la palabra actual
             else:
                 if current_word:
-                    verb_noun_objects.append({"word": tokenizer.decode([token]), "entity": tags[label]})
+                    verb_noun_objects.append({"palabra": tokenizer.decode([token]), "clasificacion": tags[label]})
                 current_word = subtoken
                 current_entity = tags[label]
 
     if current_word:  # Asegurarse de agregar la última palabra
-        verb_noun_objects.append({"word": tokenizer.decode([token]), "entity": tags[label]})
+        verb_noun_objects.append({"palabra": tokenizer.decode([token]), "clasificacion": tags[label]})
         
     return verb_noun_objects
 
