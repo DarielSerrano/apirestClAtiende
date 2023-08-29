@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 //intentar ejecutar la aplicación pdftotext 
                 try {
                     // Ejecutar el comando y obtener la salida
-                    $output = shell_exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt");
+                    $output = shell_exec("cd /var/www/html/apirestClAtiende && pdftotext a");
 
                     // Si la salida es null, entonces hubo un problema
                     if ($output === null) {
