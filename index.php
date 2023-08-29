@@ -216,9 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }
-                
-                
+                }                            
                 try { // guardado en BD
                     //code...
                 } 
@@ -250,15 +248,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
                 // Inicio extraccion palabras clave NLP y guardado en BD
-                $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
                 try {
-                    //ejecucion extraccion NLP
-                    $salida = shell_exec("$extraer $ruta_txt");
-                    header("HTTP/1.1 200 OK");
-                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                    echo json_encode($salida, JSON_UNESCAPED_UNICODE);                                                                       
-                }
-                catch (\Throwable $th) {
+                    $output = array();
+                    $return_var = 0;
+                    $errcapture = "2>&1";
+                    $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
+                    // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
+                    exec("$extraer $ruta_txt $errcapture", $output, $return_var);
+                    
+                    // Verificar el estado de retorno para determinar si hubo un error
+                    if ($return_var === 0) {
+                        // El comando se ejecutó correctamente
+                        $respuesta = implode("\n", $output); // La salida del comando
+                        header("HTTP/1.1 200 OK");
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
+                       
+                    } else {
+                        // Hubo un error al ejecutar el comando
+                        $error_message = implode("\n", $output); // Los mensajes de error generados
+                        throw new Exception($error_message);
+                    }
+                } 
+                catch (Exception $th) {
                     $respuesta = "Hubo un problema al hacer la extracción NLP.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
@@ -273,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }                    
+                }                                   
                 try { // guardado en BD
                     /* // Inicializar los contadores
                     $frecuenciaVerbos = [];
@@ -347,14 +359,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 
                 // Inicio creacion del resumen de documento NLP y guardado en BD
-                $resumir = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py";
-                try { // Inicio creacion automatica de etiqueta
-                    $salida = shell_exec("$resumir $ruta_txt");
-                    header("HTTP/1.1 200 OK");
-                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                    echo json_encode($salida, JSON_UNESCAPED_UNICODE);
+                try {
+                    $output = array();
+                    $return_var = 0;
+                    $errcapture = "2>&1";
+                    $resumir = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py";
+                    // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
+                    exec("$resumir $ruta_txt $errcapture", $output, $return_var);
+                    
+                    // Verificar el estado de retorno para determinar si hubo un error
+                    if ($return_var === 0) {
+                        // El comando se ejecutó correctamente
+                        $respuesta = implode("\n", $output); // La salida del comando
+                        header("HTTP/1.1 200 OK");
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
+                    
+                    } else {
+                        // Hubo un error al ejecutar el comando
+                        $error_message = implode("\n", $output); // Los mensajes de error generados
+                        throw new Exception($error_message);
+                    }
                 } 
-                catch (\Throwable $th) {
+                catch (Exception $th) {
                     $respuesta = "Hubo un problema al generar el resumen.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
@@ -371,10 +398,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }
                 try { // guardado en BD
-                    
+                    //code...
                 } 
                 catch (\Throwable $th) {
-                    $respuesta = "Hubo un problema al guardar el resumen.";
+                    $respuesta = "Hubo un problema al guardar la etiqueta.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
@@ -388,8 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }                
-                
+                }                                           
             }
             else {
                 $respuesta = "El archivo internamente no se logró mover al directorio.";
