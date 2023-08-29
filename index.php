@@ -158,17 +158,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
-                        // Filtrar los comentarios de ejecución en la salida
-                        $filtered_output = array_filter($output, function($line) {
-                            // Filtrar las líneas que no sean comentarios de ejecución
-                            return strpos($line, "Comentario de ejecución") !== 0;
-                        });
-                        
-                        // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $filtered_output); // La salida filtrada del comando
+                        // Filtrar y extraer los objetos JSON de la salida
+                        foreach ($output as $line) {
+                            if (preg_match('/^\{.*\}$/', $line)) {
+                                $json_objects = json_decode($line, true);
+                            }
+                        }
+
+                        // Puedes usar $json_objects según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                       
+                        echo json_encode($json_objects, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -232,17 +232,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
-                        // Filtrar los comentarios de ejecución en la salida
-                        $filtered_output = array_filter($output, function($line) {
-                            // Filtrar las líneas que no sean comentarios de ejecución
-                            return strpos($line, "Comentario de ejecución") !== 0;
-                        });
-                        
-                        // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $filtered_output); // La salida filtrada del comando
+                        // Filtrar y extraer los objetos JSON de la salida
+                        foreach ($output as $line) {
+                            if (preg_match('/^\{.*\}$/', $line)) {
+                                $json_objects = json_decode($line, true);
+                            }
+                        }
+
+                        // Puedes usar $json_objects según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                       
+                        echo json_encode($json_objects, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -348,17 +348,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
-                        // Filtrar los comentarios de ejecución en la salida
-                        $filtered_output = array_filter($output, function($line) {
-                            // Filtrar las líneas que no sean comentarios de ejecución
-                            return strpos($line, "Comentario de ejecución") !== 0;
-                        });
-                        
-                        // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $filtered_output); // La salida filtrada del comando
+                        // Filtrar y extraer los objetos JSON de la salida
+                        foreach ($output as $line) {
+                            if (preg_match('/^\{.*\}$/', $line)) {
+                                $json_objects = json_decode($line, true);
+                            }
+                        }
+
+                        // Puedes usar $json_objects según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                    
+                        echo json_encode($json_objects, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
