@@ -1,8 +1,9 @@
-import sys, json
-import re
-from transformers import pipeline
+# Importar el módulo 'sys' para manejar argumentos de línea de comandos
+import sys
+sys.path.append('librerias')
 
-sys.path.append('~/.local/lib/python3.10/site-packages/transformers')
+import re, json
+from transformers import pipeline
 
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):

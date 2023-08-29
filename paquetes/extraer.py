@@ -1,6 +1,6 @@
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys
-sys.path.append('/var/www/html/apirestClAtiende/librerias')
+sys.path.append('librerias')
 
 import json, stanza, re
 
@@ -8,7 +8,7 @@ import json, stanza, re
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
 stanza.download('es', package='ancora', processors='tokenize,mwt,pos,lemma', verbose=True) 
-stNLP = stanza.Pipeline(processors='tokenize,mwt,pos,lemma', lang='es', use_gpu=True) 
+stNLP = stanza.Pipeline(processors='tokenize,mwt,pos,lemma', lang='es', use_gpu=True, model_dir="../stanza_resources") 
 
 # Funcion para leer archivos por ruta
 def file_get_contents(pathfile):
