@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 }; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    include 'validarsesionadmin.php';
     // Aumentar el tiempo límite de ejecución a un valor en segundos (por ejemplo, 300 segundos)
     set_time_limit(1200);
     $response = array();    
