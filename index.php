@@ -145,9 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 try {
                     $output = array();
                     $return_var = 0;
-                    
+
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    exec("cd /var/www/html/apirestClAtiende && pdftotext a", $output, $return_var);
+                    exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt", $output, $return_var);
 
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
