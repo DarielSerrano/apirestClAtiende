@@ -1,6 +1,6 @@
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys
-sys.path.append('../librerias')
+sys.path.append('../librerias/')
 
 import json, stanza, re
 
