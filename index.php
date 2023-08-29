@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
 
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    shell_exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt $errcapture", $output, $return_var);
+                    exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt $errcapture", $output, $return_var);
 
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
@@ -154,16 +154,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $etiquetar = "cd /var/www/html/apirestClAtiende && python3.10 paquetes/etiquetar.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    shell_exec("$etiquetar $ruta_txt $errcapture", $output, $return_var);
+                    exec("$etiquetar $ruta_txt $errcapture", $output, $return_var);
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
+                        // Filtrar los comentarios de ejecución en la salida
+                        $filtered_output = array_filter($output, function($line) {
+                            // Filtrar las líneas que no sean comentarios de ejecución
+                            return strpos($line, "Comentario de ejecución") !== 0;
+                        });
+                        
                         // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $output); // La salida del comando
+                        $respuesta = implode("\n", $filtered_output); // La salida filtrada del comando
                         header("HTTP/1.1 200 OK");
-                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
-                       
+                        header('Content-Type: application/json; charset=UTF-8');
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                       
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -223,16 +228,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    shell_exec("$extraer $ruta_txt $errcapture", $output, $return_var);
+                    exec("$extraer $ruta_txt $errcapture", $output, $return_var);
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
+                        // Filtrar los comentarios de ejecución en la salida
+                        $filtered_output = array_filter($output, function($line) {
+                            // Filtrar las líneas que no sean comentarios de ejecución
+                            return strpos($line, "Comentario de ejecución") !== 0;
+                        });
+                        
                         // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $output); // La salida del comando
+                        $respuesta = implode("\n", $filtered_output); // La salida filtrada del comando
                         header("HTTP/1.1 200 OK");
-                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
-                       
+                        header('Content-Type: application/json; charset=UTF-8');
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                       
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -334,16 +344,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $resumir = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    shell_exec("$resumir $ruta_txt $errcapture", $output, $return_var);
+                    exec("$resumir $ruta_txt $errcapture", $output, $return_var);
                     
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
+                        // Filtrar los comentarios de ejecución en la salida
+                        $filtered_output = array_filter($output, function($line) {
+                            // Filtrar las líneas que no sean comentarios de ejecución
+                            return strpos($line, "Comentario de ejecución") !== 0;
+                        });
+                        
                         // El comando se ejecutó correctamente
-                        $respuesta = implode("\n", $output); // La salida del comando
+                        $respuesta = implode("\n", $filtered_output); // La salida filtrada del comando
                         header("HTTP/1.1 200 OK");
-                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
-                    
+                        header('Content-Type: application/json; charset=UTF-8');
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                    
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
