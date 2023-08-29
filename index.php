@@ -152,9 +152,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
-                        // El comando se ejecutó correctamente
+                        /* // El comando se ejecutó correctamente
                         $response = implode("\n", $output); // La salida del comando
-                        echo "Comando ejecutado exitosamente:\n$response";
+                        echo "Comando ejecutado exitosamente:\n$response"; */
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
