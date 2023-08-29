@@ -126,7 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Eliminar caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
-    bdTest();
     $respuesta[] = $rut;
     $respuesta[] = $pass;
     $respuesta[] = $_FILES['archivo'];    
