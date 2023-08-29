@@ -90,10 +90,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $response = array();    
     // Obtener los datos del formulario
     $rut = $_POST['rut'];
-    $UsuarioContrasena = $_POST['password'];
+    $pass = $_POST['password'];
 
     // Eliminar caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
+
+    $respuesta[] = $rut;
+    $respuesta[] = $pass;
+    header("HTTP/1.1 200 OK");
+    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
 
     // Validar si el RUT y la contraseña no están vacíos
     if (empty($rut)) {
@@ -102,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
     } 
-    elseif (empty($UsuarioContrasena)) {
+    elseif (empty($pass)) {
         $respuesta = "Debe completar con su contraseña.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
@@ -114,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
     } // Verificación de contraseña 
-    elseif (!validarContrasena($rut, $UsuarioContrasena)) {
+    elseif (!validarContrasena($rut, $pass)) {
         $respuesta = "Contraseña incorrecta.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
@@ -128,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     else{
         $respuesta[] = $rut;
-        $respuesta[] = $UsuarioContrasena;
+        $respuesta[] = $pass;
         $respuesta[] = "Archivo OK";
         header("HTTP/1.1 200 OK");
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
@@ -178,19 +184,17 @@ function formatoRUTValido($rut) {
 }
 
 function validarContrasena($rut,$pass) {
-    $UsusarioRut = $rut;
-    $UsuarioContrasena = $pass;
-
+    
     // Declarar la variable $Contrasena
     $Contrasena = null;
     
     // funcion para transformar la contraseña a hash
-    // $passwordhash = password_hash($UsuarioContrasena, PASSWORD_DEFAULT);
+    // $passwordhash = password_hash($pass, PASSWORD_DEFAULT);
     include 'conexiondb.php';
 
     try {
         // Consulta SQL con cláusula WHERE
-        $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsusarioRut";
+        $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $rut";
         $result = $conn->query($sql);
     } 
     catch (\Throwable $th) {
@@ -222,7 +226,7 @@ function validarContrasena($rut,$pass) {
     $conn->close(); 
 
     //Verificar la contraseña hash con la almacenada 
-    if (password_verify($UsuarioContrasena, $Contrasena)) {
+    if (password_verify($pass, $Contrasena)) {
         return true;
     } 
     else {
