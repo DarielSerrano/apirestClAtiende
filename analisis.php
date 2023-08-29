@@ -1,6 +1,4 @@
 <?php
-
-
 //codigo del metodo post para recibir pdfs
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     date_default_timezone_set('America/Santiago');
