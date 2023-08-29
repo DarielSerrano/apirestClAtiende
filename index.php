@@ -58,8 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
     } */
     date_default_timezone_set('America/Santiago');
-    $fix_date = date("Y-m-d H:i:s"); // Obtiene la fecha y hora actual en el formato deseado  ;
-    $response[] = preg_replace('/\s+/', '_', $fix_date);
+    $response[] = preg_replace('/\s+/', '_', date("Y-m-d H:i:s"));
     
     echo json_encode($response,JSON_UNESCAPED_UNICODE);
 }
