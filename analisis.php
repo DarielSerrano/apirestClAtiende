@@ -64,90 +64,103 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         shell_exec ("cd /var/www/html/apirestClAtiende/archivos && pdftotext $ruta_pdf $ruta_txt");
                     } 
                     catch (\Throwable $th) {
-                        $respuesta = "No se logró hacer la transformación de pdf a texto.";
+                        $respuesta = "Hubo un problema al hacer la transformación de pdf a texto.";
                         $error = $th->getMessage();
                         $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                        $nombreArchivo = "logs_de_error.txt";                    
+                        $rutaLog = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
-                        $nombreArchivo = fopen($rutaLog, "a");
+                        $rutaLog = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
+                        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                         // Cierra el archivo de log
-                        fclose($nombreArchivo);
+                        fclose($rutaLog);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                         exit;
                     }
 
-                    // Inicio creacion automatica de etiqueta
-                    /* $etiquetar = "paquetes/etiquetar.py";
-                    $resultados = null;
-                    try {
-                        //ejecucion extraccion NLP
-                        exec("python3.10 $etiquetar $ruta_txt", $salida);
-                        $jsonOutput = implode("", $salida);
-                        $data = json_decode($jsonOutput, true);
-                        
-                        // Obtener los resultados
-                        $resultados = $data["resultados"];                                                                        
+                    // Inicio creacion automatica de etiqueta y guardado en BD
+                    $etiquetar = "cd /var/www/html/apirestClAtiende && python3.10 paquetes/etiquetar.py";
+                    try { // Inicio creacion automatica de etiqueta
+                        $salida = shell_exec("python3.10 $etiquetar $ruta_txt");
+                        header("HTTP/1.1 200 OK");
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($salida, JSON_UNESCAPED_UNICODE);                                                                   
                     }
                     catch (\Throwable $th) {
-                        $respuesta = "No se logró hacer la extracción NLP.";
+                        $respuesta = "Hubo un problema al generar el etiquetado.";
                         $error = $th->getMessage();
                         $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                        $nombreArchivo = "logs_de_error.txt";                    
+                        $rutaLog = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
-                        $nombreArchivo = fopen($rutaLog, "a");
+                        $rutaLog = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
+                        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                         // Cierra el archivo de log
-                        fclose($nombreArchivo);
+                        fclose($rutaLog);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                         exit;
-                    } */
+                    }                    
+                    try { // guardado en BD
+                        //code...
+                    } 
+                    catch (\Throwable $th) {
+                        $respuesta = "Hubo un problema al guardar la etiqueta.";
+                        $error = $th->getMessage();
+                        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                        $rutaLog = "logs_de_error.txt";                    
+                        // Abre o crea el archivo de log en modo de escritura al final del archivo
+                        $rutaLog = fopen($rutaLog, "a");
+                        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                        // Cierra el archivo de log
+                        fclose($rutaLog);
+                        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                        exit;
+                    }
                     
 
-                    // Inicio creacion del documento en DB
+                    // Inicio creacion del documento y guardado en BD
                     try {
-                        //code...
-                    } catch (\Throwable $th) {
+                        $nombreDocumento;
+                    } 
+                    catch (\Throwable $th) {
                         //throw $th;
                     }
 
 
-                    // Inicio extraccion palabras clave y guardado en DB
+                    // Inicio extraccion palabras clave NLP y guardado en BD
                     $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
-                    $resultados = null;
                     try {
                         //ejecucion extraccion NLP
                         shell_exec("$extraer $ruta_txt", $salida);
-                        $jsonOutput = implode("", $salida);
-                        $data = json_decode($jsonOutput, true);
-                        
-                        // Obtener los resultados
-                        $resultados = $data["resultados"];                                                                        
+                        header("HTTP/1.1 200 OK");
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($salida, JSON_UNESCAPED_UNICODE);                                                                       
                     }
                     catch (\Throwable $th) {
-                        $respuesta = "No se logró hacer la extracción NLP.";
+                        $respuesta = "Hubo un problema al hacer la extracción NLP.";
                         $error = $th->getMessage();
                         $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                        $nombreArchivo = "logs_de_error.txt";                    
+                        $rutaLog = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
-                        $nombreArchivo = fopen($rutaLog, "a");
+                        $rutaLog = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
+                        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                         // Cierra el archivo de log
-                        fclose($nombreArchivo);
+                        fclose($rutaLog);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                         exit;
-                    }
-                    try {
-                        /* // Inicializar los contadores
+                    }                    
+                    try { // guardado en BD
+                        // Inicializar los contadores
                         $frecuenciaVerbos = [];
                         $frecuenciaSustantivos = [];
 
@@ -198,50 +211,80 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
 
                         // Cerrar la conexión
-                        $conn->close(); */
+                        $conn->close();
 
                     } 
                     catch (\Throwable $th) {
-                        $respuesta = "Hubo un problema al ingresar las palabras clave de la extraccion en la base de datos.";
+                        $respuesta = "Hubo un problema al guardar la extraccion.";
                         $error = $th->getMessage();
                         $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                        $nombreArchivo = "logs_de_error.txt";                    
+                        $rutaLog = "logs_de_error.txt";                    
                         // Abre o crea el archivo de log en modo de escritura al final del archivo
-                        $nombreArchivo = fopen($rutaLog, "a");
+                        $rutaLog = fopen($rutaLog, "a");
                         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
+                        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                         // Cierra el archivo de log
-                        fclose($nombreArchivo);
+                        fclose($rutaLog);
                         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
                         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                         exit;
                     }
                     
-
+                    // Inicio creacion del resumen de documento NLP y guardado en BD
+                    $resumir = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py";
+                    try { // Inicio creacion automatica de etiqueta
+                        $salida = shell_exec("python3.10 $resumir $ruta_txt");
+                        header("HTTP/1.1 200 OK");
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($salida, JSON_UNESCAPED_UNICODE);
+                    } 
+                    catch (\Throwable $th) {
+                        $respuesta = "Hubo un problema al generar el resumen.";
+                        $error = $th->getMessage();
+                        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                        $rutaLog = "logs_de_error.txt";                    
+                        // Abre o crea el archivo de log en modo de escritura al final del archivo
+                        $rutaLog = fopen($rutaLog, "a");
+                        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                        // Cierra el archivo de log
+                        fclose($rutaLog);
+                        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                        exit;
+                    }
+                    try { // guardado en BD
+                        
+                    } 
+                    catch (\Throwable $th) {
+                        $respuesta = "Hubo un problema al guardar el resumen.";
+                        $error = $th->getMessage();
+                        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                        $rutaLog = "logs_de_error.txt";                    
+                        // Abre o crea el archivo de log en modo de escritura al final del archivo
+                        $rutaLog = fopen($rutaLog, "a");
+                        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                        // Cierra el archivo de log
+                        fclose($rutaLog);
+                        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                        exit;
+                    }
                 }
                 else {
-                    $mensaje = "El archivo internamente no se logró mover al directorio.";
-                    $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                    $nombreArchivo = "logs_de_error.txt";                    
-                    // Abre o crea el archivo de log en modo de escritura al final del archivo
-                    $nombreArchivo = fopen($rutaLog, "a");
-                    // Escribe el mensaje junto con la fecha y hora en el archivo de log
-                    fwrite($nombreArchivo, "[$fechaHora] $mensaje" . PHP_EOL);
-                    // Cierra el archivo de log
-                    fclose($nombreArchivo);
+                    $respuesta = "El archivo internamente no se logró mover al directorio.";
+                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                    exit;
                 }     
             }
             else {
                 $respuesta = 'El servidor no pudo efectuar la subida de archivo.';
-                $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                $nombreArchivo = "logs_de_error.txt";                    
-                // Abre o crea el archivo de log en modo de escritura al final del archivo
-                $nombreArchivo = fopen($rutaLog, "a");
-                // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                fwrite($nombreArchivo, "[$fechaHora] $respuesta" . PHP_EOL);
-                // Cierra el archivo de log
-                fclose($nombreArchivo);
                 header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
                 header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                 echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
@@ -250,14 +293,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         else{
             $respuesta = 'El archivo adjunto no es un documento PDF.';
-            $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-            $nombreArchivo = "logs_de_error.txt";                    
-            // Abre o crea el archivo de log en modo de escritura al final del archivo
-            $nombreArchivo = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
-            fwrite($nombreArchivo, "[$fechaHora] $respuesta" . PHP_EOL);
-            // Cierra el archivo de log
-            fclose($nombreArchivo);
             header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
             header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
@@ -265,15 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     else{
-        $respuesta = 'No se encuentra adjunto un documento PDF.';
-        $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-        $nombreArchivo = "logs_de_error.txt";                    
-        // Abre o crea el archivo de log en modo de escritura al final del archivo
-        $nombreArchivo = fopen($rutaLog, "a");
-        // Escribe la excepcion junto con la fecha y hora en el archivo de log
-        fwrite($nombreArchivo, "[$fechaHora] $respuesta" . PHP_EOL);
-        // Cierra el archivo de log
-        fclose($nombreArchivo);
+        $respuesta = "El archivo no se adjunto.":
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
@@ -342,13 +369,13 @@ function validarContrasena($rut,$pass) {
         $respuesta = "No se logró hacer la consulta a la base de datos para validar contraseña.";
         $error = $th->getMessage();
         $fechaHora = preg_replace('/\s+/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-        $nombreArchivo = "logs_de_error.txt";                    
+        $rutaLog = "logs_de_error.txt";                    
         // Abre o crea el archivo de log en modo de escritura al final del archivo
-        $nombreArchivo = fopen($rutaLog, "a");
+        $rutaLog = fopen($rutaLog, "a");
         // Escribe la excepcion junto con la fecha y hora en el archivo de log
-        fwrite($nombreArchivo, "[$fechaHora]_$error" . PHP_EOL);
+        fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
         // Cierra el archivo de log
-        fclose($nombreArchivo);
+        fclose($rutaLog);
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
