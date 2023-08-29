@@ -120,19 +120,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
     }           
-    elseif (!empty($_FILES['archivo'])) {
+    elseif (empty($_FILES['archivo'])) {
+        $respuesta = "El archivo no se adjunto.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                                 
+    }
+    else{
         $respuesta[] = $rut;
         $respuesta[] = $UsuarioContrasena;
         $respuesta[] = "Archivo OK";
         header("HTTP/1.1 200 OK");
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                                     
-    }
-    else{
-        $respuesta = "El archivo no se adjunto.";
-        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);  
     }
 }
 
