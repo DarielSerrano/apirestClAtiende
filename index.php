@@ -187,6 +187,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }                                                  
                 $dbextraer = null;
+                $pal = null;
+                $cla = null;            
                 // Inicio extraccion palabras clave NLP y guardado en BD
                 try {
                     $output = array();
@@ -202,12 +204,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
                                 $dbextraer = json_decode($line, true);
+                                $pal = $dbextraer['resultados']['palabra'];
+                                $cla = $dbextraer['resultados']['clasificacion'];
                             }
-                        }
-
-                        foreach ($dbextraer as $palcla) {
-                            $pal = $dbextraer['resultados']['palabra'];
-                            $cla = $dbextraer['resultados']['clasificacion'];
                         }
                         // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
