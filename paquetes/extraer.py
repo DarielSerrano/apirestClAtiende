@@ -52,7 +52,7 @@ tokens = tokenizer.tokenize(lemmatized_text)
 total_tokens = len(tokens)
 
 # Parámetros para la segmentación
-max_segment_size = 400
+max_segment_size = 300
 current_segment = []
 segments = []
 
