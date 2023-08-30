@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     date_default_timezone_set('America/Santiago');
     set_time_limit(1200);
     $response = array();    
-    $json_objects = array();
     // Obtener los datos del formulario
     $rut = $_POST['rut'];
     $pass = $_POST['password'];
@@ -165,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $respuesta = "Etiquetado exitoso.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($json_objects, JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbetiqueta, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -187,96 +186,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }                  
-                $dbidetiqueta = null;                          
-                try { // Inicio busqueda de id por nombre etiqueta extraida de documento
-                    include 'conexiondb.php';                                    
-                    // Consulta SQL con cláusula WHERE
-                    $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
-                    // Ejecutar la consulta
-                    $result = $conn->query($sql);                    
-                    if ($result) {
-                        if ($result->num_rows > 0) {
-                            // Encontrado, procesa los resultados
-                            while ($row = $result->fetch_assoc()) {
-                                // Accede a los valores en $row
-                                $dbidetiqueta = $row["idDocumentosCategoria"];
-                            }
-                        } else {
-                            // No se encontraron resultados
-                        }
-                    } else {
-                        // Manejar error en la consulta
-                        $error_message = $conn->error; // Mensaje de error generado
-                        $conn->close(); 
-                        throw new Exception($error_message);
-                    } 
-                    // Cerrar la conexión
-                    $conn->close();                                                                                                  
-                } 
-                catch (\Throwable $th) {
-                    $respuesta = "Hubo un problema al guardar la etiqueta.";
-                    $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                    $rutaLog = "logs_de_error.txt";                    
-                    // Abre o crea el archivo de log en modo de escritura al final del archivo
-                    $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
-                    // Cierra el archivo de log
-                    fclose($rutaLog);
-                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-                    exit;
-                }
-                try { // Inicio busqueda de id por nombre etiqueta extraida de documento
-                    include 'conexiondb.php';
-                    $dbidetiqueta;                    
-                    // Consulta SQL con cláusula WHERE
-                    $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";
-                    
-                    // Ejecutar la consulta
-                    $result = $conn->query($sql);
-                    
-                    if ($result) {
-                        if ($result->num_rows > 0) {
-                            // Encontrado, procesa los resultados
-                            while ($row = $result->fetch_assoc()) {
-                                // Accede a los valores en $row
-                                $a = $row["idDocumentosCategoria"];
-                            }
-                        } else {
-                            // No se encontraron resultados
-                        }
-                    } else {
-                        // Manejar error en la consulta
-                        $error_message = $conn->error; // Mensaje de error generado
-                        $conn->close(); 
-                        throw new Exception($error_message);
-                    } 
-                    // Cerrar la conexión
-                    $conn->close();                                                                                                  
-                } 
-                catch (\Throwable $th) {
-                    $respuesta = "Hubo un problema al guardar la etiqueta.";
-                    $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                      
-                    $rutaLog = "logs_de_error.txt";                    
-                    // Abre o crea el archivo de log en modo de escritura al final del archivo
-                    $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
-                    // Cierra el archivo de log
-                    fclose($rutaLog);
-                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-                    exit;
-                }
-                
-
-                /* // Inicio extraccion palabras clave NLP y guardado en BD
+                }                                                  
+                $dbextraer = null;
+                // Inicio extraccion palabras clave NLP y guardado en BD
                 try {
                     $output = array();
                     $return_var = 0;
@@ -290,14 +202,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Filtrar y extraer los objetos JSON de la salida
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
-                                $json_objects = json_decode($line, true);
+                                $dbextraer = json_decode($line, true);
                             }
                         }
 
-                        // Puedes usar $json_objects según tus necesidades
+                        // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($json_objects, JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbextraer, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -320,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
                 }                                   
-                try { // guardado en BD
+                /* try { // guardado en BD
                     // Inicializar los contadores
                     $frecuenciaVerbos = [];
                     $frecuenciaSustantivos = [];
@@ -390,8 +302,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }
+                } */
                 
+                $dbresumen = null;
                 // Inicio creacion del resumen de documento NLP y guardado en BD
                 try {
                     $output = array();
@@ -406,14 +319,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Filtrar y extraer los objetos JSON de la salida
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
-                                $json_objects = json_decode($line, true);
+                                $dbresumen = json_decode($line, true);
                             }
                         }
 
-                        // Puedes usar $json_objects según tus necesidades
+                        // Puedes usar $dbresumen según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($json_objects, JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbresumen, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -436,8 +349,76 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
                 }
-                try { // guardado en BD
-                    //code...
+                $dbidetiqueta = null;                          
+                /* try { // Inicio busqueda de id por nombre etiqueta extraida de documento
+                    include 'conexiondb.php';                                    
+                    // Consulta SQL con cláusula WHERE
+                    $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
+                    // Ejecutar la consulta
+                    $result = $conn->query($sql);                    
+                    if ($result) {
+                        if ($result->num_rows > 0) {
+                            // Encontrado, procesa los resultados
+                            while ($row = $result->fetch_assoc()) {
+                                // Accede a los valores en $row
+                                $dbidetiqueta = $row["idDocumentosCategoria"];
+                            }
+                        } else {
+                            // No se encontraron resultados
+                        }
+                    } else {
+                        // Manejar error en la consulta
+                        $error_message = $conn->error; // Mensaje de error generado
+                        $conn->close(); 
+                        throw new Exception($error_message);
+                    } 
+                    // Cerrar la conexión
+                    $conn->close();                                                                                                  
+                } 
+                catch (\Throwable $th) {
+                    $respuesta = "Hubo un problema al guardar la etiqueta.";
+                    $error = $th->getMessage();
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $rutaLog = "logs_de_error.txt";                    
+                    // Abre o crea el archivo de log en modo de escritura al final del archivo
+                    $rutaLog = fopen($rutaLog, "a");
+                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                    // Cierra el archivo de log
+                    fclose($rutaLog);
+                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
+                try { // Creacion Documento en db
+                    include 'conexiondb.php';
+                    $nombreDocumento;
+                    $dbidetiqueta;                    
+                    // Consulta SQL con cláusula WHERE
+                    $sql = "INSERT INTO 'Documentos'('idDocumentos', 'DocumentosTitulo', 'DocumentosRutaGuardado', 'DocumentosResumen', 'DocumentosCategoria_idDocumentosCategoria') VALUES (NULL,$nombreDocumento,[value-3],[value-4],$dbidetiqueta)";
+                    
+                    // Ejecutar la consulta
+                    $result = $conn->query($sql);
+                    
+                    if ($result) {
+                        if ($result->num_rows > 0) {
+                            // Encontrado, procesa los resultados
+                            while ($row = $result->fetch_assoc()) {
+                                // Accede a los valores en $row
+                                $a = $row["idDocumentosCategoria"];
+                            }
+                        } else {
+                            // No se encontraron resultados
+                        }
+                    } else {
+                        // Manejar error en la consulta
+                        $error_message = $conn->error; // Mensaje de error generado
+                        $conn->close(); 
+                        throw new Exception($error_message);
+                    } 
+                    // Cerrar la conexión
+                    $conn->close();                                                                                                  
                 } 
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al guardar la etiqueta.";
@@ -454,7 +435,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }  */                                          
+                } */                                           
             }
             else {
                 $respuesta = "El archivo internamente no se logró mover al directorio.";
