@@ -150,8 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $errcapture = "2>&1";
                     $extraer = "cd /var/www/html/apirestClAtiende && STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
-                    exec("$extraer $ruta_txt $errcapture", $output, $return_var);
-                    
+                    exec("$extraer $ruta_txt $errcapture", $output, $return_var);        
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // Filtrar y extraer los objetos JSON de la salida
@@ -167,14 +166,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     foreach ($dbextraer as $resultado) {
                         $palabra = $resultado['palabra'];
                         $clasificacion = $resultado['clasificacion'];
-
                         // Incrementar el contador de la palabra
                         if (isset($palabra_contador[$palabra])) {
                             $palabra_contador[$palabra]++;
                         } else {
                             $palabra_contador[$palabra] = 1;
                         }
-
                         // Separar en verbos y sustantivos
                         if ($clasificacion == 'NOUN' || $clasificacion == 'PROPN') {
                             $sustantivo[] = $palabra;
@@ -279,8 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 $dbIDetiqueta = null;                          
                 try { // Inicio busqueda de ids para creacion documento
-                    include 'conexiondb.php'; 
-                                                       
+                    include 'conexiondb.php';                                                        
                     // Consulta SQL con cláusula WHERE
                     $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
                     $sql = preg_replace('/[^A-Za-z.,()\s_\'$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
@@ -368,12 +364,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     include 'conexiondb.php';
                     $dbIDetiqueta;
                     $dbIDdocumento;
-
                     // Insertar frecuencias de verbos
                     foreach ($top_30_verbos as $frecuencia) {
                         $verbo = $frecuencia['palabra'];
-                        $frecuenciaValor = $frecuencia['frecuencia'];
-                                                
+                        $frecuenciaValor = $frecuencia['frecuencia'];                                                
                         $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
                         $sql = preg_replace('/[^A-Za-z.,()\s_\'$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
                         if($conn->query($sql)){
@@ -390,8 +384,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Insertar frecuencias de sustantivos
                     foreach ($top_30_sustantivos as $frecuencia) {
                         $sustantivo = $frecuencia['palabra'];
-                        $frecuenciaValor = $frecuencia['frecuencia'];
-                        
+                        $frecuenciaValor = $frecuencia['frecuencia'];                                
                         $sql = "INSERT INTO Sustantivos(idSustantivos, SustantivosNombre, SustantivosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
                         $sql = preg_replace('/[^A-Za-z.,()\s_\'$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
                         if ($conn->query($sql)){
