@@ -97,11 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     elseif ($_FILES['archivo']['type'] == 'application/pdf') {    
         $ruta_destino = "archivos/";
         $namefinal = trim ($_FILES['archivo']['name']); 
-        $namefinal = preg_replace('/\s/', '_', $namefinal);
         $namefinal = correccion_tildes($namefinal);
+        $namefinal = preg_replace('/\s/', '_', $namefinal);
         $namefinal = preg_replace('/[^A-Za-z\s.:-_]/', '', $namefinal);        
-        $nombreDocumento = $namefinal;
+        $tituloDocumento = $namefinal;
         $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual 
+        $namefinal = preg_replace('/:/', '-', $namefinal);
         $namefinal = $fechaHora."_".$namefinal;
         $ruta_archivo = $ruta_destino . $namefinal; 
         if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
@@ -187,8 +188,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }                                                  
                 $dbextraer = null;
-                $pal = null;
-                $cla = null;            
+                $top_30_verbos = [];
+                $top_30_sustantivos = [];              
                 // Inicio extraccion palabras clave NLP y guardado en BD
                 try {
                     $output = array();
@@ -206,50 +207,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $dbextraer = json_decode($line, true);
                                 $dbextraer = $dbextraer['resultados'];
                             }
-                        }
-                        // Puedes usar $dbextraer según tus necesidades
-                        $sustantivo = array(); // Almacenar sustantivos
-                        $verb = array(); // Almacenar verbos
-                        $palabra_contador = array();
-                        $sustantivo = array();
-                        $verb = array();
-                        
-                        foreach ($dbextraer as $resultado) {
-                            $palabra = $resultado['palabra'];
-                            $clasificacion = $resultado['clasificacion'];
+                        }  
+                    $sustantivo = array(); // Almacenar sustantivos
+                    $verb = array(); // Almacenar verbos
+                    $palabra_contador = array();                   
+                    foreach ($dbextraer as $resultado) {
+                        $palabra = $resultado['palabra'];
+                        $clasificacion = $resultado['clasificacion'];
 
-                            // Incrementar el contador de la palabra
-                            if (isset($palabra_contador[$palabra])) {
-                                $palabra_contador[$palabra]++;
-                            } else {
-                                $palabra_contador[$palabra] = 1;
-                            }
-
-                            // Separar en verbos y sustantivos
-                            if ($clasificacion == 'NOUN' || $clasificacion == 'PROPN') {
-                                $sustantivo[] = $palabra;
-                            } elseif ($clasificacion == 'VERB') {
-                                $verb[] = $palabra;
-                            }
+                        // Incrementar el contador de la palabra
+                        if (isset($palabra_contador[$palabra])) {
+                            $palabra_contador[$palabra]++;
+                        } else {
+                            $palabra_contador[$palabra] = 1;
                         }
 
-                        // Ordenar arreglo de palabra_contador por frecuencia de mayor a menor
-                        arsort($palabra_contador);
-
-                        // Mostrar frecuencia de cada palabra con su clasificación
-                        foreach ($palabra_contador as $palabra => $frecuencia) {
-                            $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUST';
-                            if ($clasificacion == 'VERB') {
-                                echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
-                            }                          
+                        // Separar en verbos y sustantivos
+                        if ($clasificacion == 'NOUN' || $clasificacion == 'PROPN') {
+                            $sustantivo[] = $palabra;
+                        } elseif ($clasificacion == 'VERB') {
+                            $verb[] = $palabra;
                         }
-                        foreach ($palabra_contador as $palabra => $frecuencia) {
-                            $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUST';
-                            if ($clasificacion == 'SUST') {
-                                echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
-                            }                            
-                        }
+                    }
 
+                    // Ordenar arreglo de palabra_contador por frecuencia de mayor a menor
+                    arsort($palabra_contador);
+
+                    // Filtrar y guardar los 30 verbos de mayor a menor frecuencia                    
+                    $count_verbos = 0;
+                    foreach ($palabra_contador as $palabra => $frecuencia) {
+                        $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUST';
+                        if ($clasificacion == 'VERB' && $count_verbos < 30) {
+                            $top_30_verbos[] = ["palabra" => $palabra, "frecuencia" => $frecuencia];
+                            $count_verbos++;
+                        }
+                    }
+
+                    // Filtrar y guardar los 30 sustantivos de mayor a menor frecuencia                    
+                    $count_sustantivos = 0;
+                    foreach ($palabra_contador as $palabra => $frecuencia) {
+                        $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUST';
+                        if ($clasificacion == 'SUST' && $count_sustantivos < 30) {
+                            $top_30_sustantivos[] = ["palabra" => $palabra, "frecuencia" => $frecuencia];
+                            $count_sustantivos++;
+                        }
+                    }                       
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -271,80 +273,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }                                   
-                /* try { // guardado en BD
-                    // Inicializar los contadores
-                    $frecuenciaVerbos = [];
-                    $frecuenciaSustantivos = [];
-
-                    // Iterar sobre los resultados y contar las repeticiones
-                    foreach ($resultados as $resultado) {
-                        $palabra = $resultado["word"];
-                        $entidad = $resultado["entity"];
-                        
-                        if ($entidad === "VERB") {
-                            if (!array_key_exists($palabra, $frecuenciaVerbos)) {
-                                $frecuenciaVerbos[$palabra] = 1;
-                            } else {
-                                $frecuenciaVerbos[$palabra]++;
-                            }
-                        } elseif ($entidad === "NOUN" || $entidad === "PROPN") {
-                            if (!array_key_exists($palabra, $frecuenciaSustantivos)) {
-                                $frecuenciaSustantivos[$palabra] = 1;
-                            } else {
-                                $frecuenciaSustantivos[$palabra]++;
-                            }
-                        }
-                    }
-
-                    // Ordenar verbos por frecuencia de mayor a menor
-                    arsort($frecuenciaVerbos);
-
-                    // Tomar los primeros 20 verbos y sus frecuencias
-                    $top20Verbos = array_slice($frecuenciaVerbos, 0, 20, true);
-
-                    // Ordenar sustantivos por frecuencia de mayor a menor
-                    arsort($frecuenciaSustantivos);
-
-                    // Tomar los primeros 30 sustantivos y sus frecuencias
-                    $top30Sustantivos = array_slice($frecuenciaSustantivos, 0, 30, true);
-
-                    include 'conexiondb.php';
-
-                    // Insertar frecuencias de verbos
-                    foreach ($top20Verbos as $verbo => $frecuencia) {
-                        $sql = "INSERT INTO Verbos (VerbosNombre, VerbosFrecuencia) VALUES ('$verbo', $frecuencia)";
-                        $conn->query($sql);
-                    }
-
-                    // Insertar frecuencias de sustantivos (PROPN y NOUN juntos)
-                    foreach ($top30Sustantivos as $sustantivo => $frecuencia) {
-                        $sql = "INSERT INTO Sustantivos (SustantivosNombre, SustantivosFrecuencia) VALUES ('$sustantivo', $frecuencia)";
-                        $conn->query($sql);
-                    }
-
-                    // Cerrar la conexión
-                    $conn->close();
-
-                } 
-                catch (\Throwable $th) {
-                    $respuesta = "Hubo un problema al guardar la extraccion.";
-                    $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-                    $rutaLog = "logs_de_error.txt";                    
-                    // Abre o crea el archivo de log en modo de escritura al final del archivo
-                    $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
-                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
-                    // Cierra el archivo de log
-                    fclose($rutaLog);
-                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-                    exit;
-                } */
-                
-                $dbresumen = null;
+                }                                  
+                $dbResumen = null;
                 // Inicio creacion del resumen de documento NLP y guardado en BD
                 try {
                     $output = array();
@@ -359,15 +289,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Filtrar y extraer los objetos JSON de la salida
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
-                                $dbresumen = json_decode($line, true);
-                                $dbresumen = $dbresumen['resumen'];
+                                $dbResumen = json_decode($line, true);
+                                $dbResumen = $dbResumen['resumen'];
                             }
                         }
 
                         // Puedes usar $dbresumen según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbresumen, JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbResumen, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -390,19 +320,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
                 }
-                $dbidetiqueta = null;                          
-                /* try { // Inicio busqueda de id por nombre etiqueta extraida de documento
-                    include 'conexiondb.php';                                    
+                $dbIDetiqueta = null;                          
+                try { // Inicio busqueda de ids para creacion documento
+                    include 'conexiondb.php'; 
+                                                       
                     // Consulta SQL con cláusula WHERE
                     $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
-                    // Ejecutar la consulta
-                    $result = $conn->query($sql);                    
-                    if ($result) {
+                    
+                    // Ejecutar la consulta                 
+                    if ($result = $conn->query($sql)) {
                         if ($result->num_rows > 0) {
                             // Encontrado, procesa los resultados
                             while ($row = $result->fetch_assoc()) {
                                 // Accede a los valores en $row
-                                $dbidetiqueta = $row["idDocumentosCategoria"];
+                                $dbIDetiqueta = $row["idDocumentosCategoria"];
                             }
                         } else {
                             // No se encontraron resultados
@@ -417,7 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $conn->close();                                                                                                  
                 } 
                 catch (\Throwable $th) {
-                    $respuesta = "Hubo un problema al guardar la etiqueta.";
+                    $respuesta = "Hubo un problema al guardar la etiqueta en el sistema.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
@@ -433,36 +364,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }
                 try { // Creacion Documento en db
-                    include 'conexiondb.php';
-                    $nombreDocumento;
-                    $dbidetiqueta;                    
+                    include 'conexiondb.php';                    
                     // Consulta SQL con cláusula WHERE
-                    $sql = "INSERT INTO 'Documentos'('idDocumentos', 'DocumentosTitulo', 'DocumentosRutaGuardado', 'DocumentosResumen', 'DocumentosCategoria_idDocumentosCategoria') VALUES (NULL,$nombreDocumento,[value-3],[value-4],$dbidetiqueta)";
+                    $sql = "INSERT INTO Documentos (idDocumentos, DocumentosTitulo, DocumentosRutaGuardado, DocumentosResumen, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$tituloDocumento','$ruta_pdf','$dbResumen',$dbIDetiqueta)";
                     
                     // Ejecutar la consulta
-                    $result = $conn->query($sql);
-                    
-                    if ($result) {
-                        if ($result->num_rows > 0) {
-                            // Encontrado, procesa los resultados
-                            while ($row = $result->fetch_assoc()) {
-                                // Accede a los valores en $row
-                                $a = $row["idDocumentosCategoria"];
-                            }
+                    if ($conn->query($sql)) {
+                        $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado
+                        
+                        if ($dbIDdocumento > 0) {
+                            // La inserción fue exitosa
                         } else {
-                            // No se encontraron resultados
+                            // Hubo un problema al obtener el último ID insertado
                         }
                     } else {
-                        // Manejar error en la consulta
+                        // Manejar error en la consulta de inserción
                         $error_message = $conn->error; // Mensaje de error generado
-                        $conn->close(); 
                         throw new Exception($error_message);
-                    } 
-                    // Cerrar la conexión
-                    $conn->close();                                                                                                  
+                    }                                                                                                
                 } 
                 catch (\Throwable $th) {
-                    $respuesta = "Hubo un problema al guardar la etiqueta.";
+                    $respuesta = "Hubo un problema al crear el documento en el sistema.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                      
                     $rutaLog = "logs_de_error.txt";                    
@@ -476,7 +398,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                } */                                           
+                }   
+                try { // guardado verbos y sustantivos deldocumento en BD
+                    include 'conexiondb.php';
+                    $dbIDetiqueta;
+                    $dbIDdocumento;
+
+                    // Insertar frecuencias de verbos
+                    foreach ($top_30_verbos as $verbo => $frecuencia) {
+                        $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuencia,$dbIDdocumento,$dbIDetiqueta)";
+                        $conn->query($sql);
+                    }
+
+                    // Insertar frecuencias de sustantivos (PROPN y NOUN juntos)
+                    foreach ($top_30_sustantivos as $sustantivo => $frecuencia) {
+                        $sql = "INSERT INTO Sustantivo(idSustantivo, SustantivoNombre, SustantivoFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuencia,$dbIDdocumento,$dbIDetiqueta)";
+                        $conn->query($sql);
+                    }
+
+                    // Cerrar la conexión
+                    $conn->close();                                                           
+                } 
+                catch (\Throwable $th) {
+                    $respuesta = "Hubo un problema al guardar verbos y sustantivos en el sistema.";
+                    $error = $th->getMessage();
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $rutaLog = "logs_de_error.txt";                    
+                    // Abre o crea el archivo de log en modo de escritura al final del archivo
+                    $rutaLog = fopen($rutaLog, "a");
+                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                    // Cierra el archivo de log
+                    fclose($rutaLog);
+                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                    exit;
+                }                                        
             }
             else {
                 $respuesta = "El archivo internamente no se logró mover al directorio.";
