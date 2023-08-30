@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 } 
                 catch (Exception $th) {
-                    $respuesta = "Hubo un problema al hacer la transformación de pdf a texto.";
+                    $respuesta = "Hubo un problema al hacer la transformación de pdf a texto o su pdf no es elegible para ser convertido a texto.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }      
                 $dbetiqueta = null;       
-                // Inicio creacion automatica de etiqueta y guardado en BD
+                // Inicio creacion automatica de etiqueta 
                 try {
                     $output = array();
                     $return_var = 0;
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $dbextraer = null;
                 $top_30_verbos = [];
                 $top_30_sustantivos = [];              
-                // Inicio extraccion palabras clave NLP y guardado en BD
+                // Inicio extraccion palabras clave NLP 
                 try {
                     $output = array();
                     $return_var = 0;
@@ -229,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }                                  
                 $dbResumen = null;
-                // Inicio creacion del resumen de documento NLP y guardado en BD
+                // Inicio creacion del resumen de documento NLP 
                 try {
                     $output = array();
                     $return_var = 0;
