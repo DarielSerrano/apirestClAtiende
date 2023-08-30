@@ -16,30 +16,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     } 
     elseif (empty($pass)) {
         $respuesta = "Debe completar con su contraseña.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     }// Realizar otras validaciones específicas, como formato de RUT válido
     elseif (!formatoRUTValido($rut)) {
         $respuesta = "Rut en formato incorrecto, revise el dígito verificador.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     } // Verificación de contraseña 
     elseif (!validarContrasena($rut, $pass)) {
         $respuesta = "Contraseña incorrecta.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     }           
     elseif (empty($_FILES['archivo'])) {
         $respuesta = "El archivo no se adjunto.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                                 
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
+        exit;                                
     }
     elseif ($_FILES['archivo']['type'] == 'application/pdf') {    
         $ruta_destino = "archivos/";
@@ -322,18 +327,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     // Ejecutar la consulta
                     if ($conn->query($sql)) {
-                        $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado
-                        
+                        $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado                        
                         if ($dbIDdocumento > 0) {
                             // La inserción fue exitosa
                         } else {
-                            // Hubo un problema al obtener el último ID insertado
+                            // Manejar error en la consulta de inserción
+                            $error_message = $conn->error; // Mensaje de error generado
+                            // Cerrar la conexión
+                            $conn->close();
+                            throw new Exception($error_message);
                         }
-                    } else {
+                    } 
+                    else {
                         // Manejar error en la consulta de inserción
                         $error_message = $conn->error; // Mensaje de error generado
+                        // Cerrar la conexión
+                        $conn->close();
                         throw new Exception($error_message);
-                    }                                                                                                
+                    } 
+                    // Cerrar la conexión
+                    $conn->close();                                                                                               
                 } 
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al crear el documento en el sistema.";
@@ -362,18 +375,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $frecuenciaValor = $frecuencia['frecuencia'];
                         
                         $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
-                        $conn->query($sql);
+                        if($conn->query($sql)){
+                            // La consulta fue exitosa
+                        }
+                        else {
+                            // Manejar error en la consulta de inserción
+                            $error_message = $conn->error; // Mensaje de error generado
+                            // Cerrar la conexión
+                            $conn->close();
+                            throw new Exception($error_message);
+                        }
                     }
-
+                    
                     // Insertar frecuencias de sustantivos
                     foreach ($top_30_sustantivos as $frecuencia) {
                         $sustantivo = $frecuencia['palabra'];
                         $frecuenciaValor = $frecuencia['frecuencia'];
                         
                         $sql = "INSERT INTO Sustantivo(idSustantivo, SustantivoNombre, SustantivoFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
-                        $conn->query($sql);
+                        if ($conn->query($sql)){
+                            // La consulta fue exitosa
+                        }
+                        else {
+                            // Manejar error en la consulta de inserción
+                            $error_message = $conn->error; // Mensaje de error generado
+                            // Cerrar la conexión
+                            $conn->close();
+                            throw new Exception($error_message);
+                        } 
                     }
-
                     // Cerrar la conexión
                     $conn->close();
                 } 
