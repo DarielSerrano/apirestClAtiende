@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $consultaConNLP = $consultaConNLP['resultados'];
                     }
                 }  
-                echo $consultaConNLP;
+                echo json_encode($consultaConNLP, JSON_UNESCAPED_UNICODE);
                 $sustantivo = array(); // Almacenar sustantivos
                 $verb = array(); // Almacenar sustantivos
                 foreach ($consultaConNLP as $resultado) {
