@@ -204,8 +204,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
                                 $dbextraer = json_decode($line, true);
-                                $pal = $dbextraer['resultados']['palabra'];
-                                $cla = $dbextraer['resultados']['clasificacion'];
+                                $dbextraer = $dbextraer['resultados'];
+                                $pal = $dbextraer['palabra'];
+                                $cla = $dbextraer['clasificacion'];
                             }
                         }
                         // Puedes usar $dbextraer según tus necesidades
