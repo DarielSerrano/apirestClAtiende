@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }                        
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbetiqueta['etiqueta'], JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbetiqueta, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -205,11 +205,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }
                         }
 
+                        foreach ($dbextraer as $palcla) {
+                            $pal = $dbextraer['resultados']['palabra'];
+                            $cla = $dbextraer['resultados']['clasificacion'];
+                        }
                         // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbextraer['resultados']['palabra'], JSON_UNESCAPED_UNICODE);
-                        echo json_encode($dbextraer['resultados']['clasificacion'], JSON_UNESCAPED_UNICODE);
+                        echo json_encode($pal, JSON_UNESCAPED_UNICODE);
+                        echo json_encode($cla, JSON_UNESCAPED_UNICODE);
 
                     } else {
                         // Hubo un error al ejecutar el comando
@@ -328,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Puedes usar $dbresumen según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbresumen['resumen'], JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbresumen, JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
