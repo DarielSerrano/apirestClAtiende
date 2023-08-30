@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $respuesta = "Etiquetado creado con éxito.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                         
+                        echo json_encode($dbetiqueta, JSON_UNESCAPED_UNICODE);                         
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
