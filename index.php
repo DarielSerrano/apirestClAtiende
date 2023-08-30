@@ -205,13 +205,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             if (preg_match('/^\{.*\}$/', $line)) {
                                 $dbextraer = json_decode($line, true);
                                 $dbextraer = $dbextraer['resultados'];
+                                $dbextraer = json_decode($dbextraer, true);
                             }
                         }
                         // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbextraer, JSON_UNESCAPED_UNICODE);
-
+                        // Acceder a los datos en el arreglo
+                        foreach ($dbextraer as $item) {
+                            $pal = $item['palabra'];
+                            $cla = $item['clasificacion'];
+                            
+                            echo "Palabra: $pal, Clasificación: $cla<br>";
+                        }
+                        //echo json_encode($dbextraer, JSON_UNESCAPED_UNICODE);
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
