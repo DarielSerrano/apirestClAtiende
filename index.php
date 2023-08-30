@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $sustantivo = array(); // Almacenar sustantivos
                         $verb = array(); // Almacenar verbos
 
-                        foreach ($resultados as $resultado) {
+                        foreach ($dbextraer as $resultado) {
                             $palabra = $resultado['palabra'];
                             $clasificacion = $resultado['clasificacion'];
                             
