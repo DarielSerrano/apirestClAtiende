@@ -13,7 +13,7 @@ def file_get_contents(pathfile):
         with open(pathfile) as f:
             return f.read()
     except IOError:
-        return f""
+        return f"{pathfile}"
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
