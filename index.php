@@ -210,13 +210,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        foreach ($dbextraer as $resultado) {
+                        $sustantivo = array(); // Almacenar sustantivos
+                        $verb = array(); // Almacenar verbos
+
+                        foreach ($resultados as $resultado) {
                             $palabra = $resultado['palabra'];
                             $clasificacion = $resultado['clasificacion'];
                             
-                            echo "Palabra: $palabra, Clasificación: $clasificacion<br>";
+                            if ($clasificacion == 'NOUN' || $clasificacion == 'PROPN') {
+                                $sustantivo[] = $palabra;
+                            } elseif ($clasificacion == 'VERB') {
+                                $verb[] = $palabra;
+                            }
                         }
-                        echo json_encode($dbextraer, JSON_UNESCAPED_UNICODE);
+
+                        // Convertir los arrays en strings
+                        $sustantivo_str = implode(', ', $sustantivo);
+                        $verb_str = implode(', ', $verb);
+
+                        echo "Sustantivos: $sustantivo_str<br>";
+                        echo "Verbos: $verb_str<br>";
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
