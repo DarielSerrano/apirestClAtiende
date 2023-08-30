@@ -405,19 +405,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $dbIDdocumento;
 
                     // Insertar frecuencias de verbos
-                    foreach ($top_30_verbos as $verbo => $frecuencia) {
-                        $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuencia,$dbIDdocumento,$dbIDetiqueta)";
+                    foreach ($top_30_verbos as $frecuencia) {
+                        $verbo = $frecuencia['palabra'];
+                        $frecuenciaValor = $frecuencia['frecuencia'];
+                        
+                        $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
                         $conn->query($sql);
                     }
 
-                    // Insertar frecuencias de sustantivos (PROPN y NOUN juntos)
-                    foreach ($top_30_sustantivos as $sustantivo => $frecuencia) {
-                        $sql = "INSERT INTO Sustantivo(idSustantivo, SustantivoNombre, SustantivoFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuencia,$dbIDdocumento,$dbIDetiqueta)";
+                    // Insertar frecuencias de sustantivos
+                    foreach ($top_30_sustantivos as $frecuencia) {
+                        $sustantivo = $frecuencia['palabra'];
+                        $frecuenciaValor = $frecuencia['frecuencia'];
+                        
+                        $sql = "INSERT INTO Sustantivo(idSustantivo, SustantivoNombre, SustantivoFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
                         $conn->query($sql);
                     }
 
                     // Cerrar la conexión
-                    $conn->close();                                                           
+                    $conn->close();
                 } 
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al guardar verbos y sustantivos en el sistema.";
