@@ -209,8 +209,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
                         foreach ($dbextraer as $key) {
-                            $pal = $key['palabra'];
-                            $cla = $key['clasificacion'];
+                            $pal = $key['resultados']['palabra'];
+                            $cla = $key['resultados']['clasificacion'];
                             echo json_encode($pal, JSON_UNESCAPED_UNICODE);
                             echo json_encode($cla, JSON_UNESCAPED_UNICODE);
                         }
