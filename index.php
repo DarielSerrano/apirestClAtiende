@@ -104,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual 
         $namefinal = $fechaHora."_".$namefinal;
         $ruta_archivo = $ruta_destino . $namefinal; 
-        echo ($nombreDocumento);
         if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
             if(move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta_archivo)) {      
                 //guardar en la variable txt el nombre del archivo, pero cambiando la extensión 
@@ -164,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $respuesta = "Etiquetado exitoso.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbetiqueta, JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbetiqueta['etiqueta'], JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -209,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbextraer, JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbextraer['resultados'], JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -326,7 +325,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Puedes usar $dbresumen según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbresumen, JSON_UNESCAPED_UNICODE);                          
+                        echo json_encode($dbresumen['resumen'], JSON_UNESCAPED_UNICODE);                          
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
