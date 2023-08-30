@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $escaped_consulta = escapeshellarg($consulta);
         // Construir el comando para ejecutar el script de Python con la cadena de texto como argumento
         $comando_python = "cd /var/www/html/apirestClAtiende && STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py " . $escaped_consulta;
-
+        $sustantivo = null;
+        $verb = null;
         // Inicio extraccion palabras clave NLP
         try {
             $output = array();
@@ -48,11 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     } elseif ($clasificacion == 'VERB') {
                         $verb[] = $palabra;
                     }
-                }
-                echo json_encode($consultaConNLP, JSON_UNESCAPED_UNICODE);
-                echo json_encode($sustantivo, JSON_UNESCAPED_UNICODE);
-                echo json_encode($verb, JSON_UNESCAPED_UNICODE);
-                
+                }     
+                          
             } 
             else {
                 // Hubo un error al ejecutar el comando
@@ -75,7 +73,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit;
-        }                                  
+        }  
+        try {
+            $verbos = implode("', '", $verb); // Unir verbos en formato 'verbo1', 'verbo2', ...
+            $sustantivos = implode("', '", $sustantivo); // Unir sustantivos en formato 'sustantivo1', 'sustantivo2', ...
+            $sql = 
+            "SELECT
+                D.idDocumentos,
+                D.DocumentosTitulo,
+                D.DocumentosRutaGuardado,
+                D.DocumentosResumen,
+                SUM(IFNULL(V.VerbosFrecuencia, 0)) AS SumaVerbosFrecuencia,
+                SUM(IFNULL(S.SustantivosFrecuencia, 0)) AS SumaSustantivosFrecuencia,
+                SUM(IFNULL(V.VerbosFrecuencia, 0) + IFNULL(S.SustantivosFrecuencia, 0)) AS TotalFrecuencia
+            FROM
+                Documentos D
+            LEFT JOIN
+                (
+                    SELECT
+                        VerbosNombre,
+                        Documentos_idDocumentos,
+                        VerbosFrecuencia
+                    FROM
+                        Verbos
+                    WHERE
+                        VerbosNombre IN ('$verbos')
+                ) V
+            ON
+                D.idDocumentos = V.Documentos_idDocumentos
+            LEFT JOIN
+                (
+                    SELECT
+                        SustantivosNombre,
+                        Documentos_idDocumentos,
+                        SustantivosFrecuencia
+                    FROM
+                        Sustantivos
+                    WHERE
+                        SustantivosNombre IN ('$sustantivos')
+                ) S
+            ON
+                D.idDocumentos = S.Documentos_idDocumentos
+            WHERE
+                V.VerbosNombre IS NOT NULL OR S.SustantivosNombre IS NOT NULL
+            GROUP BY
+                D.idDocumentos, D.DocumentosTitulo, D.DocumentosRutaGuardado, D.DocumentosResumen
+            ORDER BY
+                TotalFrecuencia DESC
+            LIMIT 5;";
+            
+            if ($resultado_consulta = $conn->query($sql)) {
+                // Crear un arreglo para almacenar los resultados modificados
+                $documentos_modificados = array();
+
+                // Modificar los valores de DocumentosRutaGuardado para crear enlaces
+                foreach ($resultado_consulta as $row) {
+                    $row['DocumentosRutaGuardado'] = '<a href="' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
+                    $documentos_modificados[] = $row;
+                }
+
+                // Crear un objeto JSON con los resultados modificados
+                $json_resultado = json_encode($documentos_modificados);
+
+                // Imprimir el JSON
+                echo $json_resultado;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }                                
                                
         
         /* try { // guardado verbos y sustantivos deldocumento en BD
