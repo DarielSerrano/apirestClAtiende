@@ -240,21 +240,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         // Mostrar frecuencia de cada palabra con su clasificación
                         foreach ($palabra_contador as $palabra => $frecuencia) {
-                            $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUSTANTIVO';
-                            echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
+                            $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUST';
+                            if ($clasificacion == 'VERB') {
+                                echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
+                            }
+                            elseif ($clasificacion == 'SUST') {
+                                echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
+                            }
+                            
                         }
 
-                        echo "<br>Sustantivos ordenados:<br>";
-                        sort($sustantivo); // Ordenar sustantivos alfabéticamente
-                        foreach ($sustantivo as $palabra) {
-                            echo "$palabra<br>";
-                        }
-
-                        echo "<br>Verbos ordenados:<br>";
-                        sort($verb); // Ordenar verbos alfabéticamente
-                        foreach ($verb as $palabra) {
-                            echo "$palabra<br>";
-                        }
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
