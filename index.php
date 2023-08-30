@@ -209,7 +209,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
                         foreach ($dbextraer['resultados'] as $key) {
-                            echo json_encode($key[], JSON_UNESCAPED_UNICODE);
+                            echo json_encode($key['palabra'], JSON_UNESCAPED_UNICODE);
+                            echo json_encode($key['clasificacion'], JSON_UNESCAPED_UNICODE);
                         }
                     } else {
                         // Hubo un error al ejecutar el comando
