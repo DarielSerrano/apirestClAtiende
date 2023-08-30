@@ -24,7 +24,7 @@ text = WHITESPACE_HANDLER(text)
 summarizer = pipeline("summarization", model="csebuetnlp/mT5_multilingual_XLSum")
 
 # Generate the summary using the summarizer
-summary = summarizer(text, max_length=500, num_beams=4, no_repeat_ngram_size=2)
+summary = summarizer(text, max_length=840, num_beams=4, no_repeat_ngram_size=2)
 
 # Extract the summary text from the output
 summary_text = summary[0]['summary_text']
