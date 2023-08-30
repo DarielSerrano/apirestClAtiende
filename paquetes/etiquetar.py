@@ -19,7 +19,7 @@ def file_get_contents(pathfile):
         with open(pathfile) as f:
             return f.read()
     except IOError:
-        return f"no file found: {pathfile}"
+        return f""
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 raw_text = file_get_contents(sys.argv[1])
