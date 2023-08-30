@@ -246,8 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }
                             elseif ($clasificacion == 'SUST') {
                                 echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
-                            }
-                            
+                            }                            
                         }
 
                     } else {
