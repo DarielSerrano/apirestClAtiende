@@ -205,15 +205,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             if (preg_match('/^\{.*\}$/', $line)) {
                                 $dbextraer = json_decode($line, true);
                                 $dbextraer = $dbextraer['resultados'];
-                                $pal = $dbextraer['palabra'];
-                                $cla = $dbextraer['clasificacion'];
                             }
                         }
                         // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($pal, JSON_UNESCAPED_UNICODE);
-                        echo json_encode($cla, JSON_UNESCAPED_UNICODE);
+                        echo json_encode($dbextraer, JSON_UNESCAPED_UNICODE);
 
                     } else {
                         // Hubo un error al ejecutar el comando
