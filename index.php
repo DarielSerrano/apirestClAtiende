@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $output = array();
                     $return_var = 0;
                     $errcapture = "2>&1";
-                    $extraer = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
+                    $extraer = "cd /var/www/html/apirestClAtiende && STANZA_RESOURCES_DIR=stanza_resources python3.10 paquetes/extraer.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
                     exec("$extraer $ruta_txt $errcapture", $output, $return_var);
                     
