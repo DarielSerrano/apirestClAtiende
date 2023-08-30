@@ -205,7 +205,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             if (preg_match('/^\{.*\}$/', $line)) {
                                 $dbextraer = json_decode($line, true);
                                 $dbextraer = $dbextraer['resultados'];
-                                $dbextraer = json_decode($dbextraer, true);
                             }
                         }
                         // Puedes usar $dbextraer según tus necesidades
