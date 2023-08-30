@@ -212,16 +212,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         header('Content-Type: application/json; charset=UTF-8');
                         $sustantivo = array(); // Almacenar sustantivos
                         $verb = array(); // Almacenar verbos
-
+                        $palabra_contador = array();
+                        $sustantivo = array();
+                        $verb = array();
+                        
                         foreach ($dbextraer as $resultado) {
                             $palabra = $resultado['palabra'];
                             $clasificacion = $resultado['clasificacion'];
-                            
+                        
+                            // Incrementar el contador de la palabra
+                            if (isset($palabra_contador[$palabra])) {
+                                $palabra_contador[$palabra]++;
+                            } else {
+                                $palabra_contador[$palabra] = 1;
+                            }
+                        
+                            // Separar en verbos y sustantivos
                             if ($clasificacion == 'NOUN' || $clasificacion == 'PROPN') {
                                 $sustantivo[] = $palabra;
                             } elseif ($clasificacion == 'VERB') {
                                 $verb[] = $palabra;
                             }
+                        }
+                        
+                        // Mostrar frecuencia de cada palabra
+                        foreach ($palabra_contador as $palabra => $frecuencia) {
+                            echo "Palabra: $palabra, Frecuencia: $frecuencia<br>";
+                        }
+                        
+                        echo "<br>Sustantivos:<br>";
+                        foreach ($sustantivo as $palabra) {
+                            echo "$palabra<br>";
+                        }
+                        
+                        echo "<br>Verbos:<br>";
+                        foreach ($verb as $palabra) {
+                            echo "$palabra<br>";
                         }
 
                         // Convertir los arrays en strings
