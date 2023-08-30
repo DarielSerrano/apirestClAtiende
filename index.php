@@ -219,14 +219,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         foreach ($dbextraer as $resultado) {
                             $palabra = $resultado['palabra'];
                             $clasificacion = $resultado['clasificacion'];
-                        
+
                             // Incrementar el contador de la palabra
                             if (isset($palabra_contador[$palabra])) {
                                 $palabra_contador[$palabra]++;
                             } else {
                                 $palabra_contador[$palabra] = 1;
                             }
-                        
+
                             // Separar en verbos y sustantivos
                             if ($clasificacion == 'NOUN' || $clasificacion == 'PROPN') {
                                 $sustantivo[] = $palabra;
@@ -234,28 +234,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $verb[] = $palabra;
                             }
                         }
-                        
-                        // Mostrar frecuencia de cada palabra
+
+                        // Ordenar arreglo de palabra_contador por frecuencia de mayor a menor
+                        arsort($palabra_contador);
+
+                        // Mostrar frecuencia de cada palabra con su clasificación
                         foreach ($palabra_contador as $palabra => $frecuencia) {
-                            echo "Palabra: $palabra, Frecuencia: $frecuencia<br>";
+                            $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUSTANTIVO';
+                            echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
                         }
-                        
-                        echo "<br>Sustantivos:<br>";
+
+                        echo "<br>Sustantivos ordenados:<br>";
+                        sort($sustantivo); // Ordenar sustantivos alfabéticamente
                         foreach ($sustantivo as $palabra) {
                             echo "$palabra<br>";
                         }
-                        
-                        echo "<br>Verbos:<br>";
+
+                        echo "<br>Verbos ordenados:<br>";
+                        sort($verb); // Ordenar verbos alfabéticamente
                         foreach ($verb as $palabra) {
                             echo "$palabra<br>";
                         }
-
-                        // Convertir los arrays en strings
-                        $sustantivo_str = implode(', ', $sustantivo);
-                        $verb_str = implode(', ', $verb);
-
-                        echo "Sustantivos: $sustantivo_str<br>";
-                        echo "Verbos: $verb_str<br>";
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
