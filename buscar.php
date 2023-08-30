@@ -135,8 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Crear un objeto JSON con los resultados modificados
-                $respuesta = json_encode($documentos_modificados);
-                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE);
             } 
             else {
                 // Manejar error en la consulta de inserción
