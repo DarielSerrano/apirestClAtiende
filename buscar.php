@@ -130,14 +130,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Modificar los valores de DocumentosRutaGuardado para crear enlaces
                 foreach ($resultado_consulta as $row) {
                     $row['DocumentosRutaGuardado'] = '<a href="' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
+                    unset($row['idDocumentos'], $row['SumaVerbosFrecuencia'], $row['SumaSustantivosFrecuencia'], $row['TotalFrecuencia']);
                     $documentos_modificados[] = $row;
                 }
 
                 // Crear un objeto JSON con los resultados modificados
-                $json_resultado = json_encode($documentos_modificados);
-
-                // Imprimir el JSON
-                echo $json_resultado;
+                $respuesta = json_encode($documentos_modificados);
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             } 
             else {
                 // Manejar error en la consulta de inserción
