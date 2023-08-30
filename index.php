@@ -215,7 +215,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         foreach ($dbextraer as $item) {
                             $pal = $item['palabra'];
                             $cla = $item['clasificacion'];
-                            echo json_encode("Palabra: $pal, Clasificación: $cla<br>", JSON_UNESCAPED_UNICODE);
+                            echo json_encode($pal, JSON_UNESCAPED_UNICODE);
+                            echo json_encode($cla, JSON_UNESCAPED_UNICODE);
                         }
                         //echo json_encode($dbextraer, JSON_UNESCAPED_UNICODE);
                     } else {
