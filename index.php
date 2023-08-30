@@ -243,8 +243,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUST';
                             if ($clasificacion == 'VERB') {
                                 echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
-                            }
-                            elseif ($clasificacion == 'SUST') {
+                            }                          
+                        }
+                        foreach ($palabra_contador as $palabra => $frecuencia) {
+                            $clasificacion = in_array($palabra, $verb) ? 'VERB' : 'SUST';
+                            if ($clasificacion == 'SUST') {
                                 echo "Palabra: $palabra, Clasificación: $clasificacion, Frecuencia: $frecuencia<br>";
                             }                            
                         }
