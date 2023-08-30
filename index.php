@@ -208,8 +208,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }
                         }
                         // Puedes usar $dbextraer según tus necesidades
-                        header("HTTP/1.1 200 OK");
-                        header('Content-Type: application/json; charset=UTF-8');
                         $sustantivo = array(); // Almacenar sustantivos
                         $verb = array(); // Almacenar verbos
                         $palabra_contador = array();
