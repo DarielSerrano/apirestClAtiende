@@ -49,6 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $verb[] = $palabra;
                     }
                 }
+                echo json_encode($consultaConNLP, JSON_UNESCAPED_UNICODE);
+                echo json_encode($sustantivo, JSON_UNESCAPED_UNICODE);
+                echo json_encode($verb, JSON_UNESCAPED_UNICODE);
+                
             } 
             else {
                 // Hubo un error al ejecutar el comando
