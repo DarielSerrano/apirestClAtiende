@@ -279,7 +279,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     include 'conexiondb.php';                                                        
                     // Consulta SQL con cláusula WHERE
                     $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
-                    $sql = preg_replace('/[^A-Za-z.,()\s_\'"=$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
                     // Ejecutar la consulta                 
                     if ($result = $conn->query($sql)) {
                         if ($result->num_rows > 0) {
@@ -320,8 +319,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     include 'conexiondb.php';                    
                     // Consulta SQL con cláusula WHERE
                     $sql = "INSERT INTO Documentos (idDocumentos, DocumentosTitulo, DocumentosRutaGuardado, DocumentosResumen, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$tituloDocumento','$ruta_pdf','$dbResumen',$dbIDetiqueta)";
-                    $sql = preg_replace('/[^A-Za-z.,()\s_\'"=$]/', '', $sql);  //asegurar solo caracteres propios de la consulta hecha
-                    echo json_encode($sql, JSON_UNESCAPED_UNICODE);
                     // Ejecutar la consulta
                     if ($conn->query($sql)) {
                         $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado                        
@@ -370,7 +367,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $verbo = $frecuencia['palabra'];
                         $frecuenciaValor = $frecuencia['frecuencia'];                                                
                         $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
-                        $sql = preg_replace('/[^A-Za-z.,()\s_\'"=$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
                         if($conn->query($sql)){
                             // La consulta fue exitosa
                         }
@@ -387,7 +383,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $sustantivo = $frecuencia['palabra'];
                         $frecuenciaValor = $frecuencia['frecuencia'];                                
                         $sql = "INSERT INTO Sustantivos(idSustantivos, SustantivosNombre, SustantivosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
-                        $sql = preg_replace('/[^A-Za-z.,()\s_\'"=$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
                         if ($conn->query($sql)){
                             // La consulta fue exitosa
                         }
