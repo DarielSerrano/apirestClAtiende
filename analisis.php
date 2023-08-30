@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $respuesta = "Etiquetado creado con éxito.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($dbetiqueta, JSON_UNESCAPED_UNICODE);                         
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                         
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -280,6 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Consulta SQL con cláusula WHERE
                     $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = $dbetiqueta";                    
                     $sql = preg_replace('/[^A-Za-z.,()\s_\'$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
+                    echo json_encode($sql, JSON_UNESCAPED_UNICODE);
                     // Ejecutar la consulta                 
                     if ($result = $conn->query($sql)) {
                         if ($result->num_rows > 0) {
