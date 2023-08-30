@@ -278,7 +278,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 try { // Inicio busqueda de ids para creacion documento
                     include 'conexiondb.php';                                                        
                     // Consulta SQL con cláusula WHERE
-                    $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
+                    $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = $dbetiqueta";                    
                     $sql = preg_replace('/[^A-Za-z.,()\s_\'$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
                     // Ejecutar la consulta                 
                     if ($result = $conn->query($sql)) {
