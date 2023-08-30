@@ -208,12 +208,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Puedes usar $dbextraer según tus necesidades
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        foreach ($dbextraer as $key) {
-                            $pal = $key['resultados']['palabra'];
-                            $cla = $key['resultados']['clasificacion'];
-                            echo json_encode($pal, JSON_UNESCAPED_UNICODE);
-                            echo json_encode($cla, JSON_UNESCAPED_UNICODE);
-                        }
+                        echo json_encode($dbextraer['resultados']['palabra'], JSON_UNESCAPED_UNICODE);
+                        echo json_encode($dbextraer['resultados']['clasificacion'], JSON_UNESCAPED_UNICODE);
+
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
