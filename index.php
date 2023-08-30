@@ -158,9 +158,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
                                 $dbetiqueta = json_decode($line, true);
+                                $dbetiqueta = $dbetiqueta['etiqueta'];
                             }
                         }                        
-                        $respuesta = "Etiquetado exitoso.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
                         echo json_encode($dbetiqueta['etiqueta'], JSON_UNESCAPED_UNICODE);                          
@@ -319,6 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         foreach ($output as $line) {
                             if (preg_match('/^\{.*\}$/', $line)) {
                                 $dbresumen = json_decode($line, true);
+                                $dbresumen = $dbresumen['resumen'];
                             }
                         }
 
