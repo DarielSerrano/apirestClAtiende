@@ -456,7 +456,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
             } 
         }  
     } else {
-        $respuesta = "Error al analizar los datos de la solicitud.";
+        $respuesta = "Error al analizar los datos de la solicitud PUT.";
         header("HTTP/1.1 400 Bad Request");
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
