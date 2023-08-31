@@ -74,7 +74,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt $errcapture", $output, $return_var);
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
-                        /* // El comando se ejecutó correctamente*/
+                        // Lee el contenido del archivo
+                        $contenido = file_get_contents($ruta_txt);
+
+                        // Aplicar preg_replace para mantener solo los caracteres deseados
+                        $contenido_filtrado = preg_replace('/[^A-Za-z\s,.\-_():ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $contenido);
+
+                        // Escribir el contenido filtrado de vuelta al archivo
+                        file_put_contents($ruta_txt, $contenido_filtrado);
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
@@ -280,6 +287,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     include 'conexiondb.php';                                                        
                     // Consulta SQL con cláusula WHERE
                     $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
+                    // Limpieza ante posibles inyecciones
+                    $sql = preg_replace('/[^A-Za-z\s(),\'\".-_$+]/',"",$sql);
                     // Ejecutar la consulta                 
                     if ($result = $conn->query($sql)) {
                         if ($result->num_rows > 0) {
@@ -320,6 +329,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     include 'conexiondb.php';                    
                     // Consulta SQL con cláusula WHERE
                     $sql = "INSERT INTO Documentos (idDocumentos, DocumentosTitulo, DocumentosRutaGuardado, DocumentosResumen, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$tituloDocumento','$rutaDBpdf','$dbResumen',$dbIDetiqueta)";
+                    // Limpieza ante posibles inyecciones
+                    $sql = preg_replace('/[^A-Za-z\s(),\'\".-_$+]/',"",$sql);
                     // Ejecutar la consulta
                     if ($conn->query($sql)) {
                         $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado                        
@@ -368,6 +379,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $verbo = $frecuencia['palabra'];
                         $frecuenciaValor = $frecuencia['frecuencia'];                                                
                         $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
+                        // Limpieza ante posibles inyecciones
+                        $sql = preg_replace('/[^A-Za-z\s(),\'\".-_$+]/',"",$sql);
                         if($conn->query($sql)){
                             // La consulta fue exitosa
                         }
@@ -384,6 +397,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $sustantivo = $frecuencia['palabra'];
                         $frecuenciaValor = $frecuencia['frecuencia'];                                
                         $sql = "INSERT INTO Sustantivos(idSustantivos, SustantivosNombre, SustantivosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
+                        // Limpieza ante posibles inyecciones
+                        $sql = preg_replace('/[^A-Za-z\s(),\'\".-_$+]/',"",$sql);
                         if ($conn->query($sql)){
                             // La consulta fue exitosa
                         }
