@@ -129,14 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             LIMIT 5;";
 
             if ($resultado_consulta = $conn->query($sql)) {
-                // Modificar los valores de DocumentosRutaGuardado para crear enlaces
+                /// Modificar los valores de DocumentosRutaGuardado para crear enlaces
                 foreach ($resultado_consulta as $row) {
                     $row['DocumentosRutaGuardado'] = '<a href="download.php?archivo=' . rawurlencode($row['DocumentosRutaGuardado']) . '">Descargar</a>';
-                    $documentos_modificados[] = array(
-                        "DocumentosTitulo" => $row['DocumentosTitulo'],
-                        "DocumentosRutaGuardado" => $row['DocumentosRutaGuardado'],
-                        "DocumentosResumen" => $row['DocumentosResumen']
-                    );
+                    unset($row['idDocumentos'], $row['SumaVerbosFrecuencia'], $row['SumaSustantivosFrecuencia'], $row['TotalFrecuencia']);
+                    $documentos_modificados[] = $row;
                 }
 
                 // Crear un objeto JSON con los resultados modificados
