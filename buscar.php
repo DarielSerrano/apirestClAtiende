@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 TotalFrecuencia DESC
             LIMIT 5;";
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^A-Za-z\s(),\'\".-_$+]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+]/',"",$sql);
             if ($resultado_consulta = $conn->query($sql)) {
                 // Modificar los valores de DocumentosRutaGuardado para crear enlaces
                 foreach ($resultado_consulta as $row) {

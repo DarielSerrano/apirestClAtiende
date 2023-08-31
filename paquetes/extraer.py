@@ -15,6 +15,18 @@ def file_get_contents(pathfile):
             return f.read()
     except IOError:
         return f"{pathfile}"
+    
+def correccion_tildes(text):
+    # Mapeo de caracteres con tilde a sus versiones sin tilde
+    replace_map = {
+        'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
+        'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U',
+    }
+    
+    # Reemplazar los caracteres con tilde por sus versiones sin tilde
+    updated_text = text.translate(str.maketrans(replace_map))
+    
+    return updated_text    
 
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
@@ -50,6 +62,9 @@ for elemento in lemmatized_words:
 resultado_json = {
     "resultados": objetos_filtrados
 }
+
+# Aplicar corrección de tildes al resumen
+objetos_filtrados = correccion_tildes(objetos_filtrados)
 
 # Mostrar el resultado JSON
 print(json.dumps(resultado_json, ensure_ascii=False))
