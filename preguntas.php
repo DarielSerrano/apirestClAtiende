@@ -449,6 +449,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_SERVER['CONTENT_TYPE']) && st
             exit;
         } 
     }
+} else {
+    echo $_POST;
 }
 
 ?>
