@@ -313,6 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
     foreach ($putData as $key => $value) {
         $datos[$key] = $value;
+        echo "$key: $value";
     }
 
     // Ahora puedes acceder a los valores mediante sus claves
