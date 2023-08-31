@@ -54,7 +54,7 @@ objetos_filtrados = []
 for elemento in lemmatized_words:
     if elemento["upos"] in ["NOUN", "VERB", "PROPN"]:
         objetos_filtrados.append({
-            "palabra": elemento["lemma"],
+            "palabra": correccion_tildes(elemento["lemma"]),
             "clasificacion": elemento["upos"]
         })
 
@@ -62,9 +62,6 @@ for elemento in lemmatized_words:
 resultado_json = {
     "resultados": objetos_filtrados
 }
-
-# Aplicar corrección de tildes al resumen
-objetos_filtrados = correccion_tildes(objetos_filtrados)
 
 # Mostrar el resultado JSON
 print(json.dumps(resultado_json, ensure_ascii=False))
