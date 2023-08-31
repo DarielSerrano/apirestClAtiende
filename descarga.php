@@ -5,11 +5,10 @@ if (isset($_GET['archivo'])) {
 
     // Ruta real del archivo en el servidor
     $rutaArchivo = '/var/www/html/apirestClAtiende/' . $archivo;
-    
 
-    // Verifica si el archivo existe y es seguro
-    if (file_exists($rutaArchivo) && is_readable($rutaArchivo)) {
-        // Establece las cabeceras para forzar la descarga
+    // Verifica si el archivo existe y es accesible
+    if (file_exists($rutaArchivo)) {
+        // Configura las cabeceras para forzar la descarga
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . basename($rutaArchivo) . '"');
@@ -17,12 +16,14 @@ if (isset($_GET['archivo'])) {
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . filesize($rutaArchivo));
+
+        // Lee y envía el archivo
         readfile($rutaArchivo);
         exit;
     } else {
-        echo "El archivo no existe o no es accesible.";
+        echo 'El archivo no existe.';
     }
 } else {
-    echo "Nombre de archivo no proporcionado.";
+    echo 'Archivo no especificado.';
 }
 ?>
