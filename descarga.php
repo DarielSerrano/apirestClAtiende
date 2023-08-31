@@ -1,8 +1,8 @@
 <?php
 $directorioPermitido = '/var/www/html/apirestClAtiende/archivos/';
 
-if (isset($_GET['archivo'])) {
-    $nombreArchivoReal = $_GET['archivo'];
+if (isset($_GET['doc'])) {
+    $nombreArchivoReal = $_GET['doc'];
     $rutaArchivo = $directorioPermitido . $nombreArchivoReal;
 
     // Verifica si la ruta del archivo está dentro del directorio permitido
