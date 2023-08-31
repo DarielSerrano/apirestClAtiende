@@ -135,7 +135,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         "Categoria" => $row['Categoria']
                     );
                 }
-                echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                header("HTTP/1.1 200 OK");
+                header('Content-Type: application/json; charset=UTF-8');
+                echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE);
             } 
             else {
                 // Manejar error en la consulta de inserción
