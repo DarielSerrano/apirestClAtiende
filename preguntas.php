@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     }      
 }; 
 
-//codigo inicial del metodo get 
+//codigo inicial del metodo post 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     include 'sesiones/validarsesionadmin.php';
@@ -138,18 +138,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     // Obtén los datos del formulario
     $rut = $_POST['rut'];
     $pass = $_POST['password'];
+    $categoria = $_POST['categoria'];
+    $preguntaFrec = $_POST['pregunta'];
+    $respuestaFrec = $_POST['respuesta'];
 
     // Elimina caracteres no válidos del RUT
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
 
-    // Validar si el RUT y la contraseña no están vacíos
+    // Validar si el RUT no están vacío
     if (empty($rut)) {
         $respuesta = "Debe completar con su Rut, esta sección es solo para Funcionarios.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    } elseif (empty($pass)) {
+    }  // Validar si la contraseña no está vacía
+    elseif (empty($pass)) {
         $respuesta = "Debe completar con su contraseña, esta sección es solo para Funcionarios.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
@@ -170,16 +174,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
     }
-    // Verificar si se ha proporcionado la categoría en la solicitud GET
-    elseif (!isset($_POST['categoria'])) {
+    // Verificar si se ha proporcionado la categoría en la solicitud
+    elseif (empty($categoria)) {
         $respuesta = "Categoría no especificada.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
     } 
+    // Verificar si se ha proporcionado la categoría en la solicitud
+    elseif (empty($preguntaFrec)) {
+        $respuesta = "Categoría no especificada.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    // Verificar si se ha proporcionado la categoría en la solicitud
+    elseif (empty($respuestaFrec)) {
+        $respuesta = "Categoría no especificada.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    elseif (strlen($preguntaFrec) > 180) {
+        $respuesta = "La pregunta excede los 180 caracteres permitidos.";
+        header("HTTP/1.1 400 Bad Request");
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    elseif (strlen($respuestaFrec) > 180) {
+        $respuesta = "La respuesta excede los 180 caracteres permitidos.";
+        header("HTTP/1.1 400 Bad Request");
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
     else {
-        $categoria = $_POST['categoria'];
         $categoriaID = null;
         try {
             include 'conexiondb.php';                                                        
@@ -211,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
-            $respuesta = "Hubo un problema intentar la busqueda en el sistema.";
+            $respuesta = "Pruebe con una de las categorias definidas.";
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    
@@ -230,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         try {
             include 'conexiondb.php';                                                        
             // Consulta SQL
-            $sql = "SELECT PreguntasPreguntaFrecuente, PreguntasRespuesta FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = $categoriaID;";                    
+            $sql = "INSERT INTO Preguntas(idPreguntasFrecuentes, PreguntasPreguntaFrecuente, PreguntasRespuesta, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$preguntaFrec','$respuestaFrec',$categoriaID)";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
             // Ejecutar la consulta                 
@@ -239,10 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     // Encontrado, procesa los resultados
                     while ($row = $result->fetch_assoc()) {
                         // Accede a los valores en $row
-                        $documentos_modificados[] = array(
-                            "PreguntaFrecuente" => $row['PreguntasPreguntaFrecuente'],
-                            "Respuesta" => $row['PreguntasRespuesta'],
-                        );
+                        $documentos_modificados[] = $row;
                     }
                     // Construir el array final de resultados
                     $resultados = array("Resultados" => $documentos_modificados);
@@ -265,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
-            $respuesta = "Hubo un problema con la búsqueda de preguntas en el sistema.";
+            $respuesta = "Hubo un problema con la creacion de la pregunta y respuesta en el sistema.";
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    
@@ -280,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit;
         } 
-    }
-}; 
+    }   
+};  
 
 ?>
