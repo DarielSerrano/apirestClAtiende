@@ -307,39 +307,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
     // Obtén los datos en formato multipart/form-data
     $putData = file_get_contents("php://input");
-    echo $putData;
-    // Define una función para analizar los datos multipart
-    function multipart_parse($input)
-    {
-        $data = [];
-        $matches = [];
-        
-        // Separa los bloques por la cadena delimitadora
-        preg_match_all('/-{28}[0-9]+(.*?)--{28}/s', $input, $matches);
-        
-        foreach ($matches[1] as $match) {
-            $parts = explode("\r\n\r\n", trim($match), 2);
-            if (count($parts) === 2) {
-                // Extrae el nombre de campo y el valor del contenido
-                preg_match('/name="(.*?)"/', $parts[0], $nameMatches);
-                $fieldName = $nameMatches[1];
-                $data[$fieldName] = trim($parts[1]);
-            }
-        }
-        
-        return $data;
-    }
+    // Parsear los datos
+    parse_str($putData, $parsedData);
 
-    // Analiza los datos multipart
-    $multipartData = multipart_parse($putData);
-    echo $multipartData;
-    var_dump($multipartData);  
-        // Accede a los valores de los campos
-    $rut = $multipartData['rut'];
-    $password = $multipartData['password'];
-    $preguntaFrec = $multipartData['pregunta'];
-    $respuestaFrec = $multipartData['respuesta'];
-    $idPregunta = $multipartData['idpregunta'];
+    // Extraer las variables
+    $rut = $parsedData['rut'];
+    $password = $parsedData['password'];
+    $pregunta = urldecode($parsedData['pregunta']); // Decodificar la pregunta
+    $respuesta = urldecode($parsedData['respuesta']); // Decodificar la respuesta
+    $idPregunta = $parsedData['idpregunta'];
     
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
