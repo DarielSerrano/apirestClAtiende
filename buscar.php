@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     FROM
                         Verbos
                     WHERE
-                        VerbosNombre IN ('gustar', 'obtener', 'ver')
+                        VerbosNombre IN ('$verbos')
                 ) V
             ON
                 D.idDocumentos = V.Documentos_idDocumentos
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     FROM
                         Sustantivos
                     WHERE
-                        SustantivosNombre IN ('TNE', 'posibilidad')
+                        SustantivosNombre IN ('$sustantivos')
                 ) S
             ON
                 D.idDocumentos = S.Documentos_idDocumentos
