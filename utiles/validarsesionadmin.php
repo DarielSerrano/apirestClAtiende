@@ -1,6 +1,6 @@
 <?php
     function validarContrasena($rut,$pass) {
-        $UsusarioRut = $rut;
+        $UsuarioRut = $rut;
         $UsuarioContrasena = $pass;
 
         // Declarar la variable $Contrasena
@@ -12,7 +12,7 @@
 
         try {
             // Consulta SQL con cláusula WHERE
-            $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsusarioRut";
+            $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsuarioRut";
             $result = $conn->query($sql);
         } 
         catch (\Throwable $th) {
