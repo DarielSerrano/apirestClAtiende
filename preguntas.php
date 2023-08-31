@@ -329,9 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
     $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
     $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
-    foreach ($datos as $key => $value) {
-        echo "$key: $value".PHP_EOL;
-    }
+
     // Validar si el RUT no están vacío
     if (empty($rut)) {
         $respuesta = "Debe completar con su Rut, esta sección es solo para Funcionarios.";
