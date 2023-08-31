@@ -1,5 +1,6 @@
 <?php
 include 'utiles/funcionesutiles.php';
+include 'utiles/validarsesionadmin.php';    
 //codigo inicial del metodo get 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
@@ -127,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 //codigo inicial del metodo post 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    include 'utiles/validarsesionadmin.php';    
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
     set_time_limit(1200);
@@ -298,9 +298,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 };  
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
-    include 'utiles/validarsesionadmin.php';    
     $put = file_get_contents("php://input");
     // Obtén los datos del formulario utilizando 
+    echo $put;
     $rut = $put['rut'];
     $password = $put['password'];
     $preguntaFrec = $put['pregunta'];
