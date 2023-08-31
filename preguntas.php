@@ -307,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
     // Obtén los datos en formato multipart/form-data
     $putData = file_get_contents("php://input");
-
+    echo $putData;
     // Define una función para analizar los datos multipart
     function multipart_parse($input)
     {
