@@ -312,9 +312,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $datos = array();
 
     foreach ($putData as $key => $value) {
-        // Remover los posibles caracteres no deseados
-        $value = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $value);
-        // Guardar el valor en el array
         $datos[$key] = $value;
     }
 
