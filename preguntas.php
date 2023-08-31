@@ -314,7 +314,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     foreach ($putData as $key => $value) {
         $datos[$key] = $value;        
     }
-    $datos = json_encode($datos, true);
     // Ahora puedes acceder a los valores mediante sus claves
     $rut = $datos['rut'];
     $pass = $datos['password'];
