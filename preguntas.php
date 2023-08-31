@@ -308,15 +308,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Obtén los datos en formato multipart/form-data
     parse_str(file_get_contents("php://input"),$putData);
     // Parsear los datos
+    // Inicializar un array para almacenar los valores
+    $datos = array();
 
-    // Extraer las variables
-    $rut = $putData['rut'];
-    $password = $putData['password'];
-    $pregunta = urldecode($putData['pregunta']); // Decodificar la pregunta
-    $respuesta = urldecode($putData['respuesta']); // Decodificar la respuesta
-    $idPregunta = $putData['idpregunta'];
-    foreach ($putData as $put => $key){
-        echo "$put: $key" . PHP_EOL;
+    foreach ($parsedData as $key => $value) {
+        // Remover los posibles caracteres no deseados
+        $value = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $value);
+        // Guardar el valor en el array
+        $datos[$key] = $value;
+    }
+
+    // Ahora puedes acceder a los valores mediante sus claves
+    $rut = $datos['rut'];
+    $password = $datos['password'];
+    $pregunta = $datos['pregunta'];
+    $respuesta = $datos['respuesta'];
+    $idpregunta = $datos['idpregunta'];
     }
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
