@@ -300,10 +300,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 //codigo inicial del metodo put 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') 
 {
-    // Obtén los datos del cuerpo de la solicitud
-    $putData = file_get_contents("php://input"); 
     // Verifica si se analizaron los datos correctamente
-    if ($putData !== null) {
+    if (!empty($_FILES)) {
         include 'utiles/validarsesionadmin.php';    
         // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
         date_default_timezone_set('America/Santiago');
@@ -313,11 +311,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
         $response = array();
         
         // Obtén los datos del formulario
-        $rut = $putData['rut'];
-        $pass = $putData['password'];
-        $preguntaFrec = $putData['pregunta'];
-        $respuestaFrec = $putData['respuesta'];
-        $preguntaID = $putData['idpregunta'];
+        $rut = $_FILES['rut']['tmp_name'];
+        $password = $_FILES['password']['tmp_name'];
+        $preguntaFrec = $_FILES['pregunta']['tmp_name'];
+        $respuestaFrec = $_FILES['respuesta']['tmp_name'];
+        $idPregunta = $_FILES['idpregunta']['tmp_name'];
 
         // Elimina caracteres no válidos
         $rut = preg_replace('/[^kK0-9]/', '', $rut);
