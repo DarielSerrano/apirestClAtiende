@@ -72,10 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     // Encontrado, procesa los resultados
                     while ($row = $result->fetch_assoc()) {
                         // Accede a los valores en $row
-                        $documentos_modificados[] = array(
-                            "PreguntaFrecuente" => $row['PreguntasPreguntaFrecuente'],
-                            "Respuesta" => $row['PreguntasRespuesta'],
-                        );
+                        $documentos_modificados[] = $row;
                     }
                     // Construir el array final de resultados
                     $resultados = array("Resultados" => $documentos_modificados);
