@@ -297,13 +297,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     }   
 };  
 
-//codigo inicial del metodo put 
-if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
-    $putData = file_get_contents("php://input");    
-    // Analiza los datos en formato JSON
-    echo $putData;
-    $putData = json_decode($putData, true);    
-    echo $putData;
+if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') !== false) {
+    include 'utiles/validarsesionadmin.php';    
+
+    // Obtén los datos del formulario utilizando $_POST
+    $rut = $_POST['rut'];
+    $password = $_POST['password'];
+    $preguntaFrec = $_POST['pregunta'];
+    $respuestaFrec = $_POST['respuesta'];
+    $idPregunta = $_POST['idpregunta'];
+
     include 'utiles/validarsesionadmin.php';    
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
@@ -311,13 +314,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
 
     // Inicializa un arreglo para almacenar las respuestas
     $response = array();
-    echo json_decode($multipartData, true);
-    // Obtén los datos del formulario
-    $rut = $multipartData['rut'];
-    $password = $multipartData['password'];
-    $preguntaFrec = $multipartData['pregunta'];
-    $respuestaFrec = $multipartData['respuesta'];
-    $idPregunta = $multipartData['idpregunta'];
 
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
@@ -452,6 +448,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit;
         } 
-    }  
+    }
 }
+
 ?>
