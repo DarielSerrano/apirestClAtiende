@@ -438,4 +438,108 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         }
     }
 } 
+
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
+    date_default_timezone_set('America/Santiago');
+    set_time_limit(1200);
+
+    // Inicializa un arreglo para almacenar las respuestas
+    $response = array();
+
+    // Obtén los datos en formato multipart/form-data
+    parse_str(file_get_contents("php://input"),$putData);
+    // Parsear los datos
+    // Inicializar un array para almacenar los valores
+    $datos = array();
+
+    foreach ($putData as $key => $value) {
+        $datos[$key] = $value;        
+    }
+    // Ahora puedes acceder a los valores mediante sus claves
+    $rut = $datos['rut'];
+    $pass = $datos['password'];
+    $preguntaID = $datos['idpregunta'];
+
+    // Elimina caracteres no válidos
+    $rut = preg_replace('/[^kK0-9]/', '', $rut);
+    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
+    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
+
+    // Validar si el RUT no están vacío
+    if (empty($rut)) {
+        $respuesta = "Debe completar con su Rut, esta sección es solo para Funcionarios.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }  // Validar si la contraseña no está vacía
+    elseif (empty($pass)) {
+        $respuesta = "Debe completar con su contraseña, esta sección es solo para Funcionarios.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    } // Validar el ID de las preguntas
+    elseif (empty($preguntaID)) {
+        $respuesta = "Debe indicar el ID de la pregunta con respuesta que va a modificar.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    } // Realizar otras validaciones específicas, como formato de RUT válido
+    elseif (!formatoRUTValido($rut)) {
+        $respuesta = "Rut en formato incorrecto, revise el dígito verificador.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    } // Verificación de contraseña 
+    elseif (!validarContrasena($rut, $pass)) {
+        $respuesta = "Contraseña incorrecta.";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    else {
+        try {
+            include 'conexiondb.php';                                                        
+            // Consulta SQL 
+            $sql = "DELETE FROM Preguntas WHERE idPreguntasFrecuentes = $preguntaID";                    
+            // Limpieza ante posibles inyecciones
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            // Ejecutar la consulta                 
+            if ($result = $conn->query($sql)) {
+                // Respuesta satisfactoria de Extracción creada con éxito. 
+                $respuesta = "Eliminado de datos con éxito.";
+                header("HTTP/1.1 200 OK");
+                header('Content-Type: application/json; charset=UTF-8');
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
+            } else {
+                // Manejar error en la consulta
+                $error_message = $conn->error; // Mensaje de error generado
+                $conn->close(); 
+                throw new Exception($error_message);
+            } 
+            // Cerrar la conexión
+            $conn->close();
+        } catch (\Throwable $th) {
+            $respuesta = "La eliminacion de datos falló.";
+            $error = $th->getMessage();
+            $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+            $rutaLog = "logs_de_error.txt";                    
+            // Abre o crea el archivo de log en modo de escritura al final del archivo
+            $rutaLog = fopen($rutaLog, "a");
+            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+            // Cierra el archivo de log
+            fclose($rutaLog);
+            header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+            header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+    }
+} 
 ?>
