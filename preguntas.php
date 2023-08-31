@@ -301,6 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
     $putData = file_get_contents("php://input");    
     // Analiza los datos en formato JSON
+    echo $putData;
     $putData = json_decode($putData, true);    
     echo $putData;
     include 'utiles/validarsesionadmin.php';    
