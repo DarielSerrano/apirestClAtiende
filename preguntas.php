@@ -313,11 +313,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
         $response = array();
         
         // Obtén los datos del formulario
-        $rut = $putDataArray['rut'];
-        $pass = $putDataArray['password'];
-        $preguntaFrec = $putDataArray['pregunta'];
-        $respuestaFrec = $putDataArray['respuesta'];
-        $preguntaID = $putDataArray['idpregunta'];
+        $rut = $putData['rut'];
+        $pass = $putData['password'];
+        $preguntaFrec = $putData['pregunta'];
+        $respuestaFrec = $putData['respuesta'];
+        $preguntaID = $putData['idpregunta'];
 
         // Elimina caracteres no válidos
         $rut = preg_replace('/[^kK0-9]/', '', $rut);
