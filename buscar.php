@@ -3,9 +3,12 @@
 // Código del método POST para consultar
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
     set_time_limit(1200);
-    $response = array();    
+
+    // Inicializa un arreglo para almacenar las respuestas
+    $response = array();
 
     // Obtener los datos del formulario
     $consulta = $_POST['consulta'];
