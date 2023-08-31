@@ -316,7 +316,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $pregunta = urldecode($parsedData['pregunta']); // Decodificar la pregunta
     $respuesta = urldecode($parsedData['respuesta']); // Decodificar la respuesta
     $idPregunta = $parsedData['idpregunta'];
-    
+    foreach ($parsedData as $put){
+        echo $put;
+    }
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
     $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
