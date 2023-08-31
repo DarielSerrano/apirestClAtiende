@@ -300,6 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 //codigo inicial del metodo put 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') 
 {
+    echo $_FILES;
     // Verifica si se analizaron los datos correctamente
     if (!empty($_FILES)) {
         include 'utiles/validarsesionadmin.php';    
