@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if ($resultado_consulta = $conn->query($sql)) {
             // Modificar los valores de DocumentosRutaGuardado para crear enlaces
             foreach ($resultado_consulta as $row) {
-                $documentos_modificados[] = $row;                
+                $documentos_modificados[] = $row['DocumentosCategoriaNombre'];                
             }
             // Crear un objeto JSON con los resultados modificados
             echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
