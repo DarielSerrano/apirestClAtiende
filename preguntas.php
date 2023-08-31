@@ -308,8 +308,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $put = file_get_contents("php://input");
     parse_str($put, $putData);
     // Obtén los datos del formulario utilizando 
-    $rut = urldecode($putData['rut']);
-    $idPregunta = urldecode($putData['idpregunta']);
+    $rut = $putData['rut'];
+    $idPregunta = $putData['idpregunta'];
     $preguntaFrec = $putData['pregunta'];
     $respuestaFrec = $putData['respuesta'];
     $idPregunta = $putData['idpregunta'];
