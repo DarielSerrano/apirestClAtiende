@@ -1,5 +1,4 @@
 <?php
-
 //codigo inicial del metodo get 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
@@ -127,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 //codigo inicial del metodo post 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    include 'sesiones/validarsesionadmin.php';
+    include 'utiles/validarsesionadmin.php';    
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
     set_time_limit(1200);
@@ -142,9 +141,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     $preguntaFrec = $_POST['pregunta'];
     $respuestaFrec = $_POST['respuesta'];
 
-    // Elimina caracteres no válidos del RUT
+    // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
-
+    $preguntaFrec = preg_replace('/[^A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
+    $respuestaFrec = preg_replace('/[^A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
     // Validar si el RUT no están vacío
     if (empty($rut)) {
         $respuesta = "Debe completar con su Rut, esta sección es solo para Funcionarios.";
@@ -312,5 +312,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         } 
     }   
 };  
-
 ?>

@@ -1,5 +1,6 @@
 <?php
-include 'sesiones/validarsesionadmin.php';
+include 'utiles/validarsesionadmin.php';
+include 'utiles/funcionesutiles.php';
 //codigo del metodo post para recibir pdfs
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
@@ -44,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    }           
+    }
+               
     // Verifica si no se adjuntó ningún archivo
     elseif (empty($_FILES['archivo'])) {
         $respuesta = "El archivo no se adjuntó.";
@@ -71,8 +73,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 //creación de rutas, nombres y variables
                 $ruta_txt = $ruta_destino . $ruta_txt;            
                 $ruta_pdf = $ruta_archivo;                           
-                                // ...
+                //intentar ejecutar la aplicación pdftotext 
+                try {
+                    $output = array();
+                    $return_var = 0;
+                    $errcapture = "2>&1";
+                    // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
+                    exec("cd /var/www/html/apirestClAtiende && pdftotext $ruta_pdf $ruta_txt $errcapture", $output, $return_var);
+                    // Verificar el estado de retorno para determinar si hubo un error
+                    if ($return_var === 0) {
+                        // Lee el contenido del archivo
+                        $contenido = file_get_contents($ruta_txt);
 
+                        // Aplicar preg_replace para mantener solo los caracteres deseados
+                        $contenido_filtrado = preg_replace('/[^A-Za-z\s,.\-_()?¿¡!:ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $contenido);
+
+                        // Escribir el contenido filtrado de vuelta al archivo
+                        file_put_contents($ruta_txt, $contenido_filtrado);
+                    } else {
+                        // Hubo un error al ejecutar el comando
+                        $error_message = implode("\n", $output); // Los mensajes de error generados
+                        throw new Exception($error_message);
+                    }
+                } 
+                catch (Exception $th) {
+                    $respuesta = "Hubo un problema al hacer la transformación de pdf a texto o su pdf no es elegible para ser convertido a texto.";
+                    $error = $th->getMessage();
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
+                    $rutaLog = "logs_de_error.txt";                    
+                    // Abre o crea el archivo de log en modo de escritura al final del archivo
+                    $rutaLog = fopen($rutaLog, "a");
+                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
+                    // Cierra el archivo de log
+                    fclose($rutaLog);
+                    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+                    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+                    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+                    exit;
+                }      
+                $dbetiqueta = null;
                 // Creación automática de etiqueta
                 try {
                     $output = array();
@@ -433,19 +473,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
     }
-}
-
-function correccion_tildes($text) {
-    // Mapeo de caracteres con tilde a sus versiones sin tilde
-    $replace_map = array(
-        'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
-        'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
-    );
-
-    // Reemplazar los caracteres con tilde por sus versiones sin tilde
-    $updated_text = strtr($text, $replace_map);
-
-    return $updated_text;
 }
 
 ?>

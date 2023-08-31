@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
     else {
-        $consulta = preg_replace('/[^A-Za-z\s.:,_\-?¿¡!]/', '', $consulta);        
+        $consulta = preg_replace('/[^A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $consulta);  
         // Escapar la consulta de texto para usarla en el comando
         $escaped_consulta = escapeshellarg($consulta);
 
@@ -172,16 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }    
 }
 
-function correccion_tildes($text) {
-    // Mapeo de caracteres con tilde a sus versiones sin tilde
-    $replace_map = array(
-        'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
-        'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
-    );
-    
-    // Reemplazar los caracteres con tilde por sus versiones sin tilde
-    $updated_text = strtr($text, $replace_map);
-    return $updated_text;
-}
+
 
 ?>
