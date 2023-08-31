@@ -339,6 +339,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
+    } // Validar el ID de las preguntas
+    elseif (empty($preguntaID)) {
+        $respuesta = "Debe indicar el ID de la pregunta con respuesta que va a modificar..";
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+        exit;
     } // Realizar otras validaciones específicas, como formato de RUT válido
     elseif (!formatoRUTValido($rut)) {
         $respuesta = "Rut en formato incorrecto, revise el dígito verificador.";
