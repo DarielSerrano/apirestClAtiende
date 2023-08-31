@@ -341,7 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         exit;
     } // Validar el ID de las preguntas
     elseif (empty($preguntaID)) {
-        $respuesta = "Debe indicar el ID de la pregunta con respuesta que va a modificar..";
+        $respuesta = "Debe indicar el ID de la pregunta con respuesta que va a modificar.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
