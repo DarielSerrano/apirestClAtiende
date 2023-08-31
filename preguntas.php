@@ -317,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
     // Ahora puedes acceder a los valores mediante sus claves
     $rut = $datos['rut'];
-    $password = $datos['password'];
+    $pass = $datos['password'];
     $preguntaFrec = $datos['pregunta'];
     $respuestaFrec = $datos['respuesta'];
     $idpregunta = $datos['idpregunta'];
