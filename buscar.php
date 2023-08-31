@@ -88,44 +88,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 SUM(IFNULL(V.VerbosFrecuencia, 0)) AS SumaVerbosFrecuencia,
                 SUM(IFNULL(S.SustantivosFrecuencia, 0)) AS SumaSustantivosFrecuencia,
                 SUM(IFNULL(V.VerbosFrecuencia, 0) + IFNULL(S.SustantivosFrecuencia, 0)) AS TotalFrecuencia
-            FROM
-                Documentos D
-            LEFT JOIN
-                (
-                    SELECT
-                        VerbosNombre,
-                        Documentos_idDocumentos,
-                        VerbosFrecuencia
-                    FROM
-                        Verbos
-                    WHERE
-                        VerbosNombre IN ('$verbos')
-                ) V
-            ON
-                D.idDocumentos = V.Documentos_idDocumentos
-            LEFT JOIN
-                (
-                    SELECT
-                        SustantivosNombre,
-                        Documentos_idDocumentos,
-                        SustantivosFrecuencia
-                    FROM
-                        Sustantivos
-                    WHERE
-                        SustantivosNombre IN ('$sustantivos')
-                ) S
-            ON
-                D.idDocumentos = S.Documentos_idDocumentos
-            LEFT JOIN
-                DocumentosCategoria DC
-            ON
-                D.DocumentosCategoria_idDocumentosCategoria = DC.idDocumentosCategoria
-            WHERE
-                V.VerbosNombre IS NOT NULL OR S.SustantivosNombre IS NOT NULL
-            GROUP BY
-                D.idDocumentos, D.DocumentosTitulo, D.DocumentosRutaGuardado, D.DocumentosResumen, DC.DocumentosCategoriaNombre
-            ORDER BY
-                TotalFrecuencia DESC
+            FROM (
+                SELECT MAX(idDocumentos) AS idDocumentos, DocumentosTitulo
+                FROM Documentos
+                GROUP BY DocumentosTitulo
+            ) MaxDocs
+            INNER JOIN Documentos D ON MaxDocs.idDocumentos = D.idDocumentos
+            LEFT JOIN (
+                SELECT VerbosNombre, Documentos_idDocumentos, VerbosFrecuencia
+                FROM Verbos
+                WHERE VerbosNombre IN ('$verbos')
+            ) V ON D.idDocumentos = V.Documentos_idDocumentos
+            LEFT JOIN (
+                SELECT SustantivosNombre, Documentos_idDocumentos, SustantivosFrecuencia
+                FROM Sustantivos
+                WHERE SustantivosNombre IN ('$sustantivos')
+            ) S ON D.idDocumentos = S.Documentos_idDocumentos
+            LEFT JOIN DocumentosCategoria DC ON D.DocumentosCategoria_idDocumentosCategoria = DC.idDocumentosCategoria
+            WHERE (V.VerbosNombre IS NOT NULL OR S.SustantivosNombre IS NOT NULL)
+            GROUP BY D.idDocumentos, D.DocumentosTitulo, D.DocumentosRutaGuardado, D.DocumentosResumen, DC.DocumentosCategoriaNombre
+            ORDER BY TotalFrecuencia DESC
             LIMIT 5;";
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=]/',"",$sql);
@@ -142,8 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         "Categoria" => $row['Categoria']
                     );
                 }
-
-
                 // Crear un objeto JSON con los resultados modificados
                 echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             } 
