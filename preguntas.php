@@ -299,13 +299,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     include 'utiles/validarsesionadmin.php';    
-    parse_str(file_get_contents("php://input"),$_put);
-    // Obtén los datos del formulario utilizando $_POST
-    $rut = $_put['rut'];
-    $password = $_put['password'];
-    $preguntaFrec = $_put['pregunta'];
-    $respuestaFrec = $_put['respuesta'];
-    $idPregunta = $_put['idpregunta'];
+    $put = json_decode(file_get_contents("php://input"));
+    // Obtén los datos del formulario utilizando 
+    $rut = $put['rut'];
+    $password = $put['password'];
+    $preguntaFrec = $put['pregunta'];
+    $respuestaFrec = $put['respuesta'];
+    $idPregunta = $put['idpregunta'];
 
     include 'utiles/validarsesionadmin.php';    
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
