@@ -23,31 +23,37 @@ def correccion_tildes(text):
     # Reemplazar los caracteres con tilde por sus versiones sin tilde
     updated_text = text.translate(str.maketrans(replace_map))
     
-    return updated_text    
-   
+    return updated_text
+
 # Leer el contenido del archivo pasado como argumento en la línea de comandos
 text = (file_get_contents(sys.argv[1]))
 
+# Aplicar corrección de tildes al texto
 text = correccion_tildes(text)
 
 # Definición de una función para manipular el texto (eliminar espacios y saltos de línea)
 WHITESPACE_HANDLER = lambda k: re.sub('\s+', ' ', re.sub('\n+', ' ', k.strip()))
 
+# Aplicar la función de manipulación de espacios y saltos de línea al texto
 text = WHITESPACE_HANDLER(text)
 
+# Inicializar el modelo de resumen
 summarizer = pipeline("summarization", model="csebuetnlp/mT5_multilingual_XLSum")
 
-# Generate the summary using the summarizer
+# Generar el resumen utilizando el modelo de resumen
 summary = summarizer(text, max_length=840, num_beams=4, no_repeat_ngram_size=2)
 
-# Extract the summary text from the output
+# Extraer el texto del resumen del resultado
 summary_text = summary[0]['summary_text']
 
-# Perform a specific replacement in the generated summary
+# Realizar reemplazos específicos en el resumen generado
 summary_text = summary_text.replace("A continuación, ", "El siguiente documento trata de: ")
 
-# Convert the summary to JSON format
+# Aplicar corrección de tildes al resumen
+summary_text = correccion_tildes(summary_text)
+
+# Convertir el resumen a formato JSON
 result_json = json.dumps({"resumen": summary_text}, ensure_ascii=False)
 
-# Print the JSON result
+# Imprimir el resultado en formato JSON
 print(result_json)

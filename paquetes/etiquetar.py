@@ -1,6 +1,7 @@
 # Importar el módulo 'sys' para manejar argumentos de línea de comandos
 import sys, json
 
+# Función para corregir tildes en el texto
 def correccion_tildes(text):
     # Mapeo de caracteres con tilde a sus versiones sin tilde
     replace_map = {
@@ -51,6 +52,7 @@ keywords = {
     "Cultura y Recreacion": ["cultura","recreacion","fondo concursable cultura","fondo concursable recreacion","museo","biblioteca","parque","turismo","zoologico"],
 }
 
+# Definir función para asignar etiquetas al texto
 def label_text(text, keywords):
     best_label = None
     best_match_count = 0
@@ -68,7 +70,11 @@ def label_text(text, keywords):
     else:
         return {"etiqueta": "No categorizado"}
 
+# Asignar una etiqueta al texto utilizando la función de etiquetado
 result = label_text(text, keywords)
+
+# Convertir el resultado a formato JSON
 result_json = json.dumps(result, ensure_ascii=False)
 
+# Imprimir el resultado en formato JSON
 print(result_json)
