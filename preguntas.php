@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     $resultados = array("Resultados" => $documentos_modificados);
                     header("HTTP/1.1 200 OK");
                     header('Content-Type: application/json; charset=UTF-8');
-                    echo json_encode($resultados, JSON_UNESCAPED_UNICODE);
+                    echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE);
                 } else {
                     // No se encontraron resultados
                     // Manejar error en la consulta
