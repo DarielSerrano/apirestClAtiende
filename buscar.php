@@ -136,11 +136,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     $documentos_modificados[] = array(
                         "DocumentosTitulo" => $row['DocumentosTitulo'],
-                        "DocumentosRutaGuardado" => htmlspecialchars($enlaceDescarga),
+                        "DocumentosRutaGuardado" => $enlaceDescarga,
                         "DocumentosResumen" => $row['DocumentosResumen'],
                         "Categoria" => $row['Categoria']
                     );
                 }
+
 
                 // Crear un objeto JSON con los resultados modificados
                 echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
