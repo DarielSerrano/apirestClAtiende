@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $namefinal = preg_replace('/[^A-Za-z\s.:-_]/', '', $namefinal);        
         $tituloDocumento = $namefinal;
         $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual 
-        $namefinal = preg_replace('/:/', '-', $namefinal);
+        $rutaDBpdf = $namefinal; 
         $namefinal = $fechaHora."_".$namefinal;
         $ruta_archivo = $ruta_destino . $namefinal; 
         if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
@@ -63,8 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $ruta_txt= preg_replace("/pdf/", 'txt', $namefinal);                    
                 //creación de rutas, nombres y variables
                 $ruta_txt = $ruta_destino . $ruta_txt;            
-                $ruta_pdf = $ruta_archivo; 
-                $rutaDBpdf = $namefinal;           
+                $ruta_pdf = $ruta_archivo;                           
                 //intentar ejecutar la aplicación pdftotext 
                 try {
                     $output = array();
