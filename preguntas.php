@@ -316,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $respuesta = urldecode($putData['respuesta']); // Decodificar la respuesta
     $idPregunta = $putData['idpregunta'];
     foreach ($putData as $put => $key){
-        echo "$key: $value" . PHP_EOL;
+        echo "$put: $key" . PHP_EOL;
     }
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
