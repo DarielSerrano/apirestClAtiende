@@ -333,9 +333,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Analiza los datos multipart
     $multipartData = multipart_parse($putData);
     echo $multipartData;
-    echo $multipartData['rut'];  // Accede al valor del campo "rut"
-    echo $multipartData['password'];  // Accede al valor del campo "password"
-    // Accede a los valores de los campos
+    var_dump($multipartData);  
+        // Accede a los valores de los campos
     $rut = $multipartData['rut'];
     $password = $multipartData['password'];
     $preguntaFrec = $multipartData['pregunta'];
