@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         try {
             include 'conexiondb.php';                                                        
             // Consulta SQL
-            $sql = "SELECT 'PreguntasPreguntaFrecuente', 'PreguntasRespuesta' FROM 'Preguntas' WHERE 'DocumentosCategoria_idDocumentosCategoria' = $categoriaID";                    
+            $sql = "SELECT PreguntasPreguntaFrecuente, PreguntasRespuesta FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = $categoriaID;";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=]/',"",$sql);
             // Ejecutar la consulta                 
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
-            $respuesta = "Hubo un problema intentar la busqueda en el sistema.";
+            $respuesta = "Hubo un problema con la búsqueda de preguntas en el sistema.";
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    
