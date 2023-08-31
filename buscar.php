@@ -127,7 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ORDER BY
                 TotalFrecuencia DESC
             LIMIT 5;";
-
+            // Limpieza ante posibles inyecciones
+            $sql = preg_replace('/[^A-Za-z\s(),\'\".-_$+]/',"",$sql);
             if ($resultado_consulta = $conn->query($sql)) {
                 // Modificar los valores de DocumentosRutaGuardado para crear enlaces
                 foreach ($resultado_consulta as $row) {
@@ -171,66 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit;
-        }                                
-                               
-        
-        /* try { // guardado verbos y sustantivos deldocumento en BD
-            include 'conexiondb.php';
-            $dbIDetiqueta;
-            $dbIDdocumento;
-            // Insertar frecuencias de verbos
-            foreach ($top_30_verbos as $frecuencia) {
-                $verbo = $frecuencia['palabra'];
-                $frecuenciaValor = $frecuencia['frecuencia'];                                                
-                $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
-                $sql = preg_replace('/[^A-Za-z.,()\s_\'$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
-                if($conn->query($sql)){
-                    // La consulta fue exitosa
-                }
-                else {
-                    // Manejar error en la consulta de inserción
-                    $error_message = $conn->error; // Mensaje de error generado
-                    // Cerrar la conexión
-                    $conn->close();
-                    throw new Exception($error_message);
-                }
-            }
-            // Insertar frecuencias de sustantivos
-            foreach ($top_30_sustantivos as $frecuencia) {
-                $sustantivo = $frecuencia['palabra'];
-                $frecuenciaValor = $frecuencia['frecuencia'];                                
-                $sql = "INSERT INTO Sustantivos(idSustantivos, SustantivosNombre, SustantivosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
-                $sql = preg_replace('/[^A-Za-z.,()\s_\'$]/', '', $sql); //asegurar solo caracteres propios de la consulta hecha
-                if ($conn->query($sql)){
-                    // La consulta fue exitosa
-                }
-                else {
-                    // Manejar error en la consulta de inserción
-                    $error_message = $conn->error; // Mensaje de error generado
-                    // Cerrar la conexión
-                    $conn->close();
-                    throw new Exception($error_message);
-                } 
-            }
-            // Cerrar la conexión
-            $conn->close();
-        } 
-        catch (\Throwable $th) {
-            $respuesta = "Hubo un problema al guardar verbos y sustantivos en el sistema.";
-            $error = $th->getMessage();
-            $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
-            $rutaLog = "logs_de_error.txt";                    
-            // Abre o crea el archivo de log en modo de escritura al final del archivo
-            $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
-            fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
-            // Cierra el archivo de log
-            fclose($rutaLog);
-            header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
-            header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-            echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-            exit;
-        } */ 
+        }                                        
     }    
 }
 
