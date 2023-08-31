@@ -53,9 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $namefinal = preg_replace('/\s/', '_', $namefinal);
         $namefinal = preg_replace('/[^A-Za-z\s.:-_]/', '', $namefinal);        
         $tituloDocumento = $namefinal;
-        $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual 
-        $rutaDBpdf = $namefinal; 
+        $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual         
         $namefinal = $fechaHora."_".$namefinal;
+        $rutaDBpdf = $namefinal; 
         $ruta_archivo = $ruta_destino . $namefinal; 
         if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
             if(move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta_archivo)) {      
