@@ -7,6 +7,10 @@ if (isset($_GET['archivo'])) {
 
     // Verifica si el archivo existe y es accesible
     if (file_exists($rutaArchivo)) {
+        // Configura las cabeceras para forzar la descarga
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($rutaArchivo) . '"');
+        header('Content-Length: ' . filesize($rutaArchivo));
 
         // Envía el contenido del archivo
         readfile($rutaArchivo);
