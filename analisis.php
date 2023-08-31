@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $contenido = file_get_contents($ruta_txt);
 
                         // Aplicar preg_replace para mantener solo los caracteres deseados
-                        $contenido_filtrado = preg_replace('/[^A-Za-z\s,.\-_()?¿¡!:ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $contenido);
+                        $contenido_filtrado = preg_replace('/[^0-9A-Za-z\s,.\-_()?¿¡!:ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $contenido);
 
                         // Escribir el contenido filtrado de vuelta al archivo
                         file_put_contents($ruta_txt, $contenido_filtrado);

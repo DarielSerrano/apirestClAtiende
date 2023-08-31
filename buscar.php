@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
     else {
-        $consulta = preg_replace('/[^A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $consulta);  
+        $consulta = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $consulta);  
         // Escapar la consulta de texto para usarla en el comando
         $escaped_consulta = escapeshellarg($consulta);
 
