@@ -16,9 +16,13 @@ if (isset($_GET['doc'])) {
         readfile($rutaArchivo);
         exit;
     } else {
+        header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+        header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode('Archivo no permitido para descarga.', JSON_UNESCAPED_UNICODE);
     }
 } else {
+    header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
+    header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
     echo json_encode('Archivo no especificado.', JSON_UNESCAPED_UNICODE);
 }
 ?>
