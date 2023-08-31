@@ -10,13 +10,13 @@ if (isset($_GET['archivo'])) {
         // Configura las cabeceras para forzar la descarga
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . basename($rutaArchivo) . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
         header('Content-Length: ' . filesize($rutaArchivo));
 
-        // Desactivar la salida de PHP
-        ob_clean();
-        flush();
-
-        // Lee y envía el archivo en bloques
+        // Envía el contenido del archivo
         readfile($rutaArchivo);
         exit;
     } else {
