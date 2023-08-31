@@ -6,7 +6,7 @@ if (isset($_GET['archivo'])) {
     // Ruta real del archivo en el servidor
     $rutaArchivo = '/var/www/html/apirestClAtiende/' . $archivo;
     $rutaArchivo = preg_replace('/\\+$/','',$rutaArchivo);
-
+    echo ($rutaArchivo);
     // Verifica si el archivo existe y es accesible
     if (file_exists($rutaArchivo)) {
         // Configura las cabeceras para forzar la descarga
