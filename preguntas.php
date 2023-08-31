@@ -306,17 +306,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $response = array();
 
     // Obtén los datos en formato multipart/form-data
-    $putData = file_get_contents("php://input");
+    parse_str(file_get_contents("php://input"),$putData);
     // Parsear los datos
-    parse_str($putData, $parsedData);
 
     // Extraer las variables
-    $rut = $parsedData['rut'];
-    $password = $parsedData['password'];
-    $pregunta = urldecode($parsedData['pregunta']); // Decodificar la pregunta
-    $respuesta = urldecode($parsedData['respuesta']); // Decodificar la respuesta
-    $idPregunta = $parsedData['idpregunta'];
-    foreach ($parsedData as $put => $key){
+    $rut = $putData['rut'];
+    $password = $putData['password'];
+    $pregunta = urldecode($putData['pregunta']); // Decodificar la pregunta
+    $respuesta = urldecode($putData['respuesta']); // Decodificar la respuesta
+    $idPregunta = $putData['idpregunta'];
+    foreach ($putData as $put => $key){
         echo "$key: $value" . PHP_EOL;
     }
     // Elimina caracteres no válidos
