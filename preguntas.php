@@ -297,15 +297,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     }   
 };  
 
-if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') !== false) {
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     include 'utiles/validarsesionadmin.php';    
-
+    parse_str(file_get_contents("php://input"),$_put);
     // Obtén los datos del formulario utilizando $_POST
-    $rut = $_POST['rut'];
-    $password = $_POST['password'];
-    $preguntaFrec = $_POST['pregunta'];
-    $respuestaFrec = $_POST['respuesta'];
-    $idPregunta = $_POST['idpregunta'];
+    $rut = $_put['rut'];
+    $password = $_put['password'];
+    $preguntaFrec = $_put['pregunta'];
+    $respuestaFrec = $_put['respuesta'];
+    $idPregunta = $_put['idpregunta'];
 
     include 'utiles/validarsesionadmin.php';    
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
@@ -449,8 +449,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_SERVER['CONTENT_TYPE']) && st
             exit;
         } 
     }
-} else {
-    echo $_POST;
-}
-
+} 
 ?>
