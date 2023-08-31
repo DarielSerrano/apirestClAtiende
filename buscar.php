@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($resultado_consulta = $conn->query($sql)) {
                 /// Modificar los valores de DocumentosRutaGuardado para crear enlaces
                 foreach ($resultado_consulta as $row) {
-                    $row['DocumentosRutaGuardado'] = '<a href="download.php?archivo=' . rawurlencode($row['DocumentosRutaGuardado']) . '">Descargar</a>';
+                    $enlaceDescarga = '<a href="download.php?archivo=' . rawurlencode($row['DocumentosRutaGuardado']) . '">Descargar</a>';
                     unset($row['idDocumentos'], $row['SumaVerbosFrecuencia'], $row['SumaSustantivosFrecuencia'], $row['TotalFrecuencia']);
                     $documentos_modificados[] = $row;
                 }
