@@ -307,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_SERVER['CONTENT_TYPE']) && st
 
         // Inicializa un arreglo para almacenar las respuestas
         $response = array();
-        
+        echo $multipartData;
         // Obtén los datos del formulario
         $rut = $multipartData['rut'];
         $password = $multipartData['password'];
