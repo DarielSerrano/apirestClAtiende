@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             // Consulta SQL 
             $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$categoria'";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
             // Ejecutar la consulta                 
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
@@ -106,9 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         try {
             include 'conexiondb.php';                                                        
             // Consulta SQL
-            $sql = "SELECT * FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = $categoriaID;";                    
+            $sql = "SELECT * FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = 11";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
             // Ejecutar la consulta                 
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
