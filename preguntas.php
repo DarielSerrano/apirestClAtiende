@@ -320,7 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $pass = $datos['password'];
     $preguntaFrec = $datos['pregunta'];
     $respuestaFrec = $datos['respuesta'];
-    $idpregunta = $datos['idpregunta'];
+    $preguntaID = $datos['idpregunta'];
 
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
