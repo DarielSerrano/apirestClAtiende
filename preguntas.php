@@ -269,24 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
             // Ejecutar la consulta                 
             if ($result = $conn->query($sql)) {
-                if ($result->num_rows > 0) {
-                    // Encontrado, procesa los resultados
-                    while ($row = $result->fetch_assoc()) {
-                        // Accede a los valores en $row
-                        $documentos_modificados[] = $row;
-                    }
-                    // Construir el array final de resultados
-                    $resultados = array("Resultados" => $documentos_modificados);
-                    header("HTTP/1.1 200 OK");
-                    header('Content-Type: application/json; charset=UTF-8');
-                    echo json_encode($resultados, JSON_UNESCAPED_UNICODE);
-                } else {
-                    // No se encontraron resultados
-                    // Manejar error en la consulta
-                    $error_message = $conn->error; // Mensaje de error generado
-                    $conn->close(); 
-                    throw new Exception($error_message);
-                }
+                // Consulta exitosa
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
