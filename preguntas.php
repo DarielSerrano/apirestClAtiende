@@ -298,16 +298,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 };  
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
-    $put = file_get_contents("php://input");
-    // Obtén los datos del formulario utilizando 
-    echo $put;
-    $rut = $put['rut'];
-    $password = $put['password'];
-    $preguntaFrec = $put['pregunta'];
-    $respuestaFrec = $put['respuesta'];
-    $idPregunta = $put['idpregunta'];
-
-    include 'utiles/validarsesionadmin.php';    
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
     set_time_limit(1200);
@@ -315,6 +305,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Inicializa un arreglo para almacenar las respuestas
     $response = array();
 
+    $put = file_get_contents("php://input");
+    parse_str($put, $putData);
+    // Obtén los datos del formulario utilizando 
+    $rut = urldecode($putData['rut']);
+    $idPregunta = urldecode($putData['idpregunta']);
+    $preguntaFrec = $putData['pregunta'];
+    $respuestaFrec = $putData['respuesta'];
+    $idPregunta = $putData['idpregunta'];
+
+    
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
     $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
