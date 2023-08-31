@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($resultado_consulta = $conn->query($sql)) {
                 // Modificar los valores de DocumentosRutaGuardado para crear enlaces
                 foreach ($resultado_consulta as $row) {
-                    $enlaceDescarga = '<a href="download.php?archivo=' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
+                    $enlaceDescarga = '<a href="http://146.83.194.142:1106/apirestClAtiende/download.php?archivo=' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
                     $row['DocumentosRutaGuardado'] = $enlaceDescarga;
                     
                     $documentos_modificados[] = array(
