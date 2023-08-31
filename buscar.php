@@ -84,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 D.DocumentosTitulo,
                 D.DocumentosRutaGuardado,
                 D.DocumentosResumen,
+                DC.DocumentosCategoriaNombre AS Categoria,
                 SUM(IFNULL(V.VerbosFrecuencia, 0)) AS SumaVerbosFrecuencia,
                 SUM(IFNULL(S.SustantivosFrecuencia, 0)) AS SumaSustantivosFrecuencia,
                 SUM(IFNULL(V.VerbosFrecuencia, 0) + IFNULL(S.SustantivosFrecuencia, 0)) AS TotalFrecuencia
@@ -98,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     FROM
                         Verbos
                     WHERE
-                        VerbosNombre IN ('$verbos')
+                        VerbosNombre IN ('gustar', 'obtener', 'ver')
                 ) V
             ON
                 D.idDocumentos = V.Documentos_idDocumentos
@@ -111,14 +112,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     FROM
                         Sustantivos
                     WHERE
-                        SustantivosNombre IN ('$sustantivos')
+                        SustantivosNombre IN ('TNE', 'posibilidad')
                 ) S
             ON
                 D.idDocumentos = S.Documentos_idDocumentos
+            LEFT JOIN
+                DocumentosCategoria DC
+            ON
+                D.DocumentosCategoria_idDocumentosCategoria = DC.idDocumentosCategoria
             WHERE
                 V.VerbosNombre IS NOT NULL OR S.SustantivosNombre IS NOT NULL
             GROUP BY
-                D.idDocumentos, D.DocumentosTitulo, D.DocumentosRutaGuardado, D.DocumentosResumen
+                D.idDocumentos, D.DocumentosTitulo, D.DocumentosRutaGuardado, D.DocumentosResumen, DC.DocumentosCategoriaNombre
             ORDER BY
                 TotalFrecuencia DESC
             LIMIT 5;";
