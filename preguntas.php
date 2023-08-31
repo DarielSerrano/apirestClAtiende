@@ -1,4 +1,5 @@
 <?php
+include 'utiles/funcionesutiles.php';
 //codigo inicial del metodo get 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
