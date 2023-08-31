@@ -1,5 +1,6 @@
 <?php
-
+include 'utiles/funcionesutiles.php';
+include 'utiles/validarsesionadmin.php';  
 // Código del método POST para consultar
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

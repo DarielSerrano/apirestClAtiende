@@ -1,5 +1,6 @@
 <?php
-
+include 'utiles/funcionesutiles.php';
+include 'utiles/validarsesionadmin.php';  
 //codigo inicial del metodo get 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
