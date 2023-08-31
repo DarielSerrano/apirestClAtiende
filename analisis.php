@@ -300,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Consulta SQL con cláusula WHERE
                     $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
                     // Limpieza ante posibles inyecciones
-                    $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
+                    $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
                     // Ejecutar la consulta                 
                     if ($result = $conn->query($sql)) {
                         if ($result->num_rows > 0) {
@@ -347,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Consulta SQL
                     $sql = "INSERT INTO Documentos (idDocumentos, DocumentosTitulo, DocumentosRutaGuardado, DocumentosResumen, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$tituloDocumento','$rutaDBpdf','$dbResumen',$dbIDetiqueta)";
                     // Limpieza ante posibles inyecciones
-                    $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
+                    $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
                     // Ejecutar la consulta
                     if ($conn->query($sql)) {
                         $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado                        
@@ -397,7 +397,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $frecuenciaValor = $frecuencia['frecuencia'];                                                
                         $sql = "INSERT INTO Verbos(idVerbos, VerbosNombre, VerbosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$verbo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
                         // Limpieza ante posibles inyecciones
-                        $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
+                        $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
                         if($conn->query($sql)){
                             // La consulta fue exitosa
                         }
@@ -415,7 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $frecuenciaValor = $frecuencia['frecuencia'];                                
                         $sql = "INSERT INTO Sustantivos(idSustantivos, SustantivosNombre, SustantivosFrecuencia, Documentos_idDocumentos, Documentos_DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$sustantivo',$frecuenciaValor,$dbIDdocumento,$dbIDetiqueta)";
                         // Limpieza ante posibles inyecciones
-                        $sql = preg_replace('/[^0-9A-Za-z\s(),\'\":._\-$+=\*]/',"",$sql);
+                        $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
                         if ($conn->query($sql)){
                             // La consulta fue exitosa
                         }
