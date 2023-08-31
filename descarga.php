@@ -4,7 +4,7 @@ if (isset($_GET['archivo'])) {
     $archivo = $_GET['archivo'];
 
     // Ruta real del archivo en el servidor
-    $rutaArchivo = '/ruta/completa/a/tus/archivos/' . $archivo;
+    $rutaArchivo = '/var/www/html/apirestClAtiende/' . $archivo;
 
     // Verifica si el archivo existe y es seguro
     if (file_exists($rutaArchivo) && is_readable($rutaArchivo)) {
