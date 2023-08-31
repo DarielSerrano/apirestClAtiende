@@ -12,14 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $rut = preg_replace('/[^kK0-9]/', '', $rut); 
     // Validar si el RUT y la contraseña no están vacíos
     if (empty($rut)) {
-        $respuesta = "Debe completar con su Rut.";
+        $respuesta = "Debe completar con su Rut, esta sección es solo para Funcionarios .";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
     } 
     elseif (empty($pass)) {
-        $respuesta = "Debe completar con su contraseña.";
+        $respuesta = "Debe completar con su contraseña, esta sección es solo para Funcionarios .";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
