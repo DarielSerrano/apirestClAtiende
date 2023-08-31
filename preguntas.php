@@ -305,15 +305,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Inicializa un arreglo para almacenar las respuestas
     $response = array();
 
-    $put = file_get_contents("php://input");
-    echo $put;
-    // Obtén los datos del formulario utilizando 
-    $rut = $putData['rut'];
-    $idPregunta = $putData['idpregunta'];
-    $preguntaFrec = $putData['pregunta'];
-    $respuestaFrec = $putData['respuesta'];
-    $idPregunta = $putData['idpregunta'];
+    // Obtén los datos en formato multipart/form-data
+    $putData = file_get_contents("php://input");
 
+    // Define una función para analizar los datos multipart
+    function multipart_parse($input)
+    {
+        $data = [];
+        $matches = [];
+        
+        // Separa los bloques por la cadena delimitadora
+        preg_match_all('/-{28}[0-9]+(.*?)--{28}/s', $input, $matches);
+        
+        foreach ($matches[1] as $match) {
+            $parts = explode("\r\n\r\n", trim($match), 2);
+            if (count($parts) === 2) {
+                // Extrae el nombre de campo y el valor del contenido
+                preg_match('/name="(.*?)"/', $parts[0], $nameMatches);
+                $fieldName = $nameMatches[1];
+                $data[$fieldName] = trim($parts[1]);
+            }
+        }
+        
+        return $data;
+    }
+
+    // Analiza los datos multipart
+    $multipartData = multipart_parse($putData);
+
+    // Accede a los valores de los campos
+    $rut = $multipartData['rut'];
+    $password = $multipartData['password'];
+    $preguntaFrec = $multipartData['pregunta'];
+    $respuestaFrec = $multipartData['respuesta'];
+    $idPregunta = $multipartData['idpregunta'];
     
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
