@@ -63,7 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $ruta_txt= preg_replace("/pdf/", 'txt', $namefinal);                    
                 //creación de rutas, nombres y variables
                 $ruta_txt = $ruta_destino . $ruta_txt;            
-                $ruta_pdf = $ruta_archivo;                
+                $ruta_pdf = $ruta_archivo; 
+                $rutaDBpdf = $namefinal;           
                 //intentar ejecutar la aplicación pdftotext 
                 try {
                     $output = array();
@@ -318,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 try { // Creacion Documento en db
                     include 'conexiondb.php';                    
                     // Consulta SQL con cláusula WHERE
-                    $sql = "INSERT INTO Documentos (idDocumentos, DocumentosTitulo, DocumentosRutaGuardado, DocumentosResumen, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$tituloDocumento','$ruta_pdf','$dbResumen',$dbIDetiqueta)";
+                    $sql = "INSERT INTO Documentos (idDocumentos, DocumentosTitulo, DocumentosRutaGuardado, DocumentosResumen, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$tituloDocumento','$rutaDBpdf','$dbResumen',$dbIDetiqueta)";
                     // Ejecutar la consulta
                     if ($conn->query($sql)) {
                         $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado                        
