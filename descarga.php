@@ -19,7 +19,7 @@ if (isset($_GET['archivo'])) {
         ob_end_clean();
         flush();
         readfile($rutaArchivo);
-        return true;
+        exit;
     }
     else{
         echo 'Archivo no especificado.';
