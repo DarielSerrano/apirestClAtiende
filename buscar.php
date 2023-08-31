@@ -133,9 +133,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 foreach ($resultado_consulta as $row) {
                     $enlaceDescarga = '<a href="download.php?archivo=' . rawurlencode($row['DocumentosRutaGuardado']) . '">Descargar</a>';
                     $row['DocumentosRutaGuardado'] = $enlaceDescarga;
+                    
                     $documentos_modificados[] = array(
                         "DocumentosTitulo" => $row['DocumentosTitulo'],
-                        "DocumentosRutaGuardado" => htmlspecialchars($row['DocumentosRutaGuardado']),
+                        "DocumentosRutaGuardado" => htmlspecialchars($enlaceDescarga),
                         "DocumentosResumen" => $row['DocumentosResumen'],
                         "Categoria" => $row['Categoria']
                     );
