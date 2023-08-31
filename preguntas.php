@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     } 
     // Verificar si se ha proporcionado la categoría en la solicitud
     elseif (empty($preguntaFrec)) {
-        $respuesta = "Categoría no especificada.";
+        $respuesta = "Pregunta no especificada.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
@@ -193,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     }
     // Verificar si se ha proporcionado la categoría en la solicitud
     elseif (empty($respuestaFrec)) {
-        $respuesta = "Categoría no especificada.";
+        $respuesta = "Respuesta no especificada.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
