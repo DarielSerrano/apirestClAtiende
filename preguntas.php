@@ -144,8 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
-    $preguntaFrec = preg_replace('/[^A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
-    $respuestaFrec = preg_replace('/[^A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
+    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
+    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
     // Validar si el RUT no están vacío
     if (empty($rut)) {
         $respuesta = "Debe completar con su Rut, esta sección es solo para Funcionarios.";
