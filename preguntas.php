@@ -269,7 +269,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
             // Ejecutar la consulta                 
             if ($result = $conn->query($sql)) {
-                // Consulta exitosa
+                // Respuesta satisfactoria de Extracción creada con éxito. 
+                $respuesta = "pregunta y respuesta creadas con éxito.";
+                header("HTTP/1.1 200 OK");
+                header('Content-Type: application/json; charset=UTF-8');
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
@@ -405,7 +409,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
             // Ejecutar la consulta                 
             if ($result = $conn->query($sql)) {
-                // Consulta exitosa
+                // Respuesta satisfactoria de Extracción creada con éxito. 
+                $respuesta = "Actualización de datos con éxito.";
+                header("HTTP/1.1 200 OK");
+                header('Content-Type: application/json; charset=UTF-8');
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
