@@ -301,7 +301,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') 
 {
     // Obtén los datos del cuerpo de la solicitud
-    $putData = file_get_contents("php://input");    
+    $putData = file_get_contents("php://input"); 
+    echo $putData;  
     // Analiza los datos en formato JSON
     $putDataArray = json_decode($putData, true);    
     // Verifica si se analizaron los datos correctamente
