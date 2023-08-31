@@ -302,11 +302,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
 {
     // Obtén los datos del cuerpo de la solicitud
     $putData = file_get_contents("php://input"); 
-    echo $putData;  
-    // Analiza los datos en formato JSON
-    $putDataArray = json_decode($putData, true);    
     // Verifica si se analizaron los datos correctamente
-    if ($putDataArray !== null) {
+    if ($putData !== null) {
         include 'utiles/validarsesionadmin.php';    
         // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
         date_default_timezone_set('America/Santiago');
