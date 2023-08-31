@@ -16,9 +16,9 @@ if (isset($_GET['doc'])) {
         readfile($rutaArchivo);
         exit;
     } else {
-        echo 'Archivo no permitido para descarga.';
+        echo json_encode('Archivo no permitido para descarga.', JSON_UNESCAPED_UNICODE);
     }
 } else {
-    echo 'Archivo no especificado.';
+    echo json_encode('Archivo no especificado.', JSON_UNESCAPED_UNICODE);
 }
 ?>
