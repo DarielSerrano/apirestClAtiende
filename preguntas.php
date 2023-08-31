@@ -318,10 +318,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Ahora puedes acceder a los valores mediante sus claves
     $rut = $datos['rut'];
     $password = $datos['password'];
-    $pregunta = $datos['pregunta'];
-    $respuesta = $datos['respuesta'];
+    $preguntaFrec = $datos['pregunta'];
+    $respuestaFrec = $datos['respuesta'];
     $idpregunta = $datos['idpregunta'];
-        
+
     // Elimina caracteres no válidos
     $rut = preg_replace('/[^kK0-9]/', '', $rut);
     $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
