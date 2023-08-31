@@ -299,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     include 'utiles/validarsesionadmin.php';    
-    $put = json_decode(file_get_contents("php://input"));
+    $put = file_get_contents("php://input");
     // Obtén los datos del formulario utilizando 
     $rut = $put['rut'];
     $password = $put['password'];
