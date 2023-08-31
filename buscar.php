@@ -134,10 +134,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Modificar los valores de DocumentosRutaGuardado para crear enlaces
                 foreach ($resultado_consulta as $row) {
-                    $enlaceDescarga = '<a href="apirestClAtiende/' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
-                    $row['DocumentosRutaGuardado'] = $enlaceDescarga;
-                    unset($row['idDocumentos'], $row['SumaVerbosFrecuencia'], $row['SumaSustantivosFrecuencia'], $row['TotalFrecuencia']);
-                    $documentos_modificados[] = $row;
+                    $row['DocumentosRutaGuardado'] = '<a href="download.php?archivo=' . urlencode($row['DocumentosRutaGuardado']) . '">Descargar<\/a>';
+                    $documentos_modificados[] = array(
+                        "DocumentosTitulo" => $row['DocumentosTitulo'],
+                        "DocumentosRutaGuardado" => $row['DocumentosRutaGuardado'],
+                        "DocumentosResumen" => $row['DocumentosResumen']
+                    );
                 }
 
                 // Crear un objeto JSON con los resultados modificados
