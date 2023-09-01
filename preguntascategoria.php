@@ -1,8 +1,9 @@
 <?php
+
 include 'utiles/funcionesutiles.php';
 include 'utiles/validarsesionadmin.php';  
-//codigo inicial del metodo get 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') 
+//código inicial del método get
+if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     try {
         include 'conexiondb.php';
@@ -16,25 +17,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             }
             // Crear un objeto JSON con los resultados modificados
             echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        } 
+        }
         else {
             // Manejar error en la consulta de inserción
             $error_message = $conn->error; // Mensaje de error generado
             // Cerrar la conexión
             $conn->close();
             throw new Exception($error_message);
-        } 
+        }
         // Cerrar la conexión
         $conn->close();
 
     } catch (\Throwable $th) {
-        $respuesta = "Hubo un problema intentar la busqueda en el sistema.";
+        $respuesta = "Hubo un problema intentar la búsqueda en el sistema.";
         $error = $th->getMessage();
         $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
         $rutaLog = "logs_de_error.txt";                    
         // Abre o crea el archivo de log en modo de escritura al final del archivo
         $rutaLog = fopen($rutaLog, "a");
-        // Escribe la excepcion junto con la fecha y hora en el archivo de log
+        // Escribe la excepción junto con la fecha y hora en el archivo de log
         fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
         // Cierra el archivo de log
         fclose($rutaLog);
@@ -43,6 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
     }    
-}; 
+};
 
 ?>

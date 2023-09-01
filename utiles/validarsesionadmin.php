@@ -1,12 +1,14 @@
 <?php
+
     function validarContrasena($rut,$pass) {
         $UsuarioRut = $rut;
         $UsuarioContrasena = $pass;
 
-        // Declarar la variable $Contrasena
+
+        // Declarar la variable Contraseña
         $Contrasena = null;
-        
-        // funcion para transformar la contraseña a hash
+       
+        // función para transformar la contraseña a hash
         // $passwordhash = password_hash($UsuarioContrasena, PASSWORD_DEFAULT);
         include 'conexiondb.php';
 
@@ -14,7 +16,7 @@
             // Consulta SQL con cláusula WHERE
             $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsuarioRut";
             $result = $conn->query($sql);
-        } 
+        }
         catch (\Throwable $th) {
             $respuesta = "No se logró hacer la consulta a la base de datos para validar contraseña.";
             $error = $th->getMessage();
@@ -22,7 +24,7 @@
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            // Escribe la excepción junto con la fecha y hora en el archivo de log
             fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
             // Cierra el archivo de log
             fclose($rutaLog);
@@ -38,17 +40,18 @@
                 // Accede a los valores en $row
                 $Contrasena = $row["UsuarioContrasena"];
             }
-        } 
+        }
 
         // Cerrar la conexión
-        $conn->close(); 
+        $conn->close();
 
-        //Verificar la contraseña hash con la almacenada 
+        //Verificar la contraseña hash con la almacenada
         if (password_verify($UsuarioContrasena, $Contrasena)) {
             return true;
-        } 
+        }
         else {
             return false;
         }
     }
+
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 include 'utiles/validarsesionadmin.php';
 include 'utiles/funcionesutiles.php';
 //codigo del metodo post para recibir pdfs
@@ -38,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    } // Verificación de contraseña 
+    } // Verificación de contraseña
     elseif (!validarContrasena($rut, $pass)) {
         $respuesta = "Contraseña incorrecta.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -52,28 +53,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $respuesta = "El archivo no se adjuntó.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
-        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;                                
     }    
     elseif ($_FILES['archivo']['type'] == 'application/pdf') {    
         $ruta_destino = "archivos/";
-        $namefinal = trim ($_FILES['archivo']['name']); 
+        $namefinal = trim ($_FILES['archivo']['name']);
         $namefinal = correccion_tildes($namefinal);
         $namefinal = preg_replace('/\s/', '_', $namefinal);
         $namefinal = preg_replace('/[^A-Za-z\s.:-_]/', '', $namefinal);        
         $tituloDocumento = $namefinal;
-        $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual         
+        $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual        
         $namefinal = $fechaHora."_".$namefinal;
-        $rutaDBpdf = $namefinal; 
-        $ruta_archivo = $ruta_destino . $namefinal; 
+        $rutaDBpdf = $namefinal;
+        $ruta_archivo = $ruta_destino . $namefinal;
         if(is_uploaded_file($_FILES['archivo']['tmp_name'])) {                    
             if(move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta_archivo)) {      
-                //guardar en la variable txt el nombre del archivo, pero cambiando la extensión 
+                //guardar en la variable txt el nombre del archivo, pero cambiando la extensión
                 $ruta_txt= preg_replace("/pdf/", 'txt', $namefinal);                    
                 //creación de rutas, nombres y variables
                 $ruta_txt = $ruta_destino . $ruta_txt;            
-                $ruta_pdf = $ruta_archivo;                           
-                //intentar ejecutar la aplicación pdftotext 
+                $ruta_pdf = $ruta_archivo;                          
+                //intentar ejecutar la aplicación pdftotext
                 try {
                     $output = array();
                     $return_var = 0;
@@ -87,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         // Aplicar preg_replace para mantener solo los caracteres deseados
                         $contenido_filtrado = preg_replace('/[^0-9A-Za-z\s,.\-_()?¿¡!:ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $contenido);
-
                         // Escribir el contenido filtrado de vuelta al archivo
                         file_put_contents($ruta_txt, $contenido_filtrado);
                     } else {
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $error_message = implode("\n", $output); // Los mensajes de error generados
                         throw new Exception($error_message);
                     }
-                } 
+                }
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al hacer la transformación de pdf a texto o su pdf no es elegible para ser convertido a texto.";
                     $error = $th->getMessage();
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    // Escribe la excepción junto con la fecha y hora en el archivo de log
                     fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
@@ -133,13 +133,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $respuesta = "Etiquetado creado con éxito.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                         
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                        
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
                         throw new Exception($error_message);
                     }
-                } 
+                }
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al generar el etiquetado.";
                     $error = $th->getMessage();
@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    // Escribe la excepción junto con la fecha y hora en el archivo de log
                     fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $dbextraer = null;
                 $top_30_verbos = [];
                 $top_30_sustantivos = [];              
-                // Inicio extraccion palabras clave NLP 
+                // Inicio extracción palabras clave NLP
                 try {
                     $output = array();
                     $return_var = 0;
@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Procesar los resultados para obtener sustantivos y verbos
                     $sustantivo = array(); // Almacenar sustantivos
                     $verb = array(); // Almacenar verbos
-                    $palabra_contador = array();                   
+                    $palabra_contador = array();                  
                     foreach ($dbextraer as $resultado) {
                         $palabra = $resultado['palabra'];
                         $clasificacion = $resultado['clasificacion'];
@@ -220,17 +220,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $count_sustantivos++;
                         }
                     }  
-                        // Respuesta satisfactoria de Extracción creada con éxito. 
+                        // Respuesta satisfactoria de Extracción creada con éxito.
                         $respuesta = "Extracción creada con éxito.";
                         header("HTTP/1.1 200 OK");
                         header('Content-Type: application/json; charset=UTF-8');
-                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                       
+                        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);                      
                     } else {
                         // Hubo un error al ejecutar el comando
                         $error_message = implode("\n", $output); // Los mensajes de error generados
                         throw new Exception($error_message);
                     }
-                } 
+                }
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al hacer la extracción NLP.";
                     $error = $th->getMessage();
@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    // Escribe la excepción junto con la fecha y hora en el archivo de log
                     fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
@@ -248,7 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }                                  
                 $dbResumen = null;
-                // Inicio creacion del resumen de documento NLP 
+                // Inicio creación del resumen de documento NLP
                 try {
                     $output = array();
                     $return_var = 0;
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $resumir = "cd /var/www/html/apirestClAtiende && TRANSFORMERS_CACHE=cache python3.10 paquetes/resumir.py";
                     // Ejecutar el comando y capturar la salida en $output y el estado de retorno en $return_var
                     exec("$resumir $ruta_txt $errcapture", $output, $return_var);
-                    
+                   
                     // Verificar el estado de retorno para determinar si hubo un error
                     if ($return_var === 0) {
                         // Filtrar y extraer los objetos JSON de la salida
@@ -276,15 +276,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $error_message = implode("\n", $output); // Los mensajes de error generados
                         throw new Exception($error_message);
                     }
-                } 
+                }
                 catch (Exception $th) {
                     $respuesta = "Hubo un problema al generar el resumen NLP.";
                     $error = $th->getMessage();
-                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                     
+                    $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                    
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    // Escribe la excepción junto con la fecha y hora en el archivo de log
                     fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
@@ -293,15 +293,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
                 }
-                $dbIDetiqueta = null;   
-                // Inicio busqueda de id para creacion documento                       
-                try { 
+                $dbIDetiqueta = null;  
+                // Inicio busqueda de id para creación documento                      
+                try {
                     include 'conexiondb.php';                                                        
                     // Consulta SQL con cláusula WHERE
                     $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$dbetiqueta'";                    
                     // Limpieza ante posibles inyecciones
                     $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
-                    // Ejecutar la consulta                 
+                    // Ejecutar la consulta                
                     if ($result = $conn->query($sql)) {
                         if ($result->num_rows > 0) {
                             // Encontrado, procesa los resultados
@@ -313,18 +313,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             // No se encontraron resultados
                             // Manejar error en la consulta
                             $error_message = $conn->error; // Mensaje de error generado
-                            $conn->close(); 
+                            $conn->close();
                             throw new Exception($error_message);
                         }
                     } else {
                         // Manejar error en la consulta
                         $error_message = $conn->error; // Mensaje de error generado
-                        $conn->close(); 
+                        $conn->close();
                         throw new Exception($error_message);
-                    } 
+                    }
                     // Cerrar la conexión
                     $conn->close();                                                                                                  
-                } 
+                }
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al guardar la etiqueta en el sistema.";
                     $error = $th->getMessage();
@@ -332,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    // Escribe la excepción junto con la fecha y hora en el archivo de log
                     fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
@@ -342,7 +342,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit;
                 }
                 // Creacion Documento en db
-                try { 
+                try {
                     include 'conexiondb.php';                    
                     // Consulta SQL
                     $sql = "INSERT INTO Documentos (idDocumentos, DocumentosTitulo, DocumentosRutaGuardado, DocumentosResumen, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$tituloDocumento','$rutaDBpdf','$dbResumen',$dbIDetiqueta)";
@@ -352,8 +352,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if ($conn->query($sql)) {
                         $dbIDdocumento = $conn->insert_id; // Obtener el último ID insertado                        
                         if ($dbIDdocumento > 0) {
-                            // La obtencion fue exitosa
-                        } 
+                            // La obtención fue exitosa
+                        }
                         else {
                             // Manejar error en la consulta de inserción
                             $error_message = $conn->error; // Mensaje de error generado
@@ -361,17 +361,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $conn->close();
                             throw new Exception($error_message);
                         }
-                    } 
+                    }
                     else {
                         // Manejar error en la consulta de inserción
                         $error_message = $conn->error; // Mensaje de error generado
                         // Cerrar la conexión
                         $conn->close();
                         throw new Exception($error_message);
-                    } 
+                    }
                     // Cerrar la conexión
-                    $conn->close();                                                                                               
-                } 
+                    $conn->close();                                                                                              
+                }
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al crear el documento en el sistema.";
                     $error = $th->getMessage();
@@ -379,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    // Escribe la excepción junto con la fecha y hora en el archivo de log
                     fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
@@ -387,9 +387,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
-                }   
+                }  
                 // guardado verbos y sustantivos del documento en BD
-                try { 
+                try {
                     include 'conexiondb.php';
                     // Insertar frecuencias de verbos
                     foreach ($top_30_verbos as $frecuencia) {
@@ -425,11 +425,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             // Cerrar la conexión
                             $conn->close();
                             throw new Exception($error_message);
-                        } 
+                        }
                     }
                     // Cerrar la conexión
                     $conn->close();
-                } 
+                }
                 catch (\Throwable $th) {
                     $respuesta = "Hubo un problema al guardar verbos y sustantivos en el sistema.";
                     $error = $th->getMessage();
@@ -437,7 +437,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $rutaLog = "logs_de_error.txt";                    
                     // Abre o crea el archivo de log en modo de escritura al final del archivo
                     $rutaLog = fopen($rutaLog, "a");
-                    // Escribe la excepcion junto con la fecha y hora en el archivo de log
+                    // Escribe la excepción junto con la fecha y hora en el archivo de log
                     fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
                     // Cierra el archivo de log
                     fclose($rutaLog);
@@ -446,7 +446,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                     exit;
                 }                                        
-            } 
+            }
             else {
                 // Maneja el error si no se pudo mover el archivo al directorio
                 $respuesta = "El archivo internamente no se logró mover al directorio.";
@@ -454,8 +454,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
                 echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
                 exit;
-            }     
-        } 
+            }    
+        }
         else {
             // Maneja el error si el servidor no pudo subir el archivo
             $respuesta = 'El servidor no pudo efectuar la subida de archivo.';
@@ -463,8 +463,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit;
-        }                               
-    } 
+        }                              
+    }
     else {
         // Maneja el error si el archivo adjunto no es un documento PDF
         $respuesta = 'El archivo adjunto no es un documento PDF.';

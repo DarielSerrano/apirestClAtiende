@@ -1,8 +1,9 @@
 <?php
+
 include 'utiles/funcionesutiles.php';
 include 'utiles/validarsesionadmin.php';    
-//codigo inicial del metodo get 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') 
+//código inicial del método get
+if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
@@ -17,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         $categoriaID = null;
         try {
             include 'conexiondb.php';                                                        
-            // Consulta SQL 
+            // Consulta SQL
             $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$categoria'";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
-            // Ejecutar la consulta                 
+            // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
                     // Encontrado, procesa los resultados
@@ -33,25 +34,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     // No se encontraron resultados
                     // Manejar error en la consulta
                     $error_message = $conn->error; // Mensaje de error generado
-                    $conn->close(); 
+                    $conn->close();
                     throw new Exception($error_message);
                 }
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
-                $conn->close(); 
+                $conn->close();
                 throw new Exception($error_message);
-            } 
+            }
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
-            $respuesta = "Hubo un problema intentar la busqueda en el sistema.";
+            $respuesta = "Hubo un problema intentar la búsqueda en el sistema.";
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            // Escribe la excepción junto con la fecha y hora en el archivo de log
             fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
             // Cierra el archivo de log
             fclose($rutaLog);
@@ -61,13 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             exit;
         }
 
+        // Inicio búsqueda de preguntas en el sistema
         try {
             include 'conexiondb.php';                                                        
             // Consulta SQL
             $sql = "SELECT PreguntasPreguntaFrecuente, PreguntasRespuesta FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = $categoriaID;";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
-            // Ejecutar la consulta                 
+            // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
                     // Encontrado, procesa los resultados
@@ -87,15 +89,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     // No se encontraron resultados
                     // Manejar error en la consulta
                     $error_message = $conn->error; // Mensaje de error generado
-                    $conn->close(); 
+                    $conn->close();
                     throw new Exception($error_message);
                 }
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
-                $conn->close(); 
+                $conn->close();
                 throw new Exception($error_message);
-            } 
+            }
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
@@ -105,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            // Escribe la excepción junto con la fecha y hora en el archivo de log
             fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
             // Cierra el archivo de log
             fclose($rutaLog);
@@ -114,8 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit;
         }    
-
-    } 
+    }
     else {
         $respuesta = "Categoría no especificada.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -123,10 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
     }      
-}; 
+};
 
-//codigo inicial del metodo post 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+
+//código inicial del método post
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
@@ -134,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
     // Inicializa un arreglo para almacenar las respuestas
     $response = array();
-    
+   
     // Obtén los datos del formulario
     $rut = $_POST['rut'];
     $pass = $_POST['password'];
@@ -167,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    } // Verificación de contraseña 
+    } // Verificación de contraseña
     elseif (!validarContrasena($rut, $pass)) {
         $respuesta = "Contraseña incorrecta.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -182,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    } 
+    }
     // Verificar si se ha proporcionado la categoría en la solicitud
     elseif (empty($preguntaFrec)) {
         $respuesta = "Pregunta no especificada.";
@@ -217,11 +219,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $categoriaID = null;
         try {
             include 'conexiondb.php';                                                        
-            // Consulta SQL 
+            // Consulta SQL
             $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$categoria'";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
-            // Ejecutar la consulta                 
+            // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
                     // Encontrado, procesa los resultados
@@ -233,15 +235,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     // No se encontraron resultados
                     // Manejar error en la consulta
                     $error_message = $conn->error; // Mensaje de error generado
-                    $conn->close(); 
+                    $conn->close();
                     throw new Exception($error_message);
                 }
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
-                $conn->close(); 
+                $conn->close();
                 throw new Exception($error_message);
-            } 
+            }
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
@@ -251,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            // Escribe la excepción junto con la fecha y hora en el archivo de log
             fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
             // Cierra el archivo de log
             fclose($rutaLog);
@@ -267,19 +269,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $sql = "INSERT INTO Preguntas(idPreguntasFrecuentes, PreguntasPreguntaFrecuente, PreguntasRespuesta, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$preguntaFrec','$respuestaFrec',$categoriaID)";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
-            // Ejecutar la consulta                 
+            // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
-                // Respuesta satisfactoria de Extracción creada con éxito. 
+                // Respuesta satisfactoria de Extracción creada con éxito.
                 $respuesta = "pregunta y respuesta creadas con éxito.";
                 header("HTTP/1.1 200 OK");
                 header('Content-Type: application/json; charset=UTF-8');
-                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
-                $conn->close(); 
+                $conn->close();
                 throw new Exception($error_message);
-            } 
+            }
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
@@ -289,7 +291,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            // Escribe la excepción junto con la fecha y hora en el archivo de log
             fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
             // Cierra el archivo de log
             fclose($rutaLog);
@@ -297,10 +299,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
             echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             exit;
-        } 
-    }   
+        }
+    }  
 };  
 
+//código inicial del método put
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
@@ -358,7 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    } // Verificación de contraseña 
+    } // Verificación de contraseña
     elseif (!validarContrasena($rut, $pass)) {
         $respuesta = "Contraseña incorrecta.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -401,23 +404,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     else {
         try {
             include 'conexiondb.php';                                                        
-            // Consulta SQL 
+            // Consulta SQL
             $sql = "UPDATE Preguntas SET PreguntasPreguntaFrecuente='$preguntaFrec',PreguntasRespuesta='$respuestaFrec' WHERE idPreguntasFrecuentes = $preguntaID";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
-            // Ejecutar la consulta                 
+            // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
-                // Respuesta satisfactoria de Extracción creada con éxito. 
+                // Respuesta satisfactoria de Extracción creada con éxito.
                 $respuesta = "Actualización de datos con éxito.";
                 header("HTTP/1.1 200 OK");
                 header('Content-Type: application/json; charset=UTF-8');
-                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
-                $conn->close(); 
+                $conn->close();
                 throw new Exception($error_message);
-            } 
+            }
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
@@ -427,7 +430,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            // Escribe la excepción junto con la fecha y hora en el archivo de log
             fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
             // Cierra el archivo de log
             fclose($rutaLog);
@@ -437,8 +440,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             exit;
         }
     }
-} 
+}
 
+//código inicial del método delete
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
@@ -494,7 +498,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         header('Content-Type: application/json; charset=UTF-8');  // Encabezado Content-Type
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
         exit;
-    } // Verificación de contraseña 
+    } // Verificación de contraseña
     elseif (!validarContrasena($rut, $pass)) {
         $respuesta = "Contraseña incorrecta.";
         header("HTTP/1.1 400 Bad Request");  // Encabezado de estado
@@ -505,33 +509,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     else {
         try {
             include 'conexiondb.php';                                                        
-            // Consulta SQL 
+            // Consulta SQL
             $sql = "DELETE FROM Preguntas WHERE idPreguntasFrecuentes = $preguntaID";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
-            // Ejecutar la consulta                 
+            // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
-                // Respuesta satisfactoria de Extracción creada con éxito. 
+                // Respuesta satisfactoria de Extracción creada con éxito.
                 $respuesta = "Eliminado de datos con éxito.";
                 header("HTTP/1.1 200 OK");
                 header('Content-Type: application/json; charset=UTF-8');
-                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE); 
+                echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
             } else {
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
-                $conn->close(); 
+                $conn->close();
                 throw new Exception($error_message);
-            } 
+            }
             // Cerrar la conexión
             $conn->close();
         } catch (\Throwable $th) {
-            $respuesta = "La eliminacion de datos falló.";
+            $respuesta = "La eliminación de datos falló.";
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
-            // Escribe la excepcion junto con la fecha y hora en el archivo de log
+            // Escribe la excepción junto con la fecha y hora en el archivo de log
             fwrite($rutaLog, "[$fechaHora]($respuesta)_$error" . PHP_EOL);
             // Cierra el archivo de log
             fclose($rutaLog);
@@ -541,5 +545,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             exit;
         }
     }
-} 
+}
+
 ?>

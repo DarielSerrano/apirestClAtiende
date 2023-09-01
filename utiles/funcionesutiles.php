@@ -1,4 +1,5 @@
 <?php
+
     function formatoRUTValido($rut) {
         // Eliminar caracteres no válidos
         $rut = preg_replace('/[^kK0-9]/', '', $rut); 
@@ -49,4 +50,5 @@
         $updated_text = strtr($text, $replace_map);
         return $updated_text;
     }
+
 ?>
