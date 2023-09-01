@@ -1,8 +1,8 @@
 <?php
+
 include 'utiles/funcionesutiles.php';
 include 'utiles/validarsesionadmin.php';  
 // Código del método POST para consultar
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Establece la zona horaria a Santiago y limita el tiempo de ejecución a 1200 segundos (20 minutos)
     date_default_timezone_set('America/Santiago');
@@ -61,14 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     } elseif ($clasificacion == 'VERB') {
                         $verb[] = $palabra;
                     }
-                }     
-            } 
+                }    
+            }
             else {
                 // Hubo un error al ejecutar el comando
                 $error_message = implode("\n", $output); // Los mensajes de error generados
                 throw new Exception($error_message);
             }
-        } 
+        }
         catch (Exception $th) {
             // Procesar la excepción y generar una respuesta de error
             $respuesta = "Hubo un problema al hacer la extracción NLP a la búsqueda.";
@@ -89,9 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         try {
             include 'conexiondb.php';
-            $verbos = implode("', '", $verb); // Unir verbos en formato 'verbo1', 'verbo2', ...
-            $sustantivos = implode("', '", $sustantivo); // Unir sustantivos en formato 'sustantivo1', 'sustantivo2', ...
-            $sql = 
+            $verbos = implode("', '", $verb); // Unir verbos en formato 'verbo 1', 'verbo 2', ...
+            $sustantivos = implode("', '", $sustantivo); // Unir sustantivos en formato 'sustantivo 1', 'sustantivo 2', ...
+            $sql =
             "SELECT
                 D.idDocumentos,
                 D.DocumentosTitulo,
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 foreach ($resultado_consulta as $row) {
                     $enlaceDescarga = '<a href="http://146.83.194.142:1106/apirestClAtiende/descarga.php?doc=' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
                     $row['DocumentosRutaGuardado'] = $enlaceDescarga;
-                    
+                   
                     $documentos_modificados[] = array(
                         "DocumentosTitulo" => $row['DocumentosTitulo'],
                         "DocumentosRutaGuardado" => $enlaceDescarga,
@@ -142,14 +142,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 header("HTTP/1.1 200 OK");
                 header('Content-Type: application/json; charset=UTF-8');
                 echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE);
-            } 
+            }
             else {
                 // Manejar error en la consulta de inserción
                 $error_message = $conn->error; // Mensaje de error generado
                 // Cerrar la conexión
                 $conn->close();
                 throw new Exception($error_message);
-            } 
+            }
 
             // Cerrar la conexión
             $conn->close();
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Procesar la excepción y generar una respuesta de error
             $respuesta = "Hubo un problema intentar la búsqueda en el sistema.";
             $error = $th->getMessage();
-            $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); 
+            $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s"));
             $rutaLog = "logs_de_error.txt";                    
             // Abre o crea el archivo de log en modo de escritura al final del archivo
             $rutaLog = fopen($rutaLog, "a");
@@ -172,7 +172,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }                                        
     }    
 }
-
-
 
 ?>
