@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 }
                 catch (Exception $th) {
-                    $respuesta = "Hubo un problema al hacer la transformación de pdf a texto o su pdf no es elegible para ser convertido a texto.";
+                    $respuesta = "Hubo un problema al hacer la transformación de pdf o su pdf no es elegible para ser convertido a texto.";
                     $error = $th->getMessage();
                     $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
                     $rutaLog = "logs_de_error.txt";                    
