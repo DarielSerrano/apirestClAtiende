@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     header('Content-Type: application/json; charset=UTF-8');
     $namefinal = preg_replace('/([^0-9A-Za-zÑñ\s(),?¿¡!\'\":._\-$+=\*@#%º])/', '', $_GET['prueba']); 
     $namefinal = correccion_tildes($namefinal);
+    $namefinal = escapeshellarg($namefinal);
     echo json_encode($namefinal, JSON_UNESCAPED_UNICODE);
     echo ($namefinal);
     
