@@ -11,11 +11,31 @@
         // función para transformar la contraseña a hash
         // $passwordhash = password_hash($UsuarioContrasena, PASSWORD_DEFAULT);
         include 'conexiondb.php';
-
         try {
             // Consulta SQL con cláusula WHERE
-            $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsuarioRut";
-            $result = $conn->query($sql);
+            $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsuarioRut";            
+            // Ejecutar la consulta
+            if ($result = $conn->query($sql)) {
+                if ($result->num_rows > 0) {
+                    // Encontrado, procesa los resultados
+                    while ($row = $result->fetch_assoc()) {
+                        // Accede a los valores en $row
+                        $Contrasena = $row["UsuarioContrasena"];
+                    }
+                }
+                else {
+
+                }
+            }
+            else {
+                // Manejar error en la consulta de inserción
+                $error_message = $conn->error; // Mensaje de error generado
+                // Cerrar la conexión
+                $conn->close();
+                throw new Exception($error_message);
+            }
+            // Cerrar la conexión
+            $conn->close();
         }
         catch (\Throwable $th) {
             $respuesta = "No se logró hacer la consulta a la base de datos para validar contraseña.";
@@ -34,16 +54,7 @@
             exit;
         }        
 
-        if ($result->num_rows > 0) {
-            // Encontrado, procesa los resultados
-            while ($row = $result->fetch_assoc()) {
-                // Accede a los valores en $row
-                $Contrasena = $row["UsuarioContrasena"];
-            }
-        }
-
-        // Cerrar la conexión
-        $conn->close();
+        
 
         //Verificar la contraseña hash con la almacenada
         if (password_verify($UsuarioContrasena, $Contrasena)) {
