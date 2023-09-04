@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $conn->close();
         } catch (\Throwable $th) {
             // Procesar la excepción y generar una respuesta de error
-            $respuesta = "Hubo un problema intentar la búsqueda en el sistema.";
+            $respuesta = "Hubo un problema intentar la búsqueda en el sistema, es posible que no haya coincidencias.";
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s"));
             $rutaLog = "logs_de_error.txt";                    
