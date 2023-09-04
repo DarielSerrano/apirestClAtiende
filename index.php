@@ -11,18 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     $namefinal = correccion_tildes($namefinal);
     echo json_encode($namefinal, JSON_UNESCAPED_UNICODE);
     
-    function correccion_tildes($text) {
-        // Mapeo de caracteres con tilde a sus versiones sin tilde
-        $replace_map = array(
-            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
-            'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
-        );
         
-        // Reemplazar los caracteres con tilde por sus versiones sin tilde
-        $updated_text = strtr($text, $replace_map);
-        
-        return $updated_text;
-    }    
 };
+
+function correccion_tildes($text) {
+    // Mapeo de caracteres con tilde a sus versiones sin tilde
+    $replace_map = array(
+        'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+        'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
+    );
+    
+    // Reemplazar los caracteres con tilde por sus versiones sin tilde
+    $updated_text = strtr($text, $replace_map);
+    
+    return $updated_text;
+}
 
 ?>
