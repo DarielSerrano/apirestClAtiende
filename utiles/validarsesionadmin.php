@@ -13,7 +13,10 @@
         include 'conexiondb.php';
         try {
             // Consulta SQL con cláusula WHERE
-            $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsuarioRut";            
+            $sql = "SELECT UsuarioContrasena FROM Usuario WHERE UsuarioRut = $UsuarioRut";     
+            // Limpieza ante posibles inyecciones
+            $sql = preg_replace('/[^0-9A-Za-zÑñ\s(),?¿¡!\'":._$+=*@#%º\-]/u',"",$sql);
+
             // Ejecutar la consulta
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
