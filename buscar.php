@@ -107,16 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 GROUP BY DocumentosTitulo
             ) MaxDocs
             INNER JOIN Documentos D ON MaxDocs.idDocumentos = D.idDocumentos
-            LEFT JOIN (
-                SELECT VerbosNombre, Documentos_idDocumentos, VerbosFrecuencia
-                FROM Verbos
-                WHERE VerbosNombre IN ('$verbos')
-            ) V ON D.idDocumentos = V.Documentos_idDocumentos
-            LEFT JOIN (
-                SELECT SustantivosNombre, Documentos_idDocumentos, SustantivosFrecuencia
-                FROM Sustantivos
-                WHERE SustantivosNombre IN ('$sustantivos')
-            ) S ON D.idDocumentos = S.Documentos_idDocumentos
+            LEFT JOIN Verbos V ON D.idDocumentos = V.Documentos_idDocumentos AND V.VerbosNombre IN ('$verbos')
+            LEFT JOIN Sustantivos S ON D.idDocumentos = S.Documentos_idDocumentos AND S.SustantivosNombre IN ('$sustantivos')
             LEFT JOIN DocumentosCategoria DC ON D.DocumentosCategoria_idDocumentosCategoria = DC.idDocumentosCategoria
             WHERE (V.VerbosNombre IS NOT NULL OR S.SustantivosNombre IS NOT NULL)
             GROUP BY D.idDocumentos, D.DocumentosTitulo, D.DocumentosRutaGuardado, D.DocumentosResumen, DC.DocumentosCategoriaNombre
