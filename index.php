@@ -11,9 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     $namefinal = correccion_tildes($namefinal);
     $namefinal = escapeshellarg($namefinal);
     echo json_encode($namefinal, JSON_UNESCAPED_UNICODE);
-    echo ($namefinal);
-    
-        
 };
 
 function correccion_tildes($text) {
