@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     $respuesta = "Api de análisis, búsqueda y preguntas frecuentes.";
     echo json_encode ($respuesta);  */     
     header('Content-Type: application/json; charset=UTF-8');
-    $namefinal = preg_replace('/([^0-9A-Za-zÑñ\s(),?¿¡!\'\":._\-$+=\*@#%º])/', '', $_GET['prueba']); 
+    $namefinal = preg_replace('/[^0-9A-Za-zÑñ\s(),?¿¡!\'":._$+=*@#%º-]/', '', $_GET['prueba']); 
     $namefinal = correccion_tildes($namefinal);
     $namefinal = escapeshellarg($namefinal);
     echo json_encode($namefinal, JSON_UNESCAPED_UNICODE);
