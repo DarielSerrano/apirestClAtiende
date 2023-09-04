@@ -119,21 +119,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
 
             if ($resultado_consulta = $conn->query($sql)) {
-                // Modificar los valores de DocumentosRutaGuardado para crear enlaces
-                foreach ($resultado_consulta as $row) {
-                    $enlaceDescarga = '<a href="http://146.83.194.142:1106/apirestClAtiende/descarga.php?doc=' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
-                    $row['DocumentosRutaGuardado'] = $enlaceDescarga;
-                   
-                    $documentos_modificados[] = array(
-                        "DocumentosTitulo" => $row['DocumentosTitulo'],
-                        "DocumentosRutaGuardado" => $enlaceDescarga,
-                        "DocumentosResumen" => $row['DocumentosResumen'],
-                        "Categoria" => $row['Categoria']
-                    );
+                if ($resultado_consulta->num_rows > 0) {
+                    // Modificar los valores de DocumentosRutaGuardado para crear enlaces
+                    foreach ($resultado_consulta as $row) {
+                        $enlaceDescarga = '<a href="http://146.83.194.142:1106/apirestClAtiende/descarga.php?doc=' . $row['DocumentosRutaGuardado'] . '">Descargar</a>';
+                        $row['DocumentosRutaGuardado'] = $enlaceDescarga;
+                    
+                        $documentos_modificados[] = array(
+                            "DocumentosTitulo" => $row['DocumentosTitulo'],
+                            "DocumentosRutaGuardado" => $enlaceDescarga,
+                            "DocumentosResumen" => $row['DocumentosResumen'],
+                            "Categoria" => $row['Categoria']
+                        );
+                    }
+                    header("HTTP/1.1 200 OK");
+                    header('Content-Type: application/json; charset=UTF-8');
+                    echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE);
+                } else {
+                    // No se encontraron resultados
+                    // Manejar error en la consulta
+                    $error_message = $conn->error; // Mensaje de error generado
+                    $conn->close();
+                    throw new Exception($error_message);
                 }
-                header("HTTP/1.1 200 OK");
-                header('Content-Type: application/json; charset=UTF-8');
-                echo json_encode($documentos_modificados, JSON_UNESCAPED_UNICODE);
+                
+                
             }
             else {
                 // Manejar error en la consulta de inserción
