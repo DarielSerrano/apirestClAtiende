@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $namefinal = trim ($_FILES['archivo']['name']);
         $namefinal = correccion_tildes($namefinal);
         $namefinal = preg_replace('/\s/', '_', $namefinal);
-        $namefinal = preg_replace('/[^A-Za-z\s.:-_]/u', '', $namefinal);        
+        $namefinal = preg_replace('/[^A-Za-z0-9\s.:-_]/u', '', $namefinal);        
         $tituloDocumento = $namefinal;
         $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual        
         $namefinal = $fechaHora."_".$namefinal;
