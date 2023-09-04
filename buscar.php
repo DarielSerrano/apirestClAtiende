@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
     else {
-        $consulta = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $consulta);  
+        $consulta = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $consulta);  
         // Escapar la consulta de texto para usarla en el comando
         $escaped_consulta = escapeshellarg($consulta);
 
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             LIMIT 5;";
 
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
 
             if ($resultado_consulta = $conn->query($sql)) {
                 // Modificar los valores de DocumentosRutaGuardado para crear enlaces

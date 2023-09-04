@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             // Consulta SQL
             $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$categoria'";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
             // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             // Consulta SQL
             $sql = "SELECT PreguntasPreguntaFrecuente, PreguntasRespuesta FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = $categoriaID;";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
             // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
@@ -145,9 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     $respuestaFrec = $_POST['respuesta'];
 
     // Elimina caracteres no válidos
-    $rut = preg_replace('/[^kK0-9]/', '', $rut);
-    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
-    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
+    $rut = preg_replace('/[^kK0-9]/u', '', $rut);
+    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $preguntaFrec);
+    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $respuestaFrec);
     // Validar si el RUT no están vacío
     if (empty($rut)) {
         $respuesta = "Debe completar con su Rut, esta sección es solo para Funcionarios.";
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             // Consulta SQL
             $sql = "SELECT idDocumentosCategoria FROM DocumentosCategoria WHERE DocumentosCategoriaNombre = '$categoria'";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
             // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 if ($result->num_rows > 0) {
@@ -268,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             // Consulta SQL
             $sql = "INSERT INTO Preguntas(idPreguntasFrecuentes, PreguntasPreguntaFrecuente, PreguntasRespuesta, DocumentosCategoria_idDocumentosCategoria) VALUES (NULL,'$preguntaFrec','$respuestaFrec',$categoriaID)";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
             // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 // Respuesta satisfactoria de Extracción creada con éxito.
@@ -329,9 +329,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $preguntaID = $datos['idpregunta'];
 
     // Elimina caracteres no válidos
-    $rut = preg_replace('/[^kK0-9]/', '', $rut);
-    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
-    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
+    $rut = preg_replace('/[^kK0-9]/u', '', $rut);
+    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $preguntaFrec);
+    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $respuestaFrec);
 
     // Validar si el RUT no están vacío
     if (empty($rut)) {
@@ -407,7 +407,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             // Consulta SQL
             $sql = "UPDATE Preguntas SET PreguntasPreguntaFrecuente='$preguntaFrec',PreguntasRespuesta='$respuestaFrec' WHERE idPreguntasFrecuentes = $preguntaID";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
             // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 // Respuesta satisfactoria de Extracción creada con éxito.
@@ -466,9 +466,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     $preguntaID = $datos['idpregunta'];
 
     // Elimina caracteres no válidos
-    $rut = preg_replace('/[^kK0-9]/', '', $rut);
-    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $preguntaFrec);
-    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/', '', $respuestaFrec);
+    $rut = preg_replace('/[^kK0-9]/u', '', $rut);
+    $preguntaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $preguntaFrec);
+    $respuestaFrec = preg_replace('/[^0-9A-Za-z\s.:,_\-?¿¡!ÁáÉéÍíÓóÚúüÑñ$%º]/u', '', $respuestaFrec);
 
     // Validar si el RUT no están vacío
     if (empty($rut)) {
@@ -512,7 +512,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             // Consulta SQL
             $sql = "DELETE FROM Preguntas WHERE idPreguntasFrecuentes = $preguntaID";                    
             // Limpieza ante posibles inyecciones
-            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/',"",$sql);
+            $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
             // Ejecutar la consulta                
             if ($result = $conn->query($sql)) {
                 // Respuesta satisfactoria de Extracción creada con éxito.
