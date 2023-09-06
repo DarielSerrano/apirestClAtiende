@@ -1,3 +1,6 @@
 #ignorar archivos pesados
 modulo_python/
 keysdb.php
+archivos/*
+# Excepto el archivo "archivo.txt"
+!archivos/prueba.txt
