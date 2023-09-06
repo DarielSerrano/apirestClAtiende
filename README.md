@@ -21,16 +21,16 @@ sudo apt install poppler-utils -y
 sudo apt-get install zlib1g-dev libffi-dev libssl-dev libsqlite3-dev -y
 
 #	instalacion python 3.10
-cd ~ 
-wget https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tgz 
-tar -xf Python-3.10.6.tgz 
-cd Python-3.10.6 
-./configure --enable-optimizations 
-make -j$(nproc) 
-sudo make altinstall 
-python3.10 --version
+- cd ~
+- wget https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tgz 
+- tar -xf Python-3.10.6.tgz 
+- cd Python-3.10.6 
+- ./configure --enable-optimizations 
+- make -j$(nproc) 
+- sudo make altinstall 
+- python3.10 --version
 
-#(	Exclusivo para desarrollo y pruebas	)
+# (	Exclusivo para desarrollo y pruebas	)
 
 #	actualizacion pip
 pip install --upgrade pip
@@ -45,7 +45,7 @@ cd /var/www/html ; sudo git clone https://github.com/DarielSerrano/apirestClAtie
 cd /var/www/html/apirestClAtiende/ && sudo git pull
 
 
-(	PRODUCCION	)
+# ( PRODUCCION	)
 
 #	cambiar propietario a apache
 sudo mkdir archivos
@@ -71,7 +71,7 @@ sudo chmod 755 cache
 sudo chmod 755 librerias
 sudo chmod 755 stanza_resources
 
-#(	para que Apache, como servidor web, pueda acceder a las librerias en la integracion y ejecucion, debe instalar los paquetes de pip con: sudo -u www-data pip y dirigirlos a una carpeta especifica 	)
+# (	para que Apache, como servidor web, pueda acceder a las librerias en la integracion y ejecucion, debe instalar los paquetes de pip con: sudo -u www-data pip y dirigirlos a una carpeta especifica 	)
 sudo -u www-data pip install 'transformers[torch]' sentencepiece protobuf stanza --target=librerias
 
 #	Utilizar en scripts de python administrados por apache
