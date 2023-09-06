@@ -2,5 +2,8 @@
 modulo_python/
 keysdb.php
 archivos/*
+stanza_resources/
+librerias/
+cache/
 # Excepto el archivo "archivo.txt"
 !archivos/prueba.txt
