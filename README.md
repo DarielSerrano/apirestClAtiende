@@ -30,6 +30,9 @@
 - sudo make altinstall 
 - python3.10 --version
 
+# Crear archivo keysdb.php con credenciales de base de datos pertinente
+nano keysdb.php
+
 # (	Exclusivo para desarrollo y pruebas	)
 
 #	actualizacion pip
