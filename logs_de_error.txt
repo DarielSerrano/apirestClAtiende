@@ -1,0 +1,229 @@
+[2023-08-29_16:02:23](No se logró hacer la prueba.)_¡Excepción intencional!
+[2023-08-29_12:08:41]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:09:44]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:10:41]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:10:50]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:11:11]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:13:13]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:13:52]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:16:35]_Hubo un problema al hacer la transformación de pdf a texto.
+[2023-08-29_12:20:09](Hubo un problema al hacer la transformación de pdf a texto.)_
+[2023-08-29_12:25:23](Hubo un problema al hacer la transformación de pdf a texto.)_
+[2023-08-29_12:34:09](Hubo un problema al hacer la transformación de pdf a texto.)_I/O Error: Couldn't open file 'a': No such file or directory.
+[2023-08-30_00:27:42](Hubo un problema al hacer la extracción NLP.)_Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 44.0MB/s]
+2023-08-30 04:27:35 INFO: Downloading these customized packages for language: es (Spanish)...
+==============================
+| Processor       | Package  |
+------------------------------
+| tokenize        | ancora   |
+| mwt             | ancora   |
+| pos             | ancora   |
+| lemma           | ancora   |
+| backward_charlm | newswiki |
+| forward_charlm  | newswiki |
+| pretrain        | ancora   |
+==============================
+
+2023-08-30 04:27:35 INFO: File exists: stanza_resources/es/tokenize/ancora.pt
+2023-08-30 04:27:35 INFO: File exists: stanza_resources/es/mwt/ancora.pt
+2023-08-30 04:27:35 INFO: File exists: stanza_resources/es/pos/ancora.pt
+2023-08-30 04:27:35 INFO: File exists: stanza_resources/es/lemma/ancora.pt
+2023-08-30 04:27:35 INFO: File exists: stanza_resources/es/backward_charlm/newswiki.pt
+2023-08-30 04:27:35 INFO: File exists: stanza_resources/es/forward_charlm/newswiki.pt
+2023-08-30 04:27:35 INFO: File exists: stanza_resources/es/pretrain/ancora.pt
+2023-08-30 04:27:35 INFO: Finished downloading models and saved to stanza_resources.
+2023-08-30 04:27:35 INFO: Checking for updates to resources.json in case models have been updated.  Note: this behavior can be turned off with download_method=None or download_method=DownloadMethod.REUSE_RESOURCES
+Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 43.5MB/s]
+2023-08-30 04:27:35 INFO: Loading these models for language: es (Spanish):
+=======================
+| Processor | Package |
+-----------------------
+| tokenize  | ancora  |
+| mwt       | ancora  |
+| pos       | ancora  |
+| lemma     | ancora  |
+=======================
+
+2023-08-30 04:27:35 WARNING: GPU requested, but is not available!
+2023-08-30 04:27:35 INFO: Using device: cpu
+2023-08-30 04:27:35 INFO: Loading: tokenize
+2023-08-30 04:27:35 INFO: Loading: mwt
+2023-08-30 04:27:35 INFO: Loading: pos
+2023-08-30 04:27:36 INFO: Loading: lemma
+2023-08-30 04:27:36 INFO: Done loading processors!
+Some weights of the model checkpoint at mrm8488/bert-spanish-cased-finetuned-pos-16-tags were not used when initializing BertForTokenClassification: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+- This IS expected if you are initializing BertForTokenClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForTokenClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Traceback (most recent call last):
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 101, in <module>
+    verb_noun_segment = extract_verbs_and_nouns(segment)
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 94, in extract_verbs_and_nouns
+    verb_noun_objects.append({"palabra": tokenizer.decode([token]), "clasificacion": tags[label]})
+KeyError: 16
+[2023-08-30_00:35:07](Hubo un problema al hacer la extracción NLP.)_Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 61.5MB/s]
+2023-08-30 04:34:59 INFO: Downloading these customized packages for language: es (Spanish)...
+==============================
+| Processor       | Package  |
+------------------------------
+| tokenize        | ancora   |
+| mwt             | ancora   |
+| pos             | ancora   |
+| lemma           | ancora   |
+| backward_charlm | newswiki |
+| forward_charlm  | newswiki |
+| pretrain        | ancora   |
+==============================
+
+2023-08-30 04:34:59 INFO: File exists: stanza_resources/es/tokenize/ancora.pt
+2023-08-30 04:34:59 INFO: File exists: stanza_resources/es/mwt/ancora.pt
+2023-08-30 04:34:59 INFO: File exists: stanza_resources/es/pos/ancora.pt
+2023-08-30 04:34:59 INFO: File exists: stanza_resources/es/lemma/ancora.pt
+2023-08-30 04:34:59 INFO: File exists: stanza_resources/es/backward_charlm/newswiki.pt
+2023-08-30 04:34:59 INFO: File exists: stanza_resources/es/forward_charlm/newswiki.pt
+2023-08-30 04:34:59 INFO: File exists: stanza_resources/es/pretrain/ancora.pt
+2023-08-30 04:34:59 INFO: Finished downloading models and saved to stanza_resources.
+2023-08-30 04:34:59 INFO: Checking for updates to resources.json in case models have been updated.  Note: this behavior can be turned off with download_method=None or download_method=DownloadMethod.REUSE_RESOURCES
+Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 40.9MB/s]
+2023-08-30 04:35:00 INFO: Loading these models for language: es (Spanish):
+=======================
+| Processor | Package |
+-----------------------
+| tokenize  | ancora  |
+| mwt       | ancora  |
+| pos       | ancora  |
+| lemma     | ancora  |
+=======================
+
+2023-08-30 04:35:00 WARNING: GPU requested, but is not available!
+2023-08-30 04:35:00 INFO: Using device: cpu
+2023-08-30 04:35:00 INFO: Loading: tokenize
+2023-08-30 04:35:00 INFO: Loading: mwt
+2023-08-30 04:35:00 INFO: Loading: pos
+2023-08-30 04:35:00 INFO: Loading: lemma
+2023-08-30 04:35:00 INFO: Done loading processors!
+Some weights of the model checkpoint at mrm8488/bert-spanish-cased-finetuned-pos-16-tags were not used when initializing BertForTokenClassification: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+- This IS expected if you are initializing BertForTokenClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForTokenClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Traceback (most recent call last):
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 101, in <module>
+    verb_noun_segment = extract_verbs_and_nouns(segment)
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 94, in extract_verbs_and_nouns
+    verb_noun_objects.append({"palabra": tokenizer.decode([token]), "clasificacion": tags[label]})
+KeyError: 16
+[2023-08-30_00:39:48](Hubo un problema al hacer la extracción NLP.)_Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 64.4MB/s]
+2023-08-30 04:39:41 INFO: Downloading these customized packages for language: es (Spanish)...
+==============================
+| Processor       | Package  |
+------------------------------
+| tokenize        | ancora   |
+| mwt             | ancora   |
+| pos             | ancora   |
+| lemma           | ancora   |
+| forward_charlm  | newswiki |
+| pretrain        | ancora   |
+| backward_charlm | newswiki |
+==============================
+
+2023-08-30 04:39:41 INFO: File exists: stanza_resources/es/tokenize/ancora.pt
+2023-08-30 04:39:41 INFO: File exists: stanza_resources/es/mwt/ancora.pt
+2023-08-30 04:39:41 INFO: File exists: stanza_resources/es/pos/ancora.pt
+2023-08-30 04:39:41 INFO: File exists: stanza_resources/es/lemma/ancora.pt
+2023-08-30 04:39:41 INFO: File exists: stanza_resources/es/forward_charlm/newswiki.pt
+2023-08-30 04:39:41 INFO: File exists: stanza_resources/es/pretrain/ancora.pt
+2023-08-30 04:39:41 INFO: File exists: stanza_resources/es/backward_charlm/newswiki.pt
+2023-08-30 04:39:41 INFO: Finished downloading models and saved to stanza_resources.
+2023-08-30 04:39:41 INFO: Checking for updates to resources.json in case models have been updated.  Note: this behavior can be turned off with download_method=None or download_method=DownloadMethod.REUSE_RESOURCES
+Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 39.1MB/s]
+2023-08-30 04:39:42 INFO: Loading these models for language: es (Spanish):
+=======================
+| Processor | Package |
+-----------------------
+| tokenize  | ancora  |
+| mwt       | ancora  |
+| pos       | ancora  |
+| lemma     | ancora  |
+=======================
+
+2023-08-30 04:39:42 WARNING: GPU requested, but is not available!
+2023-08-30 04:39:42 INFO: Using device: cpu
+2023-08-30 04:39:42 INFO: Loading: tokenize
+2023-08-30 04:39:42 INFO: Loading: mwt
+2023-08-30 04:39:42 INFO: Loading: pos
+2023-08-30 04:39:42 INFO: Loading: lemma
+2023-08-30 04:39:42 INFO: Done loading processors!
+Some weights of the model checkpoint at mrm8488/bert-spanish-cased-finetuned-pos-16-tags were not used when initializing BertForTokenClassification: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+- This IS expected if you are initializing BertForTokenClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForTokenClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Traceback (most recent call last):
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 101, in <module>
+    verb_noun_segment = extract_verbs_and_nouns(segment)
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 94, in extract_verbs_and_nouns
+    verb_noun_objects.append({"palabra": tokenizer.decode([token]), "clasificacion": tags[label]})
+KeyError: 16
+[2023-08-30_13:29:09](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Educacion'' at line 1
+[2023-08-30_13:51:49](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Educacion' at line 1
+[2023-08-30_13:55:39](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Educacion' at line 1
+[2023-08-30_13:58:34](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Educacion' at line 1
+[2023-08-30_14:01:17](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Educacion' at line 1
+[2023-08-30_14:02:13](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Educacion'' at line 1
+[2023-08-30_14:06:55](Hubo un problema al crear el documento en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+[2023-08-30_14:22:38](Hubo un problema al crear el documento en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+[2023-08-30_14:26:02](Hubo un problema al crear el documento en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+[2023-08-31_01:20:30](Hubo un problema al hacer la extracción NLP.)_Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 66.8MB/s]
+2023-08-31 05:20:27 INFO: Downloading these customized packages for language: es (Spanish)...
+==============================
+| Processor       | Package  |
+------------------------------
+| tokenize        | ancora   |
+| mwt             | ancora   |
+| pos             | ancora   |
+| lemma           | ancora   |
+| forward_charlm  | newswiki |
+| pretrain        | ancora   |
+| backward_charlm | newswiki |
+==============================
+
+2023-08-31 05:20:27 INFO: File exists: stanza_resources/es/tokenize/ancora.pt
+2023-08-31 05:20:27 INFO: File exists: stanza_resources/es/mwt/ancora.pt
+2023-08-31 05:20:27 INFO: File exists: stanza_resources/es/pos/ancora.pt
+2023-08-31 05:20:27 INFO: File exists: stanza_resources/es/lemma/ancora.pt
+2023-08-31 05:20:27 INFO: File exists: stanza_resources/es/forward_charlm/newswiki.pt
+2023-08-31 05:20:28 INFO: File exists: stanza_resources/es/pretrain/ancora.pt
+2023-08-31 05:20:28 INFO: File exists: stanza_resources/es/backward_charlm/newswiki.pt
+2023-08-31 05:20:28 INFO: Finished downloading models and saved to stanza_resources.
+2023-08-31 05:20:28 INFO: Checking for updates to resources.json in case models have been updated.  Note: this behavior can be turned off with download_method=None or download_method=DownloadMethod.REUSE_RESOURCES
+Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json:   0%|          | 0.00/30.1k [00:00<?, ?B/s]Downloading https://raw.githubusercontent.com/stanfordnlp/stanza-resources/main/resources_1.5.0.json: 216kB [00:00, 35.3MB/s]
+2023-08-31 05:20:28 INFO: Loading these models for language: es (Spanish):
+=======================
+| Processor | Package |
+-----------------------
+| tokenize  | ancora  |
+| mwt       | ancora  |
+| pos       | ancora  |
+| lemma     | ancora  |
+=======================
+
+2023-08-31 05:20:28 WARNING: GPU requested, but is not available!
+2023-08-31 05:20:28 INFO: Using device: cpu
+2023-08-31 05:20:28 INFO: Loading: tokenize
+2023-08-31 05:20:28 INFO: Loading: mwt
+2023-08-31 05:20:28 INFO: Loading: pos
+2023-08-31 05:20:28 INFO: Loading: lemma
+2023-08-31 05:20:28 INFO: Done loading processors!
+Traceback (most recent call last):
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 67, in <module>
+    objetos_filtrados = correccion_tildes(objetos_filtrados)
+  File "/var/www/html/apirestClAtiende/paquetes/extraer.py", line 27, in correccion_tildes
+    updated_text = text.translate(str.maketrans(replace_map))
+AttributeError: 'list' object has no attribute 'translate'
+[2023-08-31_01:24:27](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Certificados'' at line 1
+[2023-08-31_01:28:05](Hubo un problema al guardar la etiqueta en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Certificados' at line 1
+[2023-08-31_07:17:47](Hubo un problema intentar la busqueda en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Preguntas' WHERE 'DocumentosCategoria_idDocumentosCategoria' = 11' at line 1
+[2023-08-31_03:43:08](Hubo un problema con la búsqueda de preguntas en el sistema.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = 11' at line 1
+[2023-08-31_04:48:23](Hubo un problema con la creacion de la pregunta y respuesta en el sistema.)_
+[2023-08-31_07:19:42](Pruebe con una de las categorias definidas.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[2023-08-31_07:21:38](Pruebe con una de las categorias definidas.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[2023-08-31_07:23:23](Pruebe con una de las categorias definidas.)_You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[2023-09-04_04:42:36](Hubo un problema intentar la búsqueda en el sistema.)_
+[2023-09-04_04:44:11](Hubo un problema intentar la búsqueda en el sistema, es posible que no haya coincidencias.)_
+[2023-09-04_04:44:25](Hubo un problema intentar la búsqueda en el sistema, es posible que no haya coincidencias.)_
