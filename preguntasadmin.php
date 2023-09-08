@@ -74,13 +74,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         $categoriaID = $row["idDocumentosCategoria"];
                     }
                 } else {
-                    // No se encontraron resultados
+                    $respuesta = "No se encontró la categoría indicada en el sistema.";
                     // Manejar error en la consulta
                     $error_message = $conn->error; // Mensaje de error generado
                     $conn->close();
                     throw new Exception($error_message);
                 }
             } else {
+                $respuesta = "Hubo un problema intentar la búsqueda de categorías en el sistema.";
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
                 $conn->close();
@@ -88,8 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             }
             // Cerrar la conexión
             $conn->close();
-        } catch (\Throwable $th) {
-            $respuesta = "Hubo un problema intentar la búsqueda de categorías en el sistema.";
+        } catch (\Throwable $th) {            
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    
@@ -125,6 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     header('Content-Type: application/json; charset=UTF-8');
                     echo json_encode($resultados, JSON_UNESCAPED_UNICODE);
                 } else {
+                    $respuesta = "No se encontraron datos en el sistema.";
                     // No se encontraron resultados
                     // Manejar error en la consulta
                     $error_message = $conn->error; // Mensaje de error generado
@@ -132,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     throw new Exception($error_message);
                 }
             } else {
+                $respuesta = "Hubo un problema con la búsqueda de preguntas en el sistema.";
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
                 $conn->close();
@@ -139,8 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             }
             // Cerrar la conexión
             $conn->close();
-        } catch (\Throwable $th) {
-            $respuesta = "Hubo un problema con la búsqueda de preguntas en el sistema.";
+        } catch (\Throwable $th) {            
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    

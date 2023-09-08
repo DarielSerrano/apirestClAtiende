@@ -31,13 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         $categoriaID = $row["idDocumentosCategoria"];
                     }
                 } else {
-                    // No se encontraron resultados
+                    $respuesta = "No se encontró la categoría indicada en el sistema.";
                     // Manejar error en la consulta
                     $error_message = $conn->error; // Mensaje de error generado
                     $conn->close();
                     throw new Exception($error_message);
                 }
             } else {
+                $respuesta = "Hubo un problema intentar la búsqueda en el sistema.";
                 // Manejar error en la consulta
                 $error_message = $conn->error; // Mensaje de error generado
                 $conn->close();
@@ -45,8 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             }
             // Cerrar la conexión
             $conn->close();
-        } catch (\Throwable $th) {
-            $respuesta = "Hubo un problema intentar la búsqueda en el sistema.";
+        } catch (\Throwable $th) {            
             $error = $th->getMessage();
             $fechaHora = preg_replace('/\s/', '_', date("Y-m-d H:i:s")); // Obtiene la fecha y hora actual                                        
             $rutaLog = "logs_de_error.txt";                    
