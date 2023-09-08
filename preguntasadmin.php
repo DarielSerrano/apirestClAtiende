@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         try {
             include 'conexiondb.php';                                                        
             // Consulta SQL
-            $sql = "SELECT * FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = 11";                    
+            $sql = "SELECT * FROM Preguntas WHERE Preguntas.DocumentosCategoria_idDocumentosCategoria = $categoriaID";                    
             // Limpieza ante posibles inyecciones
             $sql = preg_replace('/[^0-9A-Za-z\s(),?¿¡!\'\":._\-$+=\*%º]/u',"",$sql);
             // Ejecutar la consulta                
